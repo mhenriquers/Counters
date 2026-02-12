@@ -1,3 +1,8 @@
+## ⚔️ Counters MLBB - Estratégia na palma da mão
+Domine a Draft, vença a partida.
+
+![Logo](./assets/logo.png)
+
 ## Requisitos
 
 * Node.js 20 ou superior
