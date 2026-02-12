@@ -24,13 +24,13 @@ Este projeto nasceu da necessidade de ter um guia rápido e offline durante a fa
 
 ## Guia de Instalação e Execução
 
-Requisitos
+Requisitos:
 
 - Node.js: Versão 20 ou superior.
 - Expo: Ambiente configurado.
 - Gerenciador de pacotes: NPM (padrão) ou Yarn.
 
-Como rodar o projeto
+Como rodar o projeto:
 
 Clone o repositório: 
 - git clone https://github.com/mhenriquers/Counters.git
