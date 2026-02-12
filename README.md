@@ -36,7 +36,7 @@ Clone o repositório:
 - git clone https://github.com/mhenriquers/Counters.git
 
 Entre na pasta:
-- '''cd Counters'''
+- ```cd Counters```
 
 Instale as dependências:
 - npm install
