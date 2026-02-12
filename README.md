@@ -13,12 +13,12 @@ Este projeto nasceu da necessidade de ter um guia rápido e offline durante a fa
 
 - Lista de Counters: Heróis específicos que ganham de outros heróis específicos.
 - Interface Veloz: Sem telas de carregamento pesadas.
-- Feito para Android: Apk otimizado para diversos dispositivos.
+- Feito para Android: APK otimizado para diversos dispositivos.
 
 ## Tecnologias Utilizadas
 
 - React Native / Expo
-- Java Scrpipt
+- Java Script
 - React Navigation
 - Estilização customizada via StyleSheet
 
@@ -36,7 +36,7 @@ Clone o repositório:
 - git clone https://github.com/mhenriquers/Counters.git
 
 Entre na pasta:
-- cd Counters
+- '''cd Counters'''
 
 Instale as dependências:
 - npm install

@@ -9,7 +9,7 @@
     "newArchEnabled": true,
     "backgroundColor": "#000000",
     "splash": {
-      "image": "./assets/splashicon.png",
+      "image": "./assets/counters.png",
       "resizeMode": "cover",
       "backgroundColor": "#000000"
     },
