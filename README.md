@@ -1,30 +1,50 @@
-## ⚔️ Counters MLBB - Estratégia na palma da mão
-Domine a Draft, vença a partida.
-
 ![Logo](./assets/logo.png)
 
-## Requisitos
+## ⚔️ Counters MLBB - Estratégia na palma da mão
 
-* Node.js 20 ou superior
-*Expo
+Domine a Draft, vença a partida.
 
-## Como rodar o projeto baixado
+## Sobre o Projeto
 
-## Sequencia para criar o projeto
+Este projeto nasceu da necessidade de ter um guia rápido e offline durante a fase de banimento e escolha do Mobile Legends. Desenvolvido de forma independente, focando em performance e facilidade de uso.
 
-Criar o projeto com REact Native usando Expo.
 
-npx create-expo-app . --template
+## Funcionalidades
 
-Na instalação utilizar o template "Blank"
+- Lista de Counters: Heróis específicos que ganham de outros heróis específicos.
+- Interface Veloz: Sem telas de carregamento pesadas.
+- Feito para Android: Apk otimizado para diversos dispositivos.
 
-Executar o projeto
+## Tecnologias Utilizadas
 
-npx expo start
+- React Native / Expo
+- Java Scrpipt
+- React Navigation
+- Estilização customizada via StyleSheet
 
-baixar o app Expo Go da Play Store ou App Store
-Ler o QRCode da aplicação com o aplicativo Expo Go.
+## Guia de Instalação e Execução
 
-instalar Drawer navigator - Gaveta de navegação
+Requisitos
 
-npm install @react-navigattion/drawer
+- Node.js: Versão 20 ou superior.
+- Expo: Ambiente configurado.
+- Gerenciador de pacotes: NPM (padrão) ou Yarn.
+
+Como rodar o projeto
+
+Clone o repositório: 
+- git clone https://github.com/mhenriquers/Counters.git
+
+Entre na pasta:
+- cd Counters
+
+Instale as dependências:
+- npm install
+
+Inicie o servidor do Expo:
+-   npx expo start
+
+Acesse no celular:
+- Baixe o app Expo Go na Play Store ou App Store.
+- Escaneie o QR Code que aparecerá no seu terminal.
+
