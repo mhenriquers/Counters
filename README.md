@@ -39,10 +39,10 @@ Entre na pasta:
 - ```cd Counters```
 
 Instale as dependências:
-- npm install
+- ```npm install```
 
 Inicie o servidor do Expo:
--   npx expo start
+-   ```npx expo start```
 
 Acesse no celular:
 - Baixe o app Expo Go na Play Store ou App Store.
