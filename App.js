@@ -11,6 +11,7 @@ import Doacoes from "./Doacoes";
 import Sobre from "./Sobre";
 import Feedback from "./Feedback";
 import Configuracoes from "./Configuracoes";
+import SplashScreen from "./SplashScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,7 @@ export default function App() {
     <NavigationContainer>
       <View style={{ flex: 1 }}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name= "Splash" component={SplashScreen}/>
           <Stack.Screen name="Home">
             {(props) => (
               <>
@@ -40,7 +42,6 @@ export default function App() {
               </>
             )}
           </Stack.Screen>
-
           <Stack.Screen name="Details" component={DetailsScreen} />
           <Stack.Screen name="Doacoes" component={Doacoes} />
           <Stack.Screen name="Sobre" component={Sobre}/>
