@@ -1,4 +1,4 @@
-![Logo](./assets/logo.png)
+![Logo](./assets/liveLogoCut.gif)
 
 ## ⚔️ Counters MLBB - Estratégia na palma da mão
 
