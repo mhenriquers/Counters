@@ -23,7 +23,7 @@ export default function SplashScreen() {
   return (
     <View style={styles.container}>
       <Video
-        source={require("./assets/LogoVideo916.mp4")}
+        source={require("./assets/logoInVideo.mp4")}
         style={styles.Video}
         resizeMode={ResizeMode.COVER}
         shouldPlay={true}
