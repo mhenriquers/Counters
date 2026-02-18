@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { HEROIS } from "./banco_herois";
-import WinRateCard from "./paralelograma";
 {
   /* Função principal  */
 }
