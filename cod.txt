@@ -1,0 +1,41 @@
+  {/*
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 1500,
+      useNativeDriver: true,
+    }).start(() => {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(fadeAnim, {
+            toValue: 1.1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+        ]),
+      ).start();
+    });
+
+    setTimeout(() => {
+      navigation.navigate("Home");
+    }, 8000);
+  }, []);*/} 
+  
+  
+  
+  
+  
+  
+    {
+      /*<View style={styles.container}>
+      <Animated.Image
+        source={require("./assets/counters-icon.png")}
+        style={[styles.foto, { transform: [{ scale: fadeAnim }] }]}
+      />
+    </View>*/
+    },
