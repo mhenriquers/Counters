@@ -124,7 +124,7 @@ export default function HomeScreen({ navigation, route, abrirMenu }) {
                     colors={["#00e5ff"]} // Cor da bolinha (azul ciano)
                   />
                 }
-                columnWrapperStyle={{ justifyContent: "center", gap: 2 }}
+                columnWrapperStyle={{ justifyContent: "center", gap: 1 }}
                 contentContainerStyle={{
                   paddingHorizontal: 10,
                   paddingVertical: 20,
@@ -175,11 +175,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
+    
   },
 
   backgroundImage: {
     flex: 1,
     width: "100%",
+    
   },
 
   texto: {
@@ -192,8 +194,8 @@ const styles = StyleSheet.create({
   },
 
   quadrado: {
-    width: 120,
-    height: 120,
+    width: 115,
+    height: 115,
     backgroundColor: "rgba(0,0,0,0.5)",
     margin: 3,
     borderWidth: 2,
