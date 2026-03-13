@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     width: 115,
     height: 115,
     backgroundColor: "rgba(0,0,0,0.5)",
-    margin: 3,
+    margin: 2,
     borderWidth: 2,
     borderColor: "hsl(191, 100%, 94%)", // Azul do desenho
     borderRadius: 6,

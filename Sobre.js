@@ -179,7 +179,7 @@ export default function Sobre({ navigation }) {
             >
               <View style={styles.linhaContato}>
                 <Image
-                  source={require("./assets/gloria-mitico.png")}
+                  source={require("./assets/imortal.png")}
                   style={styles.iconeMitico}
                 />
                 <Text style={styles.textoContato}>

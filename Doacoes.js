@@ -54,7 +54,7 @@ export default function Doacoes({ navigation }) {
 
         <ScrollView style={styles.telaRolante}>
           <Image
-            source={require("./assets/gloria-mitico.png")}
+            source={require("./assets/imortal.png")}
             style={styles.iconeMitico}
           />
           <View style={styles.container}>
