@@ -87,7 +87,7 @@ function DetailsScreen({ route, navigation }) {
 
       {/* CARD DO HEROI PRINCIPAL */}
 
-      <ScrollView>
+      <ScrollView style={style.scrollHero}>
         <View style={style.cardHeroi}>
           {/* iMAGENS */}
 
@@ -110,131 +110,134 @@ function DetailsScreen({ route, navigation }) {
         {/* CONTAINER HEROIS */}
 
         {/* Layer do heroi counter*/}
+        <ScrollView>
+          <View style={style.secao}>
+            <ImageBackground
+              source={require("./assets/bg-Layer.png")}
+              resizeMode="stretch"
+              style={style.fundoLayer}
+            >
+              <View style={style.layer}>
+                <ImageBackground
+                  source={require("./assets/hero.png")}
+                  resizeMode="contain"
+                  style={style.imgLayer}
+                />
+                <Text style={style.textoLayer}>É forte contra :</Text>
+              </View>
+            </ImageBackground>
 
-        <View style={style.secao}>
-          <ImageBackground
-            source={require("./assets/bg-Layer.png")}
-            resizeMode="stretch"
-            style={style.fundoLayer}
-          >
-            <View style={style.layer}>
-              <ImageBackground
-                source={require("./assets/hero.png")}
-                resizeMode="contain"
-                style={style.imgLayer}
-              />
-              <Text style={style.textoLayer}>É forte contra :</Text>
+            {/* Imagens dos herois counter */}
+
+            <View
+              showsHorizontalScrollIndicator={false}
+              style={style.scrollHerois}
+            >
+              <View style={style.containerCirculos}>
+                {/* fazer com que o .map percorre o array 'counter' na ordem dos ID's */}
+
+                {heroi.counters?.map((idDoHeroi) => {
+                  const dadosDoHeroi = HEROIS.find((h) => h.id === idDoHeroi);
+                  if (!dadosDoHeroi) return null;
+
+                  return (
+                    <TouchableOpacity
+                      key={idDoHeroi}
+                      onPress={() =>
+                        navigation.push("Details", { heroi: dadosDoHeroi })
+                      }
+                    >
+                      <View style={style.containerHerois}>
+                        <Image
+                          source={dadosDoHeroi.foto}
+                          style={style.circuloHeroi}
+                        />
+
+                        {/* nome herois counter */}
+
+                        <Text
+                          style={style.nomeHeroiCirculo}
+                          numberOfLines={1} // Força o texto a ficar em uma única linha
+                          ellipsizeMode="tail" // Se o nome for gigante (ex: Yi Sun-shin), ele coloca "..." no final
+                        >
+                          {" "}
+                          {dadosDoHeroi.nome}{" "}
+                        </Text>
+                        <View style={style.linha}></View>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
             </View>
-          </ImageBackground>
+          </View>
 
-          {/* Imagens dos herois counter */}
+          {/* Layer herois counterado */}
 
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            style={style.scrollHerois}
-          >
-            <View style={style.containerCirculos}>
-              {/* fazer com que o .map percorre o array 'counter' na ordem dos ID's */}
+          <View style={style.secao}>
+            <ImageBackground
+              source={require("./assets/bg-Layer.png")}
+              resizeMode="stretch"
+              style={style.fundoLayer}
+            >
+              <View style={style.layer}>
+                <ImageBackground
+                  source={require("./assets/hero.png")}
+                  resizeMode="contain"
+                  style={style.imgLayer}
+                />
 
-              {heroi.counters?.map((idDoHeroi) => {
-                const dadosDoHeroi = HEROIS.find((h) => h.id === idDoHeroi);
-                if (!dadosDoHeroi) return null;
+                <Text style={style.textoLayer}>É fraco contra :</Text>
+              </View>
+            </ImageBackground>
 
-                return (
-                  <TouchableOpacity
-                    key={idDoHeroi}
-                    onPress={() =>
-                      navigation.push("Details", { heroi: dadosDoHeroi })
-                    }
-                  >
-                    <View style={style.containerHerois}>
-                      <Image
-                        source={dadosDoHeroi.foto}
-                        style={style.circuloHeroi}
-                      />
+            {/* Imagem herois counterado */}
 
-                      {/* nome herois counter */}
+            <View
+              showsHorizontalScrollIndicator={false}
+              style={style.scrollHerois}
+            >
+              <View style={style.containerCirculos}>
+                {/* fazer com que o .map percorre o array 'counteradoPor' na ordem dos ID's */}
 
-                      <Text
-                        style={style.nomeHeroiCirculo}
-                        numberOfLines={1} // Força o texto a ficar em uma única linha
-                        ellipsizeMode="tail" // Se o nome for gigante (ex: Yi Sun-shin), ele coloca "..." no final
-                      >
-                        {" "}
-                        {dadosDoHeroi.nome}{" "}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
+                {heroi.counteradoPor?.map((idDoHeroi) => {
+                  const dadosDoHeroi = HEROIS.find((h) => h.id === idDoHeroi);
+                  if (!dadosDoHeroi) return null;
+
+                  return (
+                    <TouchableOpacity
+                      key={idDoHeroi}
+                      onPress={() =>
+                        navigation.push("Details", { heroi: dadosDoHeroi })
+                      }
+                      style={{ flex: 1 }}
+                    >
+                      <View style={style.containerHerois}>
+                        <Image
+                          source={dadosDoHeroi.foto}
+                          style={style.circuloHeroi}
+                        />
+
+                        {/* nome herois counterado */}
+
+                        <Text
+                          style={style.nomeHeroiCirculo}
+                          numberOfLines={1} // Força o texto a ficar em uma única linha
+                          // ellipsizeMode="tail" // Se o nome for gigante (ex: Yi Sun-shin), ele coloca "..." no final
+                        >
+                          {" "}
+                          {dadosDoHeroi.nome}{" "}
+                        </Text>
+                        <View style={style.linha}></View>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
             </View>
-          </ScrollView>
-        </View>
-
-        {/* Layer herois counterado */}
-
-        <View style={style.secao}>
-          <ImageBackground
-            source={require("./assets/bg-Layer.png")}
-            resizeMode="stretch"
-            style={style.fundoLayer}
-          >
-            <View style={style.layer}>
-              <ImageBackground
-                source={require("./assets/hero.png")}
-                resizeMode="contain"
-                style={style.imgLayer}
-              />
-
-              <Text style={style.textoLayer}>É fraco contra :</Text>
-            </View>
-          </ImageBackground>
-
-          {/* Imagem herois counterado */}
-
-          <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            style={style.scrollHerois}
-          >
-            <View style={style.containerCirculos}>
-              {/* fazer com que o .map percorre o array 'counteradoPor' na ordem dos ID's */}
-
-              {heroi.counteradoPor?.map((idDoHeroi) => {
-                const dadosDoHeroi = HEROIS.find((h) => h.id === idDoHeroi);
-                if (!dadosDoHeroi) return null;
-
-                return (
-                  <TouchableOpacity
-                    key={idDoHeroi}
-                    onPress={() =>
-                      navigation.push("Details", { heroi: dadosDoHeroi })
-                    }
-                  >
-                    <View style={style.containerHerois}>
-                      <Image
-                        source={dadosDoHeroi.foto}
-                        style={style.circuloHeroi}
-                      />
-
-                      {/* nome herois counterado */}
-
-                      <Text
-                        style={style.nomeHeroiCirculo}
-                        numberOfLines={1} // Força o texto a ficar em uma única linha
-                        // ellipsizeMode="tail" // Se o nome for gigante (ex: Yi Sun-shin), ele coloca "..." no final
-                      >
-                        {" "}
-                        {dadosDoHeroi.nome}{" "}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </ScrollView>
-        </View>
+          </View>
+        </ScrollView>
+        <View style={style.espaço}></View>
       </ScrollView>
 
       <Text style={style.textoRodapé}>
@@ -335,16 +338,12 @@ const style = StyleSheet.create({
     marginLeft: 10,
   },
 
-  containerCirculos: {
-    flexDirection: "row",
-    gap: Platform.OS === "ios" ? 0 : 5,
-    marginRight: 30,
-    alignItems: "center",
+  scrollHero: {
+    marginBottom: 50,
   },
-
   circuloHeroi: {
-    width: 70,
-    height: 70,
+    width: 50,
+    height: 50,
     borderRadius: 35, //circulo perfeito
     borderWidth: 2,
     borderColor: "hsl(191, 100%, 94%)", //borda
@@ -352,7 +351,6 @@ const style = StyleSheet.create({
 
   secao: {
     marginBottom: 0,
-    minHeight: 100,
   },
 
   fundoLayer: {
@@ -387,14 +385,36 @@ const style = StyleSheet.create({
     height: 40,
   },
 
+  containerCirculos: {
+    // flexDirection: "column",
+    gap: Platform.OS === "ios" ? 0 : 5,
+    marginRight: 30,
+    // alignItems: "center",
+  },
+
   containerHerois: {
-    justifyContent: "center",
     alignItems: "center",
     paddingRight: 20,
-    height: Platform.OS === "ios" ? 110 : 80,
+    //height: Platform.OS === "ios" ? 110 : 80,
     width: 85,
     marginTop: -5,
     paddingLeft: 20,
+    // borderWidth: 1,
+    // borderColor: "red",
+    width: "100%",
+    flexDirection: "row",
+    gap: 10,
+    padding: 5,
+    margin: 5,
+  },
+
+  linha: {
+    position: "absolute",
+    borderWidth: 0.5,
+    borderColor: "#9bd1fd",
+    width: "100%",
+    alignSelf: "flex-end",
+    marginLeft: 20,
   },
 
   nomeHeroiCirculo: {
@@ -407,8 +427,9 @@ const style = StyleSheet.create({
   },
 
   scrollHerois: {
+    marginTop: 10,
     width: "100%",
-    height: Platform.OS === "ios" ? 140 : 120,
+    //height: Platform.OS === "ios" ? 140 : 120,
     marginLeft: 0,
     marginBottom: Platform.OS === "ios" ? 5 : 0,
     zIndex: 10,
@@ -426,6 +447,9 @@ const style = StyleSheet.create({
   bgNome: {
     width: 150,
     height: 150,
+  },
+  espaço: {
+    height: 50,
   },
 });
 export default DetailsScreen;
