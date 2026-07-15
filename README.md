@@ -27,8 +27,6 @@ Você pode testar a versão final do aplicativo diretamente no seu celular Andro
 
 - 📥 **[Clique aqui para baixar o Counters v1.0.0](sha256:7263f6555487f8e7b4ae4283ca992780c6678ce8df963b7e62ac5521ec5ef244)**
 
----
-
 ### 📦 Como instalar no seu celular:
 
 1. Baixe o arquivo `.apk` usando o link acima direto no seu celular Android.
