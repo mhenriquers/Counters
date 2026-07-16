@@ -341,6 +341,7 @@ const style = StyleSheet.create({
   scrollHero: {
     marginBottom: 50,
   },
+
   circuloHeroi: {
     width: 50,
     height: 50,

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useMemo, useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,7 +11,7 @@ import {
   RefreshControl,
   Keyboard,
   TouchableWithoutFeedback,
-  Platform
+  Platform,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -34,9 +34,27 @@ export default function HomeScreen({ navigation, route, abrirMenu }) {
     }, 1000);
   };
 
-  const heroisFiltrados = HEROIS.filter((heroi) =>
-    heroi.nome.toLowerCase().includes(busca.toLowerCase()),
-  );
+  const heroisFiltrados = useMemo(() => {
+    const textoBusca = busca.trim().toLocaleLowerCase("pt-BR");
+
+    return [...HEROIS]
+      .sort((a, b) => {
+        const comparacao = a.nome.localeCompare(b.nome, "pt-BR", {
+          sensitivity: "base",
+          numeric: true,
+        });
+
+        // Critério secundário para nomes iguais
+        if (comparacao === 0) {
+          return Number(a.id) - Number(b.id);
+        }
+
+        return comparacao;
+      })
+      .filter((heroi) =>
+        heroi.nome.toLocaleLowerCase("pt-BR").includes(textoBusca),
+      );
+  }, [busca]);
   const [pesquisar, setPesquisar] = useState(false);
 
   return (
@@ -175,13 +193,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
-    
   },
 
   backgroundImage: {
     flex: 1,
     width: "100%",
-    
   },
 
   texto: {
@@ -215,7 +231,7 @@ const styles = StyleSheet.create({
 
   nomeHeroi: {
     color: "#fff",
-    fontSize: Platform.OS === 'ios' ? 17 : 10,
+    fontSize: Platform.OS === "ios" ? 17 : 10,
     marginTop: 5,
     position: "absolute",
     fontWeight: "bold",
