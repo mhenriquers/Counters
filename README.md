@@ -4,17 +4,17 @@
 
 Domine a Draft, vença a partida.
 
-## Sobre o Projeto
+## 📝 Sobre o Projeto
 
 Este projeto nasceu da necessidade de ter um guia rápido e offline durante a fase de banimento e escolha do Mobile Legends. Desenvolvido de forma independente, focando em performance e facilidade de uso.
 
-## Funcionalidades
+## ✨ Funcionalidades
 
 - Lista de Counters: Heróis específicos que ganham de outros heróis específicos.
 - Interface Veloz: Sem telas de carregamento pesadas.
 - Feito para Android: APK otimizado para diversos dispositivos.
 
-## Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 
 - React
 - React Native
@@ -33,7 +33,7 @@ Você pode testar a versão final do aplicativo diretamente no seu celular Andro
 2. Abra o arquivo instalado (caso o sistema pergunte se deseja "Instalar de fontes desconhecidas", basta autorizar).
 3. Abra o aplicativo e aproveite! 🎮
 
-## Como rodar o projeto localmente
+## 🧑‍💻 Como rodar o projeto localmente
 
 Requisitos:
 
