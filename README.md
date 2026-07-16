@@ -25,7 +25,7 @@ Este projeto nasceu da necessidade de ter um guia rápido e offline durante a fa
 
 Você pode testar a versão final do aplicativo diretamente no seu celular Android!
 
-- 📥 [Clique aqui para baixar o Counters v1.0.0](sha256:7263f6555487f8e7b4ae4283ca992780c6678ce8df963b7e62ac5521ec5ef244)
+- 📥 [Clique aqui para baixar o Counters v1.0.0](https://github.com/mhenriquers/Counters/releases/download/v1.0.0/Counters.apk)
 
 ### 📦 Como instalar no seu celular:
 
