@@ -33,7 +33,7 @@ Você pode testar a versão final do aplicativo diretamente no seu celular Andro
 2. Abra o arquivo instalado (caso o sistema pergunte se deseja "Instalar de fontes desconhecidas", basta autorizar).
 3. Abra o aplicativo e aproveite! 🎮
 
-## Guia de Instalação e Execução do Código
+## Como rodar o projeto localmente
 
 Requisitos:
 
