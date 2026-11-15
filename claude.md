@@ -80,8 +80,6 @@ Telas registradas no Stack e suas URLs: `Home` (`/`), `Details` (`/heroi/:id`), 
 
 - `LoadingScreen.js` usa a cor `'21FFB5'` sem `#`.
 - `Details.js` importa `lazy` e calcula `iconeDaClasse`, `counterList` e `counteradoPorList`, mas não usa nenhum deles.
-- O cabeçalho da tela `Sobre.js` diz "Configurações" (texto copiado).
-- Na grade da Home, o nome do herói fica levemente cortado na borda inferior do quadro.
 - `assets/` tem vários arquivos de teste ou duplicados (`bgLayer - Copia.png`, `botaoVoltar (1).png`, `bg.layerTeste.png`, `gojo.jpg`).
 
 ## Convenções

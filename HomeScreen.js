@@ -222,7 +222,8 @@ const styles = StyleSheet.create({
     textShadowRadius: 10,
     textShadowOffset: { width: 1, height: 1 },
     justifyContent: "center",
-    bottom: 0,
+    // a foto (118px) é maior que o quadro (111px úteis) e é cortada ~3,5px embaixo
+    bottom: 4,
     textAlign: "center",
     left: 0,
     right: 0,

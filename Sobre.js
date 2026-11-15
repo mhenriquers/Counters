@@ -77,7 +77,7 @@ export default function Sobre({ navigation }) {
                 style={styles.iconeBotaoVoltar}
               />
             </TouchableOpacity>
-            <Text style={styles.textoHeader}> Configurações</Text>
+            <Text style={styles.textoHeader}> Sobre</Text>
           </ImageBackground>
         </SafeAreaView>
       </View>
