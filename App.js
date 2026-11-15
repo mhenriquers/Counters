@@ -40,7 +40,13 @@ export default function App() {
       <View style={{ flex: 1, backgroundColor: "#000" }}>
         {/* No computador, o app fica numa coluna de no máximo 480px centralizada */}
         <View
-          style={{ flex: 1, width: "100%", maxWidth: 480, alignSelf: "center" }}
+          style={{
+            flex: 1,
+            width: "100%",
+            maxWidth: 480,
+            alignSelf: "center",
+            overflow: "hidden",
+          }}
         >
           <NavigationContainer
             linking={linking}
