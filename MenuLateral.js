@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,10 +7,57 @@ import {
   TouchableWithoutFeedback,
   Image,
   ImageBackground,
+  Animated,
+  Easing,
+  BackHandler,
+  Platform,
+  useWindowDimensions,
 } from "react-native";
 
+// Duração das animações (ms)
+const TEMPO_ABRIR = 260;
+const TEMPO_FECHAR = 200;
+
 export default function MenuLateral({ visivel, aoFechar, navigation }) {
-  if (!visivel) return null;
+  // Na web o app fica numa coluna de no máximo 480px (ver App.js)
+  const { width } = useWindowDimensions();
+  const larguraGaveta = Math.min(width, 480) * 0.75;
+
+  // 0 = fechado, 1 = aberto. Uma única animação controla gaveta e sombra.
+  const progresso = useRef(new Animated.Value(0)).current;
+
+  // Mantém o menu na tela enquanto a animação de fechar acontece
+  const [montado, setMontado] = useState(visivel);
+
+  useEffect(() => {
+    if (visivel) setMontado(true);
+
+    const animacao = Animated.timing(progresso, {
+      toValue: visivel ? 1 : 0,
+      duration: visivel ? TEMPO_ABRIR : TEMPO_FECHAR,
+      easing: visivel ? Easing.out(Easing.cubic) : Easing.in(Easing.cubic),
+      // No celular, a animação roda na thread nativa (fica lisa mesmo se o JS estiver ocupado)
+      useNativeDriver: Platform.OS !== "web",
+    });
+
+    animacao.start(({ finished }) => {
+      if (finished && !visivel) setMontado(false);
+    });
+
+    return () => animacao.stop();
+  }, [visivel, progresso]);
+
+  // Botão/gesto "voltar" do Android fecha o menu em vez de sair do app
+  useEffect(() => {
+    if (!visivel) return;
+    const assinatura = BackHandler.addEventListener("hardwareBackPress", () => {
+      aoFechar();
+      return true;
+    });
+    return () => assinatura.remove();
+  }, [visivel, aoFechar]);
+
+  if (!montado) return null;
 
   const irPara = (tela) => {
     aoFechar();
@@ -19,13 +66,27 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
     }
   };
 
+  const deslocamento = progresso.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-larguraGaveta, 0],
+  });
+
   return (
-    <View style={StyleSheet.absoluteFill}>
+    <View
+      style={StyleSheet.absoluteFill}
+      // enquanto fecha, os toques passam para a Home
+      pointerEvents={visivel ? "auto" : "none"}
+    >
       <TouchableWithoutFeedback onPress={aoFechar}>
-        <View style={style.sombra} />
+        <Animated.View style={[style.sombra, { opacity: progresso }]} />
       </TouchableWithoutFeedback>
 
-      <View style={style.gavetaManual}>
+      <Animated.View
+        style={[
+          style.gavetaManual,
+          { width: larguraGaveta, transform: [{ translateX: deslocamento }] },
+        ]}
+      >
         <ImageBackground
           source={require("./assets/fundoMG.png")}
           style={style.bgGaveta}
@@ -74,7 +135,7 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
             </TouchableOpacity>
           </View>
         </ImageBackground>
-      </View>
+      </Animated.View>
     </View>
   );
 }
@@ -84,8 +145,9 @@ const style = StyleSheet.create({
     position: "absolute", // Faz flutuar
     top: 0,
     left: 0,
-    width: "75%", // Largura da gaveta
+    // a largura é calculada no componente (75% da tela)
     height: "100%",
+    overflow: "hidden", // a imagem de fundo é maior que a gaveta e cobria a sombra
     backgroundColor: "#121212",
     zIndex: 999, // Valor alto para ficar na frente de tudo
     padding: 1,

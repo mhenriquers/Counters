@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef } from "react";
+import React, { useCallback, useMemo, useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -18,6 +18,26 @@ import { LinearGradient } from "expo-linear-gradient";
 import { HEROIS } from "./banco_herois";
 import InstalarApp from "./InstalarApp";
 import MenuLateral from "./MenuLateral";
+
+const chaveDoHeroi = (item) => item.id;
+
+// Logo do topo da grade (não muda, então é criado uma vez só)
+const cabecalhoGrade = (
+  <View>
+    <Image
+      source={require("./assets/logo.png")}
+      style={{
+        width: "80%",
+        height: 180,
+        marginTop: -40,
+        marginBottom: -10,
+        alignSelf: "center",
+      }}
+      resizeMode="contain"
+    />
+    <InstalarApp />
+  </View>
+);
 
 export default function HomeScreen({ navigation }) {
   //Constantes
@@ -52,6 +72,45 @@ export default function HomeScreen({ navigation }) {
       );
   }, [busca]);
   const [pesquisar, setPesquisar] = useState(false);
+
+  // Funções da FlatList guardadas com useCallback: assim, abrir/fechar o menu
+  // não faz a grade inteira ser redesenhada (as props da lista não mudam).
+  const aoComecarRolagem = useCallback(() => {
+    if (pesquisar) {
+      Keyboard.dismiss();
+      setPesquisar(false);
+    }
+  }, [pesquisar]);
+
+  const aoRolar = useCallback(() => {
+    if (pesquisar) setPesquisar(false);
+  }, [pesquisar]);
+
+  const desenharHeroi = useCallback(
+    ({ item }) => (
+      <TouchableOpacity
+        style={styles.quadrado}
+        onPress={() => {
+          setBusca("");
+          setPesquisar(false);
+          navigation.navigate("Details", { id: item.id });
+        }}
+      >
+        <View>
+          <Image source={item.foto} style={styles.fotoHeroi} />
+          <LinearGradient
+            colors={["transparent", "rgba(0, 0, 0, 0.94)"]}
+            style={styles.gradiente}
+          >
+            <Text style={styles.nomeHeroi}>{item.nome}</Text>
+          </LinearGradient>
+        </View>
+      </TouchableOpacity>
+    ),
+    [navigation],
+  );
+
+  const fecharMenu = useCallback(() => setMenuAberto(false), []);
 
   return (
     <TouchableWithoutFeedback
@@ -117,55 +176,17 @@ export default function HomeScreen({ navigation }) {
 
               <FlatList
                 data={heroisFiltrados}
-                keyExtractor={(item) => item.id}
+                keyExtractor={chaveDoHeroi}
                 numColumns={3}
-                onScrollBeginDrag={() => {
-                  if (pesquisar) {
-                    Keyboard.dismiss();
-                    setPesquisar(false);
-                  }
-                }}
-                onScroll={() => {
-                  if (pesquisar) setPesquisar(false);
-                }}
+                onScrollBeginDrag={aoComecarRolagem}
+                onScroll={aoRolar}
                 scrollEventThrottle={16}
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps="handled"
-                columnWrapperStyle={{ justifyContent: "center", gap: 1 }}
-                contentContainerStyle={{
-                  paddingHorizontal: 10,
-                  paddingVertical: 20,
-                }}
-                ListHeaderComponent={
-                  <View>
-                    <Image
-                      source={require("./assets/logo.png")}
-                      style={styles.fotoIcone}
-                      resizeMode="contain"
-                    />
-                    <InstalarApp />
-                  </View>
-                }
-                renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={styles.quadrado}
-                    onPress={() => {
-                      setBusca("");
-                      setPesquisar(false);
-                      navigation.navigate("Details", { id: item.id });
-                    }}
-                  >
-                    <View>
-                      <Image source={item.foto} style={styles.fotoHeroi} />
-                      <LinearGradient
-                        colors={["transparent", "rgba(0, 0, 0, 0.94)"]}
-                        style={styles.gradiente}
-                      >
-                        <Text style={styles.nomeHeroi}>{item.nome}</Text>
-                      </LinearGradient>
-                    </View>
-                  </TouchableOpacity>
-                )}
+                columnWrapperStyle={styles.linhaGrade}
+                contentContainerStyle={styles.conteudoGrade}
+                ListHeaderComponent={cabecalhoGrade}
+                renderItem={desenharHeroi}
               />
               <StatusBar style="light" />
             </ImageBackground>
@@ -175,7 +196,7 @@ export default function HomeScreen({ navigation }) {
         {/* Menu lateral: desenhado por cima de toda a Home */}
         <MenuLateral
           visivel={menuAberto}
-          aoFechar={() => setMenuAberto(false)}
+          aoFechar={fecharMenu}
           navigation={navigation}
         />
       </View>
@@ -288,12 +309,14 @@ const styles = StyleSheet.create({
     right: 0,
   },
 
-  fotoIcone: {
-    width: "80%",
-    height: 180,
-    marginTop: -40,
-    marginBottom: -10,
-    alignSelf: "center",
+  linhaGrade: {
+    justifyContent: "center",
+    gap: 1,
+  },
+
+  conteudoGrade: {
+    paddingHorizontal: 10,
+    paddingVertical: 20,
   },
 
   botaoOpcoes: {
