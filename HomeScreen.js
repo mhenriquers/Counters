@@ -128,7 +128,6 @@ export default function HomeScreen({ navigation }) {
           <SafeAreaView style={styles.container}>
             <Fundo
               fonte={require("./assets/bgbg.png")}
-              modo="largura"
               style={styles.backgroundImage}
             >
               {/* CABEÇALHO: menu | separador | busca + lupa */}
@@ -223,7 +222,6 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     width: "100%",
-    backgroundColor: cores.fundoHome, // continua a imagem onde ela acaba
   },
 
   texto: {

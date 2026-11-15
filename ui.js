@@ -1,41 +1,32 @@
 // Componentes visuais compartilhados entre as telas.
 // Seguem a identidade do site oficial do MLBB (ver tema.js e a tela Details).
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, Platform } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from "expo-clipboard";
-import { Asset } from "expo-asset";
 import { cores, espaco, raio, fonte } from "./tema";
 
 // ---------------------------------------------------------------------------
 // Fundo: substitui o ImageBackground (descontinuado no React Native 0.88).
 // A imagem fica atrás, ocupando todo o espaço do container.
+//
+// Por que a View em volta da imagem:
+// - Imagem com require SEM width/height ganha o tamanho do arquivo (ex.:
+//   1125x2000), no celular e na web. Então ela precisa de width/height.
+// - Mas "100%" de um filho absoluto, num pai com padding, fica curto no
+//   Android (sobrava uma faixa à direita do cabeçalho da Home).
+// A View com absoluteFill cobre o container inteiro (View não tem "tamanho de
+// arquivo") e não tem padding, então o 100% da imagem é medido nela.
 // ---------------------------------------------------------------------------
-// modo "largura": a imagem encaixa na largura da tela (aparece inteira de lado
-// a lado, sem zoom), presa no topo. O que sobra embaixo fica com o
-// backgroundColor do `style`, que deve ser a cor do fim da imagem.
 export function Fundo({ fonte: imagem, modo = "cover", style, children }) {
-  const estiloImagem =
-    modo === "largura"
-      ? [estilos.imagemLargura, { aspectRatio: proporcao(imagem) }]
-      : [StyleSheet.absoluteFill, estilos.imagemFundo];
-
   return (
     <View style={style}>
-      <Image
-        source={imagem}
-        resizeMode={modo === "largura" ? "stretch" : modo}
-        style={estiloImagem}
-      />
+      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+        <Image source={imagem} resizeMode={modo} style={estilos.imagemFundo} />
+      </View>
       {children}
     </View>
   );
-}
-
-// largura / altura do arquivo de imagem (o expo-asset sabe isso em todas as plataformas)
-function proporcao(imagem) {
-  const { width, height } = Asset.fromModule(imagem);
-  return width && height ? width / height : 1;
 }
 
 // ---------------------------------------------------------------------------
@@ -181,25 +172,10 @@ export function Rodape({ style, children }) {
 }
 
 const estilos = StyleSheet.create({
-  // Só na web: sem tamanho, o react-native-web desenha a imagem no tamanho
-  // original do arquivo. No celular NÃO pode: lá, o "100%" de um filho absoluto
-  // desconta o padding do pai, e a imagem termina antes da borda (sobrava uma
-  // faixa à direita do cabeçalho da Home). O absoluteFill já preenche tudo.
-  imagemFundo: Platform.select({
-    web: { width: "100%", height: "100%" },
-    default: {},
-  }),
-
-  // modo "largura": presa no topo, a altura sai do aspectRatio.
-  // left/right em vez de width: "100%" pelo mesmo motivo do imagemFundo.
-  imagemLargura: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    // na web, sem height o react-native-web usa a altura do arquivo (2000px);
-    // "auto" deixa o aspect-ratio do CSS calcular
-    ...Platform.select({ web: { width: "100%", height: "auto" }, default: {} }),
+  // 100% da View em volta (ver o comentário do Fundo)
+  imagemFundo: {
+    width: "100%",
+    height: "100%",
   },
 
   // TituloSecao (valores iguais aos que estavam no Details.js)
