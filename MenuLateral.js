@@ -19,6 +19,9 @@ import { Fundo, LinhaAcao, Rodape } from "./ui";
 const TEMPO_ABRIR = 260;
 const TEMPO_FECHAR = 200;
 
+// Espaço do topo que não é do logo: padding (16 + 8) + gap (8) + botão ✕ (44)
+const SOBRA_TOPO = espaco.lg + espaco.sm + espaco.sm + 44;
+
 export default function MenuLateral({ visivel, aoFechar, navigation }) {
   // A gaveta cobre a tela inteira (inclusive atrás das barras do Android),
   // então o topo e o rodapé usam as margens seguras.
@@ -93,8 +96,13 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
         ]}
       >
         <Fundo fonte={require("./assets/fundoMG.png")} style={style.bgGaveta}>
-          {/* TOPO: botão de fechar + logo */}
-          <View style={{ paddingTop: insets.top + espaco.md }}>
+          {/* TOPO: logo e botão de fechar na mesma linha */}
+          <View style={[style.topo, { paddingTop: insets.top + espaco.sm }]}>
+            <Image
+              source={require("./assets/logo.png")}
+              style={[style.logo, { width: larguraGaveta - SOBRA_TOPO }]}
+              resizeMode="contain"
+            />
             <TouchableOpacity
               onPress={aoFechar}
               style={style.botaoFechar}
@@ -105,12 +113,6 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
                 style={style.iconeFechar}
               />
             </TouchableOpacity>
-
-            <Image
-              source={require("./assets/logo.png")}
-              style={style.logo}
-              resizeMode="contain"
-            />
           </View>
 
           {/* ITENS */}
@@ -175,24 +177,28 @@ const style = StyleSheet.create({
   },
 
   // TOPO
+  topo: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: espaco.sm,
+    paddingLeft: espaco.lg,
+    paddingRight: espaco.sm,
+    marginBottom: espaco.md,
+  },
+  // a largura é calculada no componente (larguraGaveta - SOBRA_TOPO): imagem
+  // sem width ganharia no celular a largura do arquivo (435)
+  logo: {
+    height: 56,
+  },
   botaoFechar: {
-    alignSelf: "flex-end",
     width: 44,
     height: 44,
     alignItems: "center",
     justifyContent: "center",
-    marginRight: espaco.sm,
   },
   iconeFechar: {
     width: 32,
     height: 32,
-  },
-  logo: {
-    width: "80%",
-    height: 70,
-    alignSelf: "center",
-    marginTop: espaco.sm,
-    marginBottom: espaco.lg,
   },
 
   // ITENS (o espaço entre eles e as margens laterais vêm do LinhaAcao)

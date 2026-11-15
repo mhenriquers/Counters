@@ -227,7 +227,7 @@ Commit: `home redesign`.
 
 **✅ Verificar:** `npm run test:web` tudo `PASS` (inclusive "tocar fora fecha"). Print `menu.png`: ✕ visível, itens alinhados, rodapé. No celular: abrir, fechar pelo ✕, tocar fora e o gesto de voltar.
 
-> 📝 **Resultado da Fase 6:** o texto "Fechar" virou o botão `botao-fechar.png`. Na web, o fundo da gaveta agora mostra a marca "M" do `fundoMG.png` (mesma correção de tamanho de imagem das fases anteriores). A cor `#121212` da gaveta ficou porque o teste web acha a gaveta por ela.
+> 📝 **Resultado da Fase 6:** o texto "Fechar" virou o botão `botao-fechar.png`, **na mesma linha do logo** (a pedido do dono: com o ✕ numa linha só pra ele, sobrava muito espaço vazio no topo). O logo tem a largura calculada (`larguraGaveta - SOBRA_TOPO`) para não pegar a largura do arquivo no celular. Na web, o fundo da gaveta agora mostra a marca "M" do `fundoMG.png` (mesma correção de tamanho de imagem das fases anteriores). A cor `#121212` da gaveta ficou porque o teste web acha a gaveta por ela.
 
 Commit: `side menu redesign`.
 
