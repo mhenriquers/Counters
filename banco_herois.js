@@ -554,7 +554,7 @@ export const HEROIS = [
     classe: "Lutador/Tanque",
     foto: require("./assets/heroi_ml_122.png"),
     counters: ["46", "95", "31", "58", "78"], // Granger, Nolan, Diggie, Irithel, Ling
-    counteradoPor: ["1", "69", "131", "72", "110"], // Aamon, Karrie, Alpha (não consta no banco), Kimmy, Sun
+    counteradoPor: ["1", "69", "131", "72", "110"], // Aamon, Karrie, Alpha, Kimmy, Sun
   },
 
   // Hylos
@@ -665,7 +665,7 @@ export const HEROIS = [
   {
     id: "67",
     nome: "Kalea",
-    classe: "Suporte/Soldado",
+    classe: "Suporte/Lutador",
     foto: require("./assets/heroi_ml_30.png"),
     counters: ["55", "37", "62", "42", "94"], // Helcurt, Fanny, Joy, Freya, Natan
     counteradoPor: ["51", "14", "110", "121", "101"], // Hanzo, Bane, Sun, X.Borg, Phoveus
@@ -728,7 +728,7 @@ export const HEROIS = [
     nome: "Lancelot",
     classe: "Assassino",
     foto: require("./assets/heroi_ml_111.png"),
-    counters: ["16", "9", "15", "44", "131"], // Baxia, Atlas, Barats, Gloo, Alpha (não consta no banco)
+    counters: ["16", "9", "15", "44", "131"], // Baxia, Atlas, Barats, Gloo, Alpha
     counteradoPor: ["6", "5", "30", "39", "58"], // Angela, Alucard, Cyclops, Floryn, Irithel
   },
 
@@ -828,7 +828,7 @@ export const HEROIS = [
     nome: "Lylia",
     classe: "Mago",
     foto: require("./assets/heroi_ml_72.png"),
-    counters: ["79", "131", "4", "15", "50"], // Lolita, Alpha (não consta no banco), Hanabi, Alice, Barats
+    counters: ["79", "131", "4", "15", "50"], // Lolita, Alpha, Hanabi, Alice, Barats
     counteradoPor: ["21", "26", "66", "47", "93"], // Bruno, Chou, Kaja, Guinevere, Natalia
   },
   // Letra M
@@ -1015,7 +1015,7 @@ export const HEROIS = [
     classe: "Lutador",
     foto: require("./assets/heroi_ml_52.png"),
     counters: ["120", "52", "42", "105", "19"], // Wanwan, Harith, Freya, Ruby, Benedetta
-    counteradoPor: ["121", "89", "131", "14", "4"], // X.Borg, Minsitthar, Alfa (não consta no banco), Bane, Alice
+    counteradoPor: ["121", "89", "131", "14", "4"], // X.Borg, Minsitthar, Alfa, Bane, Alice
   },
   {
     id: "102",
@@ -1033,7 +1033,7 @@ export const HEROIS = [
     nome: "Rafaela",
     classe: "Suporte",
     foto: require("./assets/heroi_ml_144.png"),
-    counters: ["93", "31", "69", "118", "131"], // Natalia, Diggie, Karrie, Valir, Alfa (não consta)
+    counters: ["93", "31", "69", "118", "131"], // Natalia, Diggie, Karrie, Valir, Alfa
     counteradoPor: ["75", "59", "95", "116", "98"], // Layla, Ixia, Nolan, Vale, Odette
   },
 
@@ -1127,7 +1127,7 @@ export const HEROIS = [
     classe: "Lutador",
     foto: require("./assets/heroi_ml_76.png"),
     counters: ["85", "7", "87", "105", "102"], // Masha, Argus, Melissa, Ruby, Popol Kupa
-    counteradoPor: ["121", "6", "3", "77", "131"], // X.Borg, Angela, Aldous, Lesley, Alfa (não consta)
+    counteradoPor: ["121", "6", "3", "77", "131"], // X.Borg, Angela, Aldous, Lesley, Alfa
   },
 
   // Thamuz
@@ -1322,7 +1322,7 @@ export const HEROIS = [
   },
 
   {
-    id: "131",
+    id: "133",
     nome: "Marcel",
     classe: "Suporte",
     foto: require("./assets/marcel-icon.png"),
