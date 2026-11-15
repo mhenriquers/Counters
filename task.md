@@ -1,5 +1,17 @@
 # Tarefa: repaginada visual do app
 
+## 📍 Estado atual (atualize ao fim de cada sessão)
+
+- **Feito:** Fases 0 a 4 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema). Último commit: `becf97a details uses theme and shared components`.
+- **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **8 commits à frente** do GitHub (sem push).
+- **Aguardando:** o dono confirmar no celular que o Details continua certo (Fase 4). Pergunta em aberto: o fundo do Details no celular mostra a marca d'água "M"? (Esperado: sim. Ver a nota da Fase 4.)
+- **Próximo passo:** Fase 5 (Home).
+- **Jeito de trabalhar combinado com o dono:**
+  - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
+  - deixar as perguntas para o **final** da resposta;
+  - ele está aprendendo: quando pedir para ensinar, explique o porquê e mostre os comandos, em vez de só fazer.
+- **Fora deste plano (o dono vai readicionar depois):** publicar o site no Netlify (a configuração já está no `netlify.toml`), testar a PWA instalada no celular e colocar o link do site no README.
+
 ## Objetivo
 
 Deixar o app com cara **profissional**, mantendo a **identidade do site oficial do MLBB**: fundo azul-marinho escuro, faixas azuis translúcidas com filete à esquerda (`bg-Layer.png`), capacete (`hero.png`), ícones de classe, bordas azul-claras e destaques dourados.
@@ -344,7 +356,7 @@ Commit: `cleanup after redesign`.
   - na Estrutura, adicione `tema.js`, `ui.js`, `contatos.js` e `scripts/teste-web.mjs` / `scripts/screenshots.mjs`;
   - nos Comandos, adicione `npm run test:web` e `npm run shots`;
   - nas Convenções, troque "imagens de fundo (`ImageBackground`)" por "imagens de fundo com o componente `Fundo` de `ui.js`", e adicione "cores, espaços e fontes vêm de `tema.js`; telas novas usam os componentes de `ui.js`".
-- [ ] 13.3. Commit `update claude.md after redesign`, e então o merge na `main` (`git switch main && git merge rework`) e o `git push`.
+- [ ] 13.3. Commit `update claude.md after redesign` e `git push` (o trabalho já está na `main`).
 
 ---
 
@@ -357,5 +369,7 @@ Commit: `cleanup after redesign`.
 
 - **Fase 10, textos longos:** manter o "Lore" como está (só tirar os espaços de recuo).
 - **Código morto e arquivos de teste:** apagar (Fase 12.6).
+- **Aviso "ImageBackground is deprecated"** (pedido do dono): resolvido ao longo das Fases 5 a 11 (cada tela troca o `ImageBackground` pelo `Fundo` de `ui.js`) e conferido na Fase 12.1 (zero ocorrências). Já resolvido no Details. Faltam: `HomeScreen.js`, `MenuLateral.js`, `Doacoes.js`, `Sobre.js`, `Feedback.js`, `Configuracoes.js`.
+
 
 Nenhuma decisão pendente.

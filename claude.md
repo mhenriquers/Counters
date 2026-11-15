@@ -43,9 +43,11 @@ node scripts/gerar-icones.mjs       # regera public/icons/ a partir de assets/co
 node scripts/otimizar-imagens.mjs   # recomprime assets/ (sobrescreve; só grava se ficar menor)
 npx expo-doctor                     # checa compatibilidade (deve passar em todas)
 npx expo install --check            # lista libs fora da versão esperada pelo SDK
+npm run test:web                    # teste E2E da web (rode antes npm run build:web)
+npm run shots                       # prints 384x832 de todas as telas em screenshots/
 ```
 
-Não há testes, lint nem formatter configurados no projeto. As pastas `/android`, `/ios` e `dist/` são geradas e ficam no `.gitignore`.
+Não há lint nem formatter. Os testes são só da versão web (`npm run test:web`, ver "Verificação e depuração"). As pastas `/android`, `/ios`, `dist/`, `screenshots/` e `screenshots-antes/` são geradas e ficam no `.gitignore`.
 
 ### PWA e deploy
 
@@ -71,8 +73,10 @@ Todos os arquivos ficam na raiz, sem pasta `src/`. Cada tela é um arquivo `.js`
 | `Configuracoes.js` | Tela estática e informativa (idioma, tema, política de privacidade). Ainda não tem configurações funcionais. |
 | `banco_herois.js` | **Fonte de todos os dados.** Exporta `HEROIS`. |
 | `LoadingScreen.js` | **Não está registrada no Stack** (código morto). |
-| `scripts/` | `gerar-icones.mjs` e `otimizar-imagens.mjs` (usam `sharp`). |
-| `task.md` | Plano de trabalho em andamento (hoje: repaginada visual, branch `rework`). |
+| `tema.js` | Tokens visuais: `cores`, `espaco`, `raio`, `fonte`. Toda cor, espaçamento ou tamanho de fonte novo deve vir daqui. |
+| `ui.js` | Componentes compartilhados: `Fundo` (substitui o `ImageBackground`), `TituloSecao` (faixa do site + capacete), `CabecalhoTela`, `Cartao`, `Paragrafo`, `LinhaAcao`, `BotaoCopiar` (mostra "Copiado ✓", sem `Alert`) e `Rodape`. |
+| `scripts/` | `gerar-icones.mjs` e `otimizar-imagens.mjs` (usam `sharp`); `teste-web.mjs` (E2E) e `screenshots.mjs` (prints), que usam `cdp-util.mjs`: servidor estático de `dist/` + Chrome headless via DevTools Protocol, sem dependências. Chrome em `CHROME_PATH` ou no caminho padrão do Windows. |
+| `task.md` | Plano de trabalho em andamento (hoje: repaginada visual, na `main`). A seção "Estado atual" no topo diz o que foi feito e o próximo passo. |
 | `atualizar-sdk.md` | Anotações do dono do projeto sobre como atualizar o SDK. |
 | `DraftDetails.txt`, `cod.txt` | Rascunhos e trechos antigos. `DraftDetails.txt` é uma versão antiga de `Details.js`. Não são importados. |
 
@@ -102,7 +106,8 @@ Telas registradas no Stack e suas URLs: `Home` (`/`), `Details` (`/heroi/:id`), 
 Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código novo.
 
 - **`StyleSheet.absoluteFillObject` não existe mais** no RN 0.88. Use `StyleSheet.absoluteFill`. Na web ainda funciona (react-native-web), então o erro só aparece no celular: a View fica com altura 0 e o elemento "some".
-- **`ImageBackground` está descontinuado** (aviso no Metro: "will be removed in a future release"). Ainda funciona, mas não use em código novo: prefira uma `View` com uma `Image` em `StyleSheet.absoluteFill`.
+- **`ImageBackground` está descontinuado** (aviso no Metro: "will be removed in a future release"). Ainda funciona, mas não use em código novo: use o `Fundo` de `ui.js`.
+- **Imagem com `require` na web ganha o tamanho original do arquivo** se não receber `width`/`height`. O `ImageBackground` do react-native-web cai nisso quando o container só tem `flex: 1`: o fundo aparecia no tamanho real (ex.: 1125x2000) e só o canto superior esquerdo ficava visível. No celular não acontece. O `Fundo` já resolve, passando `width: "100%"` e `height: "100%"` para a imagem. O mesmo efeito fazia a imagem da gaveta do menu (1167x2000) cobrir a tela e impedir de fechar.
 - **React Navigation 7:** `navigate("Tela")` **não volta** para uma tela que já está na pilha, ele empilha outra. Para voltar a uma tela existente, use `navigation.popTo("Tela")`.
 - **`app.json`:** as chaves `newArchEnabled`, `android.edgeToEdgeEnabled` e `splash` (na raiz) foram removidas. A splash agora é configurada no plugin `expo-splash-screen` (em `plugins`, com `image`, `resizeMode`, `backgroundColor` e `imageWidth`).
 - **Edge-to-edge é obrigatório no Android:** o app desenha atrás da barra de status e da barra de navegação. Use `useSafeAreaInsets` / `SafeAreaView` em vez de margens fixas para o Android.
@@ -110,7 +115,7 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 ## Problemas conhecidos (verificados no código)
 
-- O `ImageBackground` (descontinuado) ainda é usado em 7 arquivos: Home, Details, Menu, Doacoes, Sobre, Feedback, Configuracoes.
+- O `ImageBackground` (descontinuado) ainda é usado em 6 arquivos: Home, Menu, Doacoes, Sobre, Feedback, Configuracoes. O Details já usa o `Fundo`. A troca está planejada no `task.md`.
 - No **Android**, copiar (Pix e ID) não mostra nenhum aviso: só há `Alert` no iOS e `window.alert` na web.
 - O ID copiado em Sobre e Feedback leva um espaço na frente (`" 1033871650"`).
 - Erros de digitação: "Torne-se um apoidor" (menu), "Unico" e "Politica" (Configurações), "se vc pediu" (Feedback).
@@ -122,7 +127,9 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 ## Verificação e depuração
 
-- **Na web:** `npm run build:web` e depois `npm run preview:web`. Teste a navegação, o voltar do navegador e o modo offline (F12 → Network → Offline).
+- **Teste automático (web):** `npm run build:web && npm run test:web`. Cobre a navegação, o voltar, o ✕ do Details, os itens do menu, fechar o menu tocando fora, `/heroi/999`, os botões de copiar e os erros no console. Sai com código 1 se algo falhar. Quando mudar um texto que o teste procura (ex.: um item do menu), atualize `scripts/teste-web.mjs` no mesmo commit.
+- **Comparação visual:** `npm run shots` gera prints em `screenshots/`. Antes de mexer numa tela, copie a pasta para `screenshots-antes/` e compare depois.
+- **Na web, manual:** `npm run preview:web`. Teste o modo offline (F12 → Network → Offline).
 - **No celular:** sempre teste também no Expo Go. Há bugs que só aparecem no nativo (ex.: o `absoluteFillObject`).
 - **Depurar no celular:** `console.log` aparece no terminal do `npx expo start`. Para elementos que "não aparecem", logue o `onLayout` (`e.nativeEvent.layout`): ele mostra se o componente renderiza com tamanho ou posição errados. Remova os logs antes do commit.
 
@@ -131,7 +138,7 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 - Nomes de variáveis, componentes de UI e comentários em **português** (`busca`, `heroisFiltrados`, `aoFechar`, `irPara`). Siga esse padrão.
 - Estilos inline via `StyleSheet.create`, num objeto chamado `style` ou `styles` (varia entre arquivos).
 - Ajustes por plataforma usam `Platform.OS === "ios" ? x : y`, ou `Platform.select({ ios, web, default })` quando a web precisa de um valor próprio.
-- **Visual (identidade do site oficial do MLBB):** fundo azul-marinho escuro (`#0d1424`), bordas azul-claras `hsl(191, 100%, 94%)`, textos secundários `#9bd1fd`, faixas de seção com `bg-Layer.png` + `hero.png`, dourado `#D3AF37` (bordas e títulos das telas secundárias) e `#ffd700` (menu, botões). Siga a tela `Details.js` como referência.
+- **Visual (identidade do site oficial do MLBB):** fundo azul-marinho escuro (`#0d1424`), bordas azul-claras `hsl(191, 100%, 94%)`, textos secundários `#9bd1fd`, faixas de seção com `bg-Layer.png` + `hero.png`, dourado `#D3AF37` (bordas e títulos das telas secundárias) e `#ffd700` (menu, botões). Siga a tela `Details.js` como referência. Cores, espaços e fontes vêm de `tema.js`, e telas novas usam os componentes de `ui.js`.
 - Não use `fontFamily` customizada (nenhuma fonte é carregada, e a web cai em fonte serifada). Use só `fontWeight`.
 - **`FlatList`:** mantenha as props estáveis (`renderItem`, `keyExtractor`, handlers e estilos com `useCallback`, constantes ou `StyleSheet`). Funções inline fazem a grade inteira ser redesenhada a cada mudança de estado da tela (ex.: ao abrir o menu).
 - Assets são carregados com `require("./assets/...")`, com caminho relativo à raiz.
