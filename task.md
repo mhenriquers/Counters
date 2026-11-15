@@ -2,10 +2,10 @@
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito:** Fases 0 a 7 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`). Último commit: `share contact helpers`.
+- **Feito:** Fases 0 a 8 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações). Último commit: `donations screen redesign`.
 - **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **16 commits à frente** do GitHub (sem push).
-- **Aguardando:** nada no celular para a Fase 7 (só reorganizou código, prints idênticos). Se quiser, confira em Sobre/Feedback: e-mail, GitHub e copiar o ID.
-- **Próximo passo:** Fase 8 (Doações).
+- **Aguardando:** o dono testar Doações no celular (Fase 8): cabeçalho fora da barra de status, rolar até o fim sem nada atrás da barra de navegação, "Copiar chave" mostrando "Copiado ✓" (no Android antes não aparecia nada).
+- **Próximo passo:** Fase 9 (Feedback).
 - **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
@@ -252,21 +252,23 @@ Commit: `share contact helpers`.
 
 ## Fase 8: Doações
 
-- [ ] 8.1. Troque o cabeçalho (`ImageBackground` + seta + texto) por `<CabecalhoTela titulo="Apoiar o projeto" aoVoltar={() => navigation.goBack()} />`. Isso também corrige o bug de o cabeçalho ocupar só a largura do texto.
-- [ ] 8.2. Troque o fundo (`bg-up-side.png`) por `Fundo`.
-- [ ] 8.3. Mantenha o emblema `imortal.png` no topo (120x120, centralizado, `marginTop: espaco.xl`).
-- [ ] 8.4. Título "Torne-se um Lendário Apoiador!" fora do cartão, centralizado, `fonte.tituloTela - 6` (20), branco, `fontWeight: "800"`.
-- [ ] 8.5. O texto vira `<Cartao destaque="dourado">` com **2** `<Paragrafo>` (os 2 parágrafos atuais, **sem** os espaços de recuo e sem o itálico).
-- [ ] 8.6. **Área do Pix** num `<Cartao>`:
+- [x] 8.1. Troque o cabeçalho (`ImageBackground` + seta + texto) por `<CabecalhoTela titulo="Apoiar o projeto" aoVoltar={() => navigation.goBack()} />`. Isso também corrige o bug de o cabeçalho ocupar só a largura do texto.
+- [x] 8.2. Troque o fundo (`bg-up-side.png`) por `Fundo`.
+- [x] 8.3. Mantenha o emblema `imortal.png` no topo (120x120, centralizado, `marginTop: espaco.xl`).
+- [x] 8.4. Título "Torne-se um Lendário Apoiador!" fora do cartão, centralizado, `fonte.tituloTela - 6` (20), branco, `fontWeight: "800"`.
+- [x] 8.5. O texto vira `<Cartao destaque="dourado">` com **2** `<Paragrafo>` (os 2 parágrafos atuais, **sem** os espaços de recuo e sem o itálico).
+- [x] 8.6. **Área do Pix** num `<Cartao>`:
   - legenda "Chave Pix" (`fonte.legenda`, `cores.azulTexto`);
   - chave em `fonte.corpo` `cores.texto`, com `selectable`;
   - `<BotaoCopiar texto={chavePix} rotulo="Copiar chave" />`;
   - apague a função `copiaPix` (o `BotaoCopiar` já confirma).
-- [ ] 8.7. O aviso "As doações realizadas via Pix…" vira `Rodape` (sem os espaços de recuo).
-- [ ] 8.8. Remova os imports que sobrarem sem uso (`Alert`, `Touchable`, `SafeAreaProvider`…).
-- [ ] 8.9. Atualize o teste: o caso de copiar em `/apoiar` agora clica em "Copiar chave" e espera ver "Copiado ✓" (não há mais `window.alert`).
+- [x] 8.7. O aviso "As doações realizadas via Pix…" vira `Rodape` (sem os espaços de recuo).
+- [x] 8.8. Remova os imports que sobrarem sem uso (`Alert`, `Touchable`, `SafeAreaProvider`…).
+- [x] 8.9. Atualize o teste: o caso de copiar em `/apoiar` agora clica em "Copiar chave" e espera ver "Copiado ✓" (não há mais `window.alert`).
 
 **✅ Verificar:** `npm run test:web` tudo `PASS`. No print `apoiar.png`, cabeçalho com largura total. No celular: copiar mostra "Copiado ✓" (antes, no Android, não aparecia nada).
+
+> 📝 **Resultado da Fase 8:** o teste de copiar em `/apoiar` ficou mais rígido: exige "Copiado ✓" na tela **e** nenhum `window.alert`. O `botao-copiar.png` deixou de ser usado (o build tem 1 arquivo a menos). Dá para apagar na Fase 12.
 
 Commit: `donations screen redesign`.
 

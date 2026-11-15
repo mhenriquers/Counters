@@ -132,9 +132,13 @@ async function copiouEm(rota, clicar) {
   await clicar();
   return dialogos.length > antes || (await nav.temTexto("Copiado"));
 }
-await caso("copiar em /apoiar confirma", () =>
-  copiouEm("/apoiar", () => nav.clicarSeletor('img[src*="botao-copiar"]', 500)),
-);
+// /apoiar já usa o BotaoCopiar: tem que confirmar na tela, sem window.alert
+await caso("copiar em /apoiar mostra 'Copiado ✓'", async () => {
+  await nav.abrir(BASE + "/apoiar");
+  const antes = dialogos.length;
+  await nav.clicarTexto("Copiar chave", 500);
+  return dialogos.length === antes && (await nav.temTexto("Copiado ✓"));
+});
 await caso("copiar em /sobre confirma", () =>
   copiouEm("/sobre", () => nav.clicarTexto("Owdail - ID: 1033871650", 500)),
 );

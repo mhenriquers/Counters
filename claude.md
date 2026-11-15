@@ -68,7 +68,7 @@ Todos os arquivos ficam na raiz, sem pasta `src/`. Cada tela é um arquivo `.js`
 | `Details.js` | Recebe `{ id }`, busca o herói em `HEROIS` e mostra "Herói não encontrado" se o id não existir. Mostra foto, nome, classes (chips com ícone) e duas seções no estilo do site oficial (faixa `bg-Layer.png` + capacete `hero.png`): "É forte contra" (`counters`, destaque ciano) e "É fraco contra" (`counteradoPor`, destaque vermelho). Cada herói da lista é um card com foto, nome e classes. Tocar nele faz `navigation.push("Details", { id })`, empilhando telas. O ✕ usa `navigation.popTo("Home")`. **É a referência visual do app.** |
 | `InstalarApp.js` | Botão "Instalar app" (só web/Chrome): captura o `beforeinstallprompt`. Não aparece no iPhone nem com o app já instalado. |
 | `MenuLateral.js` | Gaveta feita à mão (não usa o drawer do react-navigation). Props: `visivel`, `aoFechar`, `navigation`. Animada com `Animated` (desliza da esquerda, `useNativeDriver` fora da web), continua montada até terminar de fechar, e com o menu aberto o voltar do Android (`BackHandler`) fecha o menu. A gaveta tem `overflow: "hidden"` porque a imagem de fundo (`fundoMG.png`, 1167x2000) transbordava e cobria a sombra, impedindo de fechar ao tocar fora. |
-| `Doacoes.js` | Tela de apoio (URL `/apoiar`): copia uma chave Pix com `expo-clipboard`. |
+| `Doacoes.js` | Tela de apoio (URL `/apoiar`): chave Pix com `BotaoCopiar`. Primeira tela secundária no padrão novo (`CabecalhoTela`, `Cartao`, `Paragrafo`, `Rodape`): use-a como modelo para as outras. |
 | `Feedback.js` / `Sobre.js` | Links para GitHub e e-mail e um botão que copia um ID. As ações vêm de `contatos.js`. |
 | `contatos.js` | `EMAIL`, `GITHUB_USUARIO`, `ID_JOGO` e as ações `abrirGit`, `enviarEmail` (`mailto:`) e `copiarId` (provisória: sai quando as telas usarem o `BotaoCopiar`). |
 | `Configuracoes.js` | Tela estática e informativa (idioma, tema, política de privacidade). Ainda não tem configurações funcionais. |
@@ -118,11 +118,10 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 ## Problemas conhecidos (verificados no código)
 
-- O `ImageBackground` (descontinuado) ainda é usado em 4 arquivos: Doacoes, Sobre, Feedback, Configuracoes. Details, Home e Menu já usam o `Fundo`. A troca está planejada no `task.md`.
-- No **Android**, copiar (Pix e ID) não mostra nenhum aviso: só há `Alert` no iOS e `window.alert` na web.
+- O `ImageBackground` (descontinuado) ainda é usado em 3 arquivos: Sobre, Feedback, Configuracoes. Details, Home, Menu e Doacoes já usam o `Fundo`. A troca está planejada no `task.md`.
+- No **Android**, copiar o ID (Sobre e Feedback) não mostra nenhum aviso: o `copiarId` de `contatos.js` só avisa no iOS e na web. Some quando as telas usarem o `BotaoCopiar` (o Pix já usa).
 - Erros de digitação: "Unico" e "Politica" (Configurações), "se vc pediu" (Feedback).
 - "Avalie-nos" em Configurações não faz nada (`TouchableOpacity` sem `onPress`).
-- O cabeçalho de Doações ocupa só a largura do texto (o container pai tem `alignItems: "center"`).
 - Os textos das telas secundárias usam recuo feito com espaços (`{"        "}`).
 - `LoadingScreen.js` usa a cor `'21FFB5'` sem `#`.
 - `assets/` tem vários arquivos de teste ou duplicados (`bgLayer - Copia.png`, `botaoVoltar (1).png`, `bg.layerTeste.png`, `gojo.jpg`).
