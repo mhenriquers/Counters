@@ -50,3 +50,19 @@ para detectar erros
     - npx expo install -- --verbose
     - npm audit fix
 - npx expo install --check
+
+
+# comandos git
+
+git add .
+git commit -m 'xxx'
+git push
+
+git status
+
+git branch
+git switch
+git branch -d nomeBranch => exclui branch
+
+git merge nomeBranch faz merge da branch para a atual branch ( faça isso estando na main)
+
