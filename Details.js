@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Image,
-  ImageBackground,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
@@ -11,6 +10,8 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HEROIS } from "./banco_herois";
+import { cores, espaco, raio } from "./tema";
+import { Fundo, TituloSecao } from "./ui";
 
 // Ícones das classes (as chaves são os nomes usados em `classe` no banco)
 const iconesClasses = {
@@ -22,36 +23,7 @@ const iconesClasses = {
   Atirador: require("./assets/atirador.png"),
 };
 
-// Cores
-const AZUL_BORDA = "hsl(191, 100%, 94%)";
-const AZUL_TEXTO = "#9bd1fd";
-const COR_FORTE = "#4fd8eb";
-const COR_FRACO = "#ff6b7a";
-
 const separarClasses = (classe) => classe.split("/");
-
-// Cabeçalho de seção no estilo do site oficial (faixa azul + capacete)
-function TituloSecao({ titulo, subtitulo, cor }) {
-  return (
-    <ImageBackground
-      source={require("./assets/bg-Layer.png")}
-      resizeMode="stretch"
-      style={style.faixaSecao}
-    >
-      <Image
-        source={require("./assets/hero.png")}
-        resizeMode="contain"
-        style={style.iconeSecao}
-      />
-      <View style={{ flex: 1 }}>
-        <Text style={style.tituloSecao}>{titulo}</Text>
-        <Text style={[style.subtituloSecao, { color: cor }]} numberOfLines={1}>
-          {subtitulo}
-        </Text>
-      </View>
-    </ImageBackground>
-  );
-}
 
 // Uma linha da lista: foto, nome, classes e seta
 function LinhaHeroi({ heroi, cor, aoTocar }) {
@@ -97,14 +69,27 @@ function DetailsScreen({ route, navigation }) {
   // URL com id inexistente (ex.: /heroi/999)
   if (!heroi) {
     return (
-      <View style={style.naoEncontrado}>
-        <Text style={{ color: "#fff", marginBottom: 20 }}>
-          Herói não encontrado.
+      <Fundo
+        fonte={require("./assets/bgDetails.png")}
+        style={[style.fundo, style.naoEncontrado]}
+      >
+        <Image
+          source={require("./assets/hero.png")}
+          resizeMode="contain"
+          style={style.iconeNaoEncontrado}
+        />
+        <Text style={style.tituloNaoEncontrado}>Herói não encontrado</Text>
+        <Text style={style.textoNaoEncontrado}>
+          Esse link não corresponde a nenhum herói do banco.
         </Text>
-        <TouchableOpacity onPress={() => navigation.popTo("Home")}>
-          <Text style={{ color: "#ffd700" }}>Voltar para a lista</Text>
+        <TouchableOpacity
+          onPress={() => navigation.popTo("Home")}
+          style={style.botaoNaoEncontrado}
+          activeOpacity={0.8}
+        >
+          <Text style={style.textoBotaoNaoEncontrado}>Voltar para a lista</Text>
         </TouchableOpacity>
-      </View>
+      </Fundo>
     );
   }
 
@@ -119,11 +104,7 @@ function DetailsScreen({ route, navigation }) {
   const abrirHeroi = (outro) => navigation.push("Details", { id: outro.id });
 
   return (
-    <ImageBackground
-      source={require("./assets/bgDetails.png")}
-      resizeMode="cover"
-      style={style.fundo}
-    >
+    <Fundo fonte={require("./assets/bgDetails.png")} style={style.fundo}>
       {/* Brilho azul atrás do herói */}
       <LinearGradient
         colors={["rgba(79, 216, 235, 0.16)", "transparent"]}
@@ -168,7 +149,7 @@ function DetailsScreen({ route, navigation }) {
           <Text style={style.nomeHeroi}>{heroi.nome}</Text>
 
           <LinearGradient
-            colors={["transparent", AZUL_TEXTO, "transparent"]}
+            colors={["transparent", cores.azulTexto, "transparent"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={style.divisor}
@@ -191,13 +172,13 @@ function DetailsScreen({ route, navigation }) {
         <TituloSecao
           titulo="É forte contra"
           subtitulo={`${heroi.nome} leva vantagem contra estes heróis`}
-          cor={COR_FORTE}
+          cor={cores.forte}
         />
         {forteContra.map((outro) => (
           <LinhaHeroi
             key={outro.id}
             heroi={outro}
-            cor={COR_FORTE}
+            cor={cores.forte}
             aoTocar={() => abrirHeroi(outro)}
           />
         ))}
@@ -206,13 +187,13 @@ function DetailsScreen({ route, navigation }) {
         <TituloSecao
           titulo="É fraco contra"
           subtitulo={`Estes heróis levam vantagem contra ${heroi.nome}`}
-          cor={COR_FRACO}
+          cor={cores.fraco}
         />
         {fracoContra.map((outro) => (
           <LinhaHeroi
             key={outro.id}
             heroi={outro}
-            cor={COR_FRACO}
+            cor={cores.fraco}
             aoTocar={() => abrirHeroi(outro)}
           />
         ))}
@@ -221,21 +202,58 @@ function DetailsScreen({ route, navigation }) {
           Pesquisa realizada no site oficial do MLBB
         </Text>
       </ScrollView>
-    </ImageBackground>
+    </Fundo>
   );
 }
 
 const style = StyleSheet.create({
   fundo: {
     flex: 1,
-    backgroundColor: "#0d1424",
+    backgroundColor: cores.fundo,
   },
 
+  // HERÓI NÃO ENCONTRADO (/heroi/999)
   naoEncontrado: {
-    flex: 1,
-    backgroundColor: "#000",
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: espaco.xl,
+  },
+
+  iconeNaoEncontrado: {
+    width: 44,
+    height: 58,
+    opacity: 0.8,
+    marginBottom: espaco.lg,
+  },
+
+  tituloNaoEncontrado: {
+    color: cores.texto,
+    fontSize: 20,
+    fontWeight: "800",
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    textAlign: "center",
+  },
+
+  textoNaoEncontrado: {
+    color: cores.azulTexto,
+    fontSize: 13,
+    textAlign: "center",
+    marginTop: espaco.sm,
+    marginBottom: espaco.xl,
+  },
+
+  botaoNaoEncontrado: {
+    backgroundColor: cores.douradoVivo,
+    borderRadius: raio.pilula,
+    paddingVertical: 10,
+    paddingHorizontal: espaco.xl,
+  },
+
+  textoBotaoNaoEncontrado: {
+    color: "#000",
+    fontWeight: "700",
+    fontSize: 14,
   },
 
   brilho: {
@@ -291,7 +309,7 @@ const style = StyleSheet.create({
     height: 136,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: AZUL_BORDA,
+    borderColor: cores.azulBorda,
   },
 
   nomeHeroi: {
@@ -337,41 +355,9 @@ const style = StyleSheet.create({
   },
 
   textoChip: {
-    color: AZUL_BORDA,
+    color: cores.azulBorda,
     fontSize: 13,
     fontWeight: "600",
-  },
-
-  // SEÇÕES
-  faixaSecao: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: 56,
-    marginTop: 24,
-    marginBottom: 6,
-    marginLeft: 8,
-    paddingLeft: 14,
-    paddingRight: 12,
-    gap: 12,
-  },
-
-  iconeSecao: {
-    width: 26,
-    height: 34,
-  },
-
-  tituloSecao: {
-    color: "#fff",
-    fontSize: 15,
-    fontWeight: "800",
-    letterSpacing: 1.2,
-    textTransform: "uppercase",
-  },
-
-  subtituloSecao: {
-    fontSize: 11,
-    marginTop: 2,
-    opacity: 0.9,
   },
 
   // LINHAS DA LISTA
@@ -395,7 +381,7 @@ const style = StyleSheet.create({
     height: 46,
     borderRadius: 6,
     borderWidth: 1.5,
-    borderColor: AZUL_BORDA,
+    borderColor: cores.azulBorda,
   },
 
   textosLinha: {
@@ -423,7 +409,7 @@ const style = StyleSheet.create({
   },
 
   textoClasseLinha: {
-    color: AZUL_TEXTO,
+    color: cores.azulTexto,
     fontSize: 12,
     marginLeft: 2,
     flexShrink: 1,

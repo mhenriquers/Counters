@@ -159,12 +159,13 @@ Commit: `add shared ui components`.
 
 ## Fase 4: Details usa o tema (sem mudança visual)
 
-- [ ] 4.1. Em `Details.js`, troque as constantes `AZUL_BORDA`, `AZUL_TEXTO`, `COR_FORTE`, `COR_FRACO` por `cores.*` de `tema.js`.
-- [ ] 4.2. Apague a função `TituloSecao` local e importe a de `ui.js`.
-- [ ] 4.3. Troque os 2 `ImageBackground` por `Fundo` (o fundo da tela com `bgDetails.png`; a faixa já está dentro do `TituloSecao`). Remova `ImageBackground` do import.
-- [ ] 4.4. Estilize o estado "Herói não encontrado": fundo `bgDetails.png`, texto `cores.texto` e um botão em pílula dourada "Voltar para a lista" (chama `navigation.popTo("Home")`).
+- [x] 4.1. Em `Details.js`, troque as constantes `AZUL_BORDA`, `AZUL_TEXTO`, `COR_FORTE`, `COR_FRACO` por `cores.*` de `tema.js`.
+- [x] 4.2. Apague a função `TituloSecao` local e importe a de `ui.js`.
+- [x] 4.3. Troque os 2 `ImageBackground` por `Fundo` (o fundo da tela com `bgDetails.png`; a faixa já está dentro do `TituloSecao`). Remova `ImageBackground` do import.
+- [x] 4.4. Estilize o estado "Herói não encontrado": fundo `bgDetails.png`, texto `cores.texto` e um botão em pílula dourada "Voltar para a lista" (chama `navigation.popTo("Home")`).
 
 **✅ Verificar:** `npm run test:web` tudo `PASS`. `npm run shots`, e compare `heroi-1.png` e `heroi-67.png` com o "antes": devem estar **idênticos** (só o `heroi-999.png` muda). No celular: abrir um herói e conferir a tela.
+> 📝 **Resultado da Fase 4:** o conteúdo do Details ficou idêntico, mas o **fundo** mudou na web: agora aparece a marca d'água "M" do `bgDetails.png`. Isso é uma **correção**: o `ImageBackground` do react-native-web desenhava a imagem no tamanho original (1125x2000), cortando só o canto superior esquerdo, quando o container não tinha `width`/`height` (o próprio código dele chama isso de "Temporary Workaround"). O `Fundo` preenche a tela em modo `cover`, como o celular já fazia. **Nas próximas fases, espere a mesma diferença de fundo na web** ao comparar com `screenshots-antes/`. Compare só o conteúdo.
 
 Commit: `details uses theme and shared components`.
 
