@@ -1,0 +1,18 @@
+[build]
+  command = "npm run build:web"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Qualquer URL (ex.: /heroi/12) abre o app
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# O service worker nunca deve ficar em cache, senão as atualizações não chegam
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
