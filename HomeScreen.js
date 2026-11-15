@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   },
 
   texto: {
-    color: "#fff",
+    color: cores.texto,
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   },
 
   nomeHeroi: {
-    color: "#fff",
+    color: cores.texto,
     fontSize: Platform.select({ ios: 17, web: 12, default: 10 }),
     marginTop: 5,
     position: "absolute",

@@ -316,7 +316,7 @@ const style = StyleSheet.create({
   },
 
   nomeHeroi: {
-    color: "#fff",
+    color: cores.texto,
     fontSize: 26,
     fontWeight: "800",
     letterSpacing: 2,
@@ -374,9 +374,9 @@ const style = StyleSheet.create({
     paddingRight: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "rgba(155, 209, 253, 0.16)",
+    borderColor: cores.bordaCartao,
     borderLeftWidth: 3,
-    backgroundColor: "rgba(10, 17, 32, 0.72)",
+    backgroundColor: cores.cartao,
   },
 
   fotoLinha: {
@@ -393,7 +393,7 @@ const style = StyleSheet.create({
   },
 
   nomeLinha: {
-    color: "#fff",
+    color: cores.texto,
     fontSize: 15,
     fontWeight: "700",
   },
@@ -426,7 +426,7 @@ const style = StyleSheet.create({
   },
 
   rodape: {
-    color: "#fff",
+    color: cores.texto,
     opacity: 0.45,
     fontSize: 11,
     fontStyle: "italic",
