@@ -4,8 +4,8 @@
 
 - **Feito:** Fases 0 a 11 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações, Feedback, Sobre, Configurações). Último commit: `settings screen redesign`.
 - **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **16 commits à frente** do GitHub (sem push).
-- **Aguardando:** o dono testar Configurações no celular (Fase 11). Sobre e o recuo (Fase 10) já foram aprovados.
-- **Próximo passo:** Fase 12 (limpeza e consistência).
+- **Aguardando:** o dono testar Configurações no celular (Fase 11, com um cartão por assunto de privacidade e os títulos fora dos cartões).
+- **Próximo passo:** Fase 12 (limpeza e consistência). Depois a 13 (finalizar) e, por último, a 14 (idiomas: o dono pediu para deixar por último).
 - **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
@@ -373,6 +373,30 @@ Commit: `cleanup after redesign`.
   - nos Comandos, adicione `npm run test:web` e `npm run shots`;
   - nas Convenções, troque "imagens de fundo (`ImageBackground`)" por "imagens de fundo com o componente `Fundo` de `ui.js`", e adicione "cores, espaços e fontes vêm de `tema.js`; telas novas usam os componentes de `ui.js`".
 - [ ] 13.3. Commit `update claude.md after redesign` e `git push` (o trabalho já está na `main`).
+
+---
+
+## Fase 14: Idiomas (português e inglês) — por último
+
+Pedido do dono: em Configurações → "Idioma", poder escolher **inglês**, e o app inteiro muda de idioma. Fica para depois de todas as outras fases.
+
+**Decisões do dono (2026-11-15):**
+- **Lembrar a escolha:** sim. Instalar `@react-native-async-storage/async-storage` com `npx expo install` (funciona no Expo Go e, na web, usa o `localStorage`).
+- **Idioma inicial:** o do celular, com `expo-localization` (instalar com `npx expo install`). Celular em português abre em português. **Qualquer outro idioma abre em inglês.**
+- **Traduções:** o Claude escreve as versões em inglês e o dono revisa.
+
+**Plano:**
+- [ ] 14.1. Instalar as duas bibliotecas (`npx expo install @react-native-async-storage/async-storage expo-localization`) e rodar `npx expo-doctor`.
+- [ ] 14.2. Criar `idioma.js`: textos `pt` e `en` por chave (ex.: `"menu.apoiar"`), um `IdiomaProvider` (Context) e um hook `useIdioma()` que devolve `{ idioma, mudarIdioma, t }`. O idioma inicial vem do que foi salvo, ou do celular (`pt*` → `pt`, o resto → `en`). Envolver o app com o `IdiomaProvider` no `App.js`.
+- [ ] 14.3. Configurações: tocar em "Idioma" mostra **Português** e **English** (com ✓ no atual). A troca vale na hora e é salva.
+- [ ] 14.4. Trocar os textos fixos por `t("...")`, **uma tela por commit**, parando para o dono testar: Home, menu lateral, Details, Doações, Feedback, Sobre, Configurações, e também `ui.js` (`ListaContatos`, `BotaoCopiar`: "Copiar"/"Copiado ✓").
+- [ ] 14.5. Classes dos heróis traduzidas só na hora de mostrar, com os nomes oficiais do jogo: Assassin, Mage, Tank, Support, Fighter, Marksman. O `banco_herois.js` continua com as chaves em português (são as chaves de `iconesClasses`). Os nomes dos heróis não mudam.
+- [ ] 14.6. Teste web: um caso que troca para inglês e confere textos de algumas telas. Os testes atuais procuram textos em português: garanta que eles rodem com o idioma em português (o Chrome headless pode vir em inglês e abrir o app em inglês, por causa do 14.2).
+- [ ] 14.7. Atualizar o `claude.md`: `idioma.js` na Estrutura e, nas Convenções, "texto visível novo vai em `idioma.js` (pt e en), nunca direto na tela".
+
+**✅ Verificar:** `npm run test:web` tudo `PASS`. No celular: trocar o idioma, fechar e abrir o app (a escolha continua), e passar por todas as telas nos dois idiomas.
+
+Commits: um por tela, mais `add language support` (14.1 a 14.3).
 
 ---
 
