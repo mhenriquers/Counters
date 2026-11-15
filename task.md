@@ -4,7 +4,7 @@
 
 - **Feito:** Fases 0 a 8 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações). Último commit: `donations screen redesign`.
 - **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **16 commits à frente** do GitHub (sem push).
-- **Aguardando:** o dono testar Doações no celular (Fase 8): cabeçalho fora da barra de status, rolar até o fim sem nada atrás da barra de navegação, "Copiar chave" mostrando "Copiado ✓" (no Android antes não aparecia nada).
+- **Aguardando:** o dono testar Doações redesenhada no celular (Fase 8): emblema encolhendo ao rolar, cabeçalho fora da barra de status, rolar até o fim, "Copiar chave" mostrando "Copiado ✓".
 - **Próximo passo:** Fase 9 (Feedback).
 - **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
@@ -269,6 +269,7 @@ Commit: `share contact helpers`.
 **✅ Verificar:** `npm run test:web` tudo `PASS`. No print `apoiar.png`, cabeçalho com largura total. No celular: copiar mostra "Copiado ✓" (antes, no Android, não aparecia nada).
 
 > 📝 **Resultado da Fase 8:** o teste de copiar em `/apoiar` ficou mais rígido: exige "Copiado ✓" na tela **e** nenhum `window.alert`. O `botao-copiar.png` deixou de ser usado (o build tem 1 arquivo a menos). Dá para apagar na Fase 12.
+> **Redesenho pedido pelo dono** (achou amador, com as coisas soltas): bloco de destaque como o do Details (emblema 200 + título em maiúsculas + divisor dourado), seções com `TituloSecao` ("Por que apoiar", "Chave Pix"), chave num campo e botão de copiar com a largura toda (`BotaoCopiar` ganhou a prop `style`). O emblema **encolhe ao rolar** (até 55%, desce até 57px e esmaece; `Animated` com native driver no celular). O texto ficava "esquecido": o `Cartao` dourado ficou mais sólido (`rgba(10, 17, 32, 0.88)`), o `Paragrafo` usa `cores.textoCorpo` (90% de branco) e "Você já é o MVP dessa jornada!" fica em dourado e negrito. O dono **não quis degradês**: nem no fundo do cartão, nem brilho atrás do emblema (ali fica transparente, mostrando o fundo da tela).
 
 Commit: `donations screen redesign`.
 

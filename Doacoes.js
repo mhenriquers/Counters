@@ -1,9 +1,12 @@
-import { Text, StyleSheet, Image, ScrollView } from "react-native";
+import { useRef } from "react";
+import { View, Text, StyleSheet, Animated, Platform } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { cores, espaco, fonte } from "./tema";
+import { cores, espaco, raio, fonte } from "./tema";
 import {
   Fundo,
   CabecalhoTela,
+  TituloSecao,
   Cartao,
   Paragrafo,
   BotaoCopiar,
@@ -12,8 +15,40 @@ import {
 
 const CHAVE_PIX = "9bfe32d9-8633-41c0-835b-5287ecd44293";
 
+// Emblema: tamanho cheio no topo e quanto ele encolhe ao rolar
+const TAMANHO_EMBLEMA = 200;
+const ROLAGEM_ENCOLHER = 180; // depois de rolar 180, ele fica no tamanho mínimo
+
 export default function Doacoes({ navigation }) {
   const insets = useSafeAreaInsets();
+
+  // Posição da rolagem, ligada direto à animação do emblema
+  const rolagem = useRef(new Animated.Value(0)).current;
+  const aoRolar = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: rolagem } } }],
+    // no celular, a animação roda na thread nativa (fica lisa)
+    { useNativeDriver: Platform.OS !== "web" },
+  );
+
+  const escalaEmblema = rolagem.interpolate({
+    inputRange: [0, ROLAGEM_ENCOLHER],
+    outputRange: [1, 0.55],
+    extrapolate: "clamp",
+  });
+  // O emblema desce um pouco enquanto encolhe: fica mais tempo visível e
+  // continua encostado no título. 57 = o máximo sem encostar no título
+  // (metade do espaço que ele libera ao chegar em 55%: 200 x 0,45 / 2 = 45,
+  // mais a margem de 12 até o título).
+  const descidaEmblema = rolagem.interpolate({
+    inputRange: [0, ROLAGEM_ENCOLHER],
+    outputRange: [0, 57],
+    extrapolate: "clamp",
+  });
+  const opacidadeEmblema = rolagem.interpolate({
+    inputRange: [0, ROLAGEM_ENCOLHER],
+    outputRange: [1, 0.35],
+    extrapolate: "clamp",
+  });
 
   return (
     <Fundo fonte={require("./assets/bg-up-side.png")} style={styles.fundo}>
@@ -22,18 +57,39 @@ export default function Doacoes({ navigation }) {
         aoVoltar={() => navigation.goBack()}
       />
 
-      <ScrollView
+      <Animated.ScrollView
+        onScroll={aoRolar}
+        scrollEventThrottle={16}
         contentContainerStyle={{ paddingBottom: insets.bottom + espaco.xl }}
         showsVerticalScrollIndicator={false}
       >
-        <Image
-          source={require("./assets/imortal.png")}
-          resizeMode="contain"
-          style={styles.emblema}
-        />
+        {/* DESTAQUE: emblema + título (como o bloco do herói no Details) */}
+        <View style={styles.destaque}>
+          <Animated.Image
+            source={require("./assets/imortal.png")}
+            resizeMode="contain"
+            style={[
+              styles.emblema,
+              {
+                opacity: opacidadeEmblema,
+                transform: [
+                  { translateY: descidaEmblema },
+                  { scale: escalaEmblema },
+                ],
+              },
+            ]}
+          />
+          <Text style={styles.titulo}>Torne-se um Lendário Apoiador!</Text>
+          <LinearGradient
+            colors={["transparent", cores.dourado, "transparent"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.divisor}
+          />
+        </View>
 
-        <Text style={styles.titulo}>Torne-se um Lendário Apoiador!</Text>
-
+        {/* POR QUE APOIAR */}
+        <TituloSecao titulo="Por que apoiar" cor={cores.dourado} />
         <Cartao destaque="dourado">
           <Paragrafo>
             Olá! Eu sou o desenvolvedor por trás deste app. Faço tudo sozinho: do
@@ -45,18 +101,24 @@ export default function Doacoes({ navigation }) {
           </Paragrafo>
           <Paragrafo ultimo>
             Se este app já te ajudou a ganhar uma Ranked ou a entender melhor um
-            herói, considere apoiar o projeto com qualquer valor. Você já é o MVP
-            dessa jornada!
+            herói, considere apoiar o projeto com qualquer valor.{" "}
+            <Text style={styles.destaqueTexto}>Você já é o MVP dessa jornada!</Text>
           </Paragrafo>
         </Cartao>
 
         {/* CHAVE PIX */}
-        <Cartao style={styles.cartaoPix}>
-          <Text style={styles.legendaPix}>Chave Pix</Text>
-          <Text style={styles.chavePix} selectable>
-            {CHAVE_PIX}
-          </Text>
-          <BotaoCopiar texto={CHAVE_PIX} rotulo="Copiar chave" />
+        <TituloSecao titulo="Chave Pix" />
+        <Cartao>
+          <View style={styles.campoChave}>
+            <Text style={styles.chavePix} selectable>
+              {CHAVE_PIX}
+            </Text>
+          </View>
+          <BotaoCopiar
+            texto={CHAVE_PIX}
+            rotulo="Copiar chave"
+            style={styles.botaoCopiar}
+          />
         </Cartao>
 
         <Rodape>
@@ -64,7 +126,7 @@ export default function Doacoes({ navigation }) {
           exclusivamente à manutenção e melhoria do projeto. Não armazenamos
           quaisquer dados bancários dos doadores.
         </Rodape>
-      </ScrollView>
+      </Animated.ScrollView>
     </Fundo>
   );
 }
@@ -75,36 +137,55 @@ const styles = StyleSheet.create({
     backgroundColor: cores.fundo,
   },
 
-  emblema: {
-    width: 120,
-    height: 120,
-    alignSelf: "center",
-    marginTop: espaco.xl,
+  // DESTAQUE
+  destaque: {
+    alignItems: "center",
+    paddingTop: espaco.lg,
   },
-
+  emblema: {
+    width: TAMANHO_EMBLEMA,
+    height: TAMANHO_EMBLEMA,
+  },
   titulo: {
     color: cores.texto,
     fontSize: fonte.tituloTela - 6,
     fontWeight: "800",
+    letterSpacing: 1,
+    textTransform: "uppercase",
     textAlign: "center",
     marginTop: espaco.md,
-    marginBottom: espaco.lg,
     marginHorizontal: espaco.lg,
   },
-
-  cartaoPix: {
-    marginTop: espaco.lg,
+  divisor: {
+    width: 160,
+    height: 1,
+    marginTop: espaco.md,
   },
 
-  legendaPix: {
-    color: cores.azulTexto,
-    fontSize: fonte.legenda,
+  destaqueTexto: {
+    color: cores.douradoVivo,
+    fontWeight: "700",
   },
 
+  // CHAVE PIX
+  campoChave: {
+    backgroundColor: "rgba(155, 209, 253, 0.08)",
+    borderWidth: 1,
+    borderColor: cores.bordaCartao,
+    borderRadius: raio.md,
+    paddingVertical: espaco.md,
+    paddingHorizontal: espaco.md,
+  },
   chavePix: {
     color: cores.texto,
     fontSize: fonte.corpo,
-    marginTop: espaco.xs,
-    marginBottom: espaco.md,
+    textAlign: "center",
+    letterSpacing: 0.5,
+  },
+  botaoCopiar: {
+    alignSelf: "stretch",
+    alignItems: "center",
+    paddingVertical: espaco.md,
+    marginTop: espaco.md,
   },
 });

@@ -83,15 +83,12 @@ export function CabecalhoTela({ titulo, aoVoltar }) {
 
 // ---------------------------------------------------------------------------
 // Cartao: caixa de conteúdo. destaque "azul" (padrão) ou "dourado".
+// O dourado tem fundo mais sólido, para o texto se destacar do fundo da tela.
 // ---------------------------------------------------------------------------
 export function Cartao({ destaque = "azul", style, children }) {
   return (
     <View
-      style={[
-        estilos.cartao,
-        destaque === "dourado" && { borderColor: "rgba(211, 175, 55, 0.5)" },
-        style,
-      ]}
+      style={[estilos.cartao, destaque === "dourado" && estilos.cartaoDourado, style]}
     >
       {children}
     </View>
@@ -144,7 +141,7 @@ export function LinhaAcao({ icone, titulo, subtitulo, aoTocar, direita, corTitul
 // BotaoCopiar: copia `texto` e mostra "Copiado ✓" por 2 segundos.
 // Funciona igual em Android, iOS e web (não usa Alert).
 // ---------------------------------------------------------------------------
-export function BotaoCopiar({ texto, rotulo = "Copiar" }) {
+export function BotaoCopiar({ texto, rotulo = "Copiar", style }) {
   const [copiado, setCopiado] = useState(false);
   const timer = useRef(null);
 
@@ -158,7 +155,7 @@ export function BotaoCopiar({ texto, rotulo = "Copiar" }) {
   };
 
   return (
-    <TouchableOpacity onPress={copiar} activeOpacity={0.8} style={estilos.botaoCopiar}>
+    <TouchableOpacity onPress={copiar} activeOpacity={0.8} style={[estilos.botaoCopiar, style]}>
       <Text style={estilos.textoBotaoCopiar}>{copiado ? "Copiado ✓" : rotulo}</Text>
     </TouchableOpacity>
   );
@@ -242,10 +239,14 @@ const estilos = StyleSheet.create({
     padding: espaco.lg,
     marginHorizontal: espaco.lg,
   },
+  cartaoDourado: {
+    borderColor: "rgba(211, 175, 55, 0.5)",
+    backgroundColor: "rgba(10, 17, 32, 0.88)", // mais sólido que o azul
+  },
 
   // Paragrafo
   paragrafo: {
-    color: cores.textoSuave,
+    color: cores.textoCorpo,
     fontSize: fonte.corpo,
     lineHeight: 21,
     marginBottom: espaco.md,

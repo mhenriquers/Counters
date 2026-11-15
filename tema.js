@@ -10,6 +10,7 @@ export const cores = {
   douradoVivo: "#ffd700", // itens do menu e botões de ação
   texto: "#ffffff",
   textoSuave: "rgba(255, 255, 255, 0.75)",
+  textoCorpo: "rgba(255, 255, 255, 0.9)", // parágrafos dentro de cartões
   textoFraco: "rgba(255, 255, 255, 0.45)", // rodapés
   forte: "#4fd8eb", // seção "É forte contra"
   fraco: "#ff6b7a", // seção "É fraco contra"
