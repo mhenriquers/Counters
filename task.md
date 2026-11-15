@@ -318,6 +318,11 @@ Commit: `settings screen redesign`.
 - [ ] 12.3. `git grep -n '{"  ' -- "*.js"` (recuo feito com espaços) deve dar **0 resultados**.
 - [ ] 12.4. Procure cores soltas que já existem no tema (`#D3AF37`, `#ffd700`, `#9bd1fd`, `hsl(191`) fora de `tema.js` e troque por `cores.*`.
 - [ ] 12.5. Rode `npx expo-doctor` (deve dar todas as verificações OK).
+- [ ] 12.6. Apague o código morto e os arquivos de teste, um `git rm` por vez, conferindo antes com `git grep` que nada os importa:
+  - `LoadingScreen.js`, `DraftDetails.txt`, `cod.txt`;
+  - `assets/gojo.jpg`, `"assets/bgLayer - Copia.png"`, `"assets/botaoVoltar (1).png"`, `assets/bg.layerTeste.png`.
+  
+  Depois, tire `LoadingScreen.js` e os rascunhos da tabela de Estrutura do `claude.md`, e os dois itens correspondentes de "Problemas conhecidos".
 
 **✅ Verificar:** `npm run build:web && npm run test:web` tudo `PASS`, com "nenhum erro no console". `npm run shots`: coloque o "antes" e o "depois" lado a lado e revise tela por tela.
 
@@ -349,7 +354,7 @@ Commit: `cleanup after redesign`.
 - **Fase 11, "Avalie-nos":** remover. Quando o app estiver na Play Store, volta como link para a página da loja.
 - **Fase 8, título do cabeçalho:** "Apoiar o projeto". Combina com o item do menu ("Torne-se um apoiador") e com a URL `/apoiar`.
 
-**Pendentes (responder antes da fase indicada):**
+- **Fase 10, textos longos:** manter o "Lore" como está (só tirar os espaços de recuo).
+- **Código morto e arquivos de teste:** apagar (Fase 12.6).
 
-3. **Fase 10, textos longos:** o "Lore" tem um tom bem pessoal ("como jogador sou um ótimo programador"). Manter como está (padrão) ou revisar?
-4. **Fora deste plano:** apagar código morto e arquivos de teste (`LoadingScreen.js`, `DraftDetails.txt`, `cod.txt`, `assets/gojo.jpg`, `assets/bgLayer - Copia.png`, `assets/botaoVoltar (1).png`, `assets/bg.layerTeste.png`)? Seria uma fase extra, depois da 12.
+Nenhuma decisão pendente.
