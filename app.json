@@ -6,13 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/counters.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "backgroundColor": "#000000",
-    "splash": {
-      "image": "./assets/counters-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "app.counters.mlbb",
@@ -25,7 +19,6 @@
         "foregroundImage": "./assets/counters.png",
         "backgroundColor": "#000000"
       },
-      "edgeToEdgeEnabled": false,
       "package": "app.counters.mlbb"
     },
     "web": {
@@ -33,7 +26,16 @@
       "output": "single"
     },
     "plugins": [
-      "expo-asset"
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/counters-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#000000",
+          "imageWidth": 200
+        }
+      ]
     ],
     "extra": {
       "eas": {
