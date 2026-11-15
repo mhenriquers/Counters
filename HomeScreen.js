@@ -123,7 +123,7 @@ export default function HomeScreen({ navigation }) {
         setPesquisar(false); // esconde o textInput
       }}
     >
-      <View style={{ flex: 1, backgroundColor: "#000" }}>
+      <View style={{ flex: 1, backgroundColor: cores.barraStatus }}>
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
             <Fundo
@@ -216,7 +216,7 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: cores.barraStatus, // a faixa da hora fica com esta cor (SafeAreaView)
   },
 
   backgroundImage: {

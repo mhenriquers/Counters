@@ -2,7 +2,8 @@
 // Identidade do site oficial do MLBB: azul é estrutura, dourado é destaque.
 
 export const cores = {
-  fundo: "#0d1424", // fundo das telas  cartao: "rgba(10, 17, 32, 0.72)", // fundo de cards e caixas
+  fundo: "#0d1424", // fundo das telas
+  barraStatus: "#000000", // faixa da hora/notificações no topo (igual em todas as telas)  cartao: "rgba(10, 17, 32, 0.72)", // fundo de cards e caixas
   bordaCartao: "rgba(155, 209, 253, 0.16)", // borda de cards
   azulBorda: "hsl(191, 100%, 94%)", // borda das fotos de herói
   azulTexto: "#9bd1fd", // textos secundários

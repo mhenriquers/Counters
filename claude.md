@@ -75,7 +75,7 @@ Todos os arquivos ficam na raiz, sem pasta `src/`. Cada tela é um arquivo `.js`
 | `banco_herois.js` | **Fonte de todos os dados.** Exporta `HEROIS`. |
 | `LoadingScreen.js` | **Não está registrada no Stack** (código morto). |
 | `tema.js` | Tokens visuais: `cores`, `espaco`, `raio`, `fonte`. Toda cor, espaçamento ou tamanho de fonte novo deve vir daqui. |
-| `ui.js` | Componentes compartilhados: `Fundo` (substitui o `ImageBackground`), `TituloSecao` (faixa do site + capacete), `CabecalhoTela`, `Cartao`, `Paragrafo`, `LinhaAcao`, `BotaoCopiar` (mostra "Copiado ✓", sem `Alert`) e `Rodape`. |
+| `ui.js` | Componentes compartilhados: `Fundo` (substitui o `ImageBackground`), `TituloSecao` (faixa do site + capacete), `BarraStatus` (faixa preta atrás da hora), `CabecalhoTela` (já inclui a `BarraStatus`), `Cartao`, `Paragrafo` (justificado), `LinhaAcao`, `BotaoCopiar` (mostra "Copiado ✓", sem `Alert`) e `Rodape`. |
 | `scripts/` | `gerar-icones.mjs` e `otimizar-imagens.mjs` (usam `sharp`); `teste-web.mjs` (E2E) e `screenshots.mjs` (prints), que usam `cdp-util.mjs`: servidor estático de `dist/` + Chrome headless via DevTools Protocol, sem dependências. Chrome em `CHROME_PATH` ou no caminho padrão do Windows. |
 | `task.md` | Plano de trabalho em andamento (hoje: repaginada visual, na `main`). A seção "Estado atual" no topo diz o que foi feito e o próximo passo. |
 | `atualizar-sdk.md` | Anotações do dono do projeto sobre como atualizar o SDK. |
@@ -113,7 +113,7 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 - **Para imagem de fundo, as duas regras juntas:** ponha a imagem dentro de uma `View` com `StyleSheet.absoluteFill` (sem padding) e dê `width: "100%"`/`height: "100%"` à imagem. É o que o `Fundo` de `ui.js` faz. Use sempre o `Fundo`.
 - **React Navigation 7:** `navigate("Tela")` **não volta** para uma tela que já está na pilha, ele empilha outra. Para voltar a uma tela existente, use `navigation.popTo("Tela")`.
 - **`app.json`:** as chaves `newArchEnabled`, `android.edgeToEdgeEnabled` e `splash` (na raiz) foram removidas. A splash agora é configurada no plugin `expo-splash-screen` (em `plugins`, com `image`, `resizeMode`, `backgroundColor` e `imageWidth`).
-- **Edge-to-edge é obrigatório no Android:** o app desenha atrás da barra de status e da barra de navegação. Use `useSafeAreaInsets` / `SafeAreaView` em vez de margens fixas para o Android.
+- **Edge-to-edge é obrigatório no Android:** o app desenha atrás da barra de status e da barra de navegação. Use `useSafeAreaInsets` / `SafeAreaView` em vez de margens fixas para o Android. **Decisão do dono:** nada da tela aparece atrás da hora e das notificações. Toda tela tem no topo uma faixa sólida `cores.barraStatus` (preta), como a Home: use a `BarraStatus` de `ui.js` (o `CabecalhoTela` já usa). Na web a faixa tem altura 0, então só dá para conferir no celular.
 - **Expo Go:** a splash do app não aparece no Expo Go (só no APK).
 
 ## Problemas conhecidos (verificados no código)

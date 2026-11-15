@@ -11,7 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HEROIS } from "./banco_herois";
 import { cores, espaco, raio } from "./tema";
-import { Fundo, TituloSecao } from "./ui";
+import { Fundo, TituloSecao, BarraStatus } from "./ui";
 
 // Ícones das classes (as chaves são os nomes usados em `classe` no banco)
 const iconesClasses = {
@@ -111,8 +111,11 @@ function DetailsScreen({ route, navigation }) {
         style={style.brilho}
       />
 
+      {/* Faixa da hora/notificações (igual em todas as telas) */}
+      <BarraStatus />
+
       {/* Botões de voltar e fechar */}
-      <View style={[style.cabecalho, { paddingTop: insets.top + 6 }]}>
+      <View style={[style.cabecalho, { paddingTop: 6 }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={style.botaoCabecalho}

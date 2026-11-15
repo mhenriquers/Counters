@@ -57,27 +57,36 @@ export function TituloSecao({ titulo, subtitulo, cor = cores.azulTexto }) {
 }
 
 // ---------------------------------------------------------------------------
+// BarraStatus: faixa sólida atrás da hora e das notificações, com a altura da
+// barra do celular. Assim nada da tela aparece ali (igual à Home).
+// Use no topo de toda tela que desenha atrás da barra de status.
+// ---------------------------------------------------------------------------
+export function BarraStatus() {
+  const insets = useSafeAreaInsets();
+  return <View style={{ height: insets.top, backgroundColor: cores.barraStatus }} />;
+}
+
+// ---------------------------------------------------------------------------
 // CabecalhoTela: barra do topo das telas secundárias (seta + título).
 // ---------------------------------------------------------------------------
 export function CabecalhoTela({ titulo, aoVoltar }) {
-  const insets = useSafeAreaInsets();
-
+  // A imagem do cabeçalho começa ABAIXO da barra de status (hora, notificações)
   return (
-    <Fundo
-      fonte={require("./assets/header.png")}
-      style={[estilos.cabecalho, { paddingTop: insets.top, height: 56 + insets.top }]}
-    >
-      <TouchableOpacity onPress={aoVoltar} style={estilos.botaoVoltar} hitSlop={8}>
-        <Image
-          source={require("./assets/seta-branca.png")}
-          resizeMode="contain"
-          style={estilos.iconeVoltar}
-        />
-      </TouchableOpacity>
-      <Text style={estilos.tituloCabecalho} numberOfLines={1}>
-        {titulo}
-      </Text>
-    </Fundo>
+    <View>
+      <BarraStatus />
+      <Fundo fonte={require("./assets/header.png")} style={estilos.cabecalho}>
+        <TouchableOpacity onPress={aoVoltar} style={estilos.botaoVoltar} hitSlop={8}>
+          <Image
+            source={require("./assets/seta-branca.png")}
+            resizeMode="contain"
+            style={estilos.iconeVoltar}
+          />
+        </TouchableOpacity>
+        <Text style={estilos.tituloCabecalho} numberOfLines={1}>
+          {titulo}
+        </Text>
+      </Fundo>
+    </View>
   );
 }
 
@@ -206,6 +215,7 @@ const estilos = StyleSheet.create({
 
   // CabecalhoTela
   cabecalho: {
+    height: 56,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: espaco.sm,
@@ -246,6 +256,7 @@ const estilos = StyleSheet.create({
 
   // Paragrafo
   paragrafo: {
+    textAlign: "justify",
     color: cores.textoCorpo,
     fontSize: fonte.corpo,
     lineHeight: 21,
