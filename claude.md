@@ -6,16 +6,33 @@ Contexto do projeto para o Claude Code. Escrito em português, assim como o cód
 
 **Counters MLBB**: app que mostra, para cada herói do Mobile Legends: Bang Bang, contra quem ele é forte ("counters") e contra quem é fraco ("counteradoPor"). Distribuído como APK (Android) e como **PWA** (web instalável, hospedada no Netlify). Funciona 100% offline: não há backend, API nem persistência. Todos os dados ficam em um arquivo JS estático.
 
-- Stack: Expo SDK 54, React Native 0.81 (New Architecture ligada), React 19.1, JavaScript puro (há um `tsconfig.json`, mas nenhum arquivo `.ts`/`.tsx`). Web via `react-native-web`.
-- Navegação: `@react-navigation/native-stack` v6, com `linking` (cada tela tem uma URL na web).
+- JavaScript puro (há um `tsconfig.json`, mas nenhum arquivo `.ts`/`.tsx`). New Architecture (obrigatória a partir do RN 0.82).
+- Navegação: React Navigation 7 (`native-stack`), com `linking` (cada tela tem uma URL na web).
 - Identificador do app: `app.counters.mlbb` (Android e iOS).
 - Licença: 0BSD.
+
+### Dependências principais
+
+| Pacote | Versão | Observação |
+|---|---|---|
+| `expo` | SDK **58** (`^58.0.5`) | O Expo Go do celular precisa ser da mesma versão (58.x). Cada Expo Go roda um único SDK. |
+| `react-native` | 0.88.1 | |
+| `react` / `react-dom` | 19.3.0 | |
+| `@react-navigation/native` | ^7 (7.5.x) | Fica **fora** da lista do Expo: atualize à mão, conferindo os `peerDependencies`. |
+| `@react-navigation/native-stack` | ^7 (7.21.x) | |
+| `react-native-web` | ~0.21 | |
+| `react-native-screens` / `react-native-safe-area-context` | ~4.30 / ~5.11 | |
+| `expo-clipboard`, `expo-linear-gradient`, `expo-splash-screen`, `expo-status-bar`, `expo-asset` | ~58.0.x | |
+| devDependencies | `sharp`, `workbox-cli`, `serve` | Ferramentas de build. Não dependem do SDK. |
+
+- **Node:** 22.13+ ou 24.3+ (exigência do SDK 58). O Netlify usa `NODE_VERSION = "22"`.
+- Para bibliotecas de React Native, instale **sempre** com `npx expo install <pacote>` (escolhe a versão compatível com o SDK), nunca com `npm install`.
 
 ## Comandos
 
 ```bash
 npm install
-npx expo start          # dev server (Expo Go / QR code)
+npx expo start -c       # dev server (Expo Go / QR code). -c limpa o cache do Metro
 npm run android         # expo run:android (build nativo local)
 npm run web             # dev server web (localhost:8081, service worker desligado)
 npm run build:web       # expo export -p web + workbox (gera dist/ com sw.js)
@@ -24,9 +41,11 @@ eas build -p android --profile preview      # gera o APK (buildType: apk)
 eas build -p android --profile production   # autoIncrement de versão
 node scripts/gerar-icones.mjs       # regera public/icons/ a partir de assets/counters.png
 node scripts/otimizar-imagens.mjs   # recomprime assets/ (sobrescreve; só grava se ficar menor)
+npx expo-doctor                     # checa compatibilidade (deve passar em todas)
+npx expo install --check            # lista libs fora da versão esperada pelo SDK
 ```
 
-Não há testes, lint nem formatter configurados. As pastas `/android`, `/ios` e `dist/` são geradas e ficam no `.gitignore`.
+Não há testes, lint nem formatter configurados no projeto. As pastas `/android`, `/ios` e `dist/` são geradas e ficam no `.gitignore`.
 
 ### PWA e deploy
 
@@ -34,7 +53,7 @@ Não há testes, lint nem formatter configurados. As pastas `/android`, `/ios` e
 - `public/manifest.json` + `public/icons/` (gerados pelo script). Tudo em `public/` é copiado para `dist/`.
 - `workbox-config.js` gera `dist/sw.js` com precache de todo o build e `navigateFallback` para `/index.html` (qualquer URL abre offline).
 - Deploy no **Netlify** via `netlify.toml`: roda `npm run build:web`, publica `dist/`, redireciona `/*` para `/index.html` e manda `Cache-Control: no-cache` no `sw.js`.
-- Na web, o app fica numa coluna de no máximo 480px (`App.js`), e `Alert.alert` não funciona: use `window.alert` quando `Platform.OS === "web"`.
+- Na web, o app fica numa coluna de no máximo 480px com `overflow: "hidden"` (`App.js`), e `Alert.alert` não funciona: use `window.alert` quando `Platform.OS === "web"`.
 
 ## Estrutura
 
@@ -43,17 +62,19 @@ Todos os arquivos ficam na raiz, sem pasta `src/`. Cada tela é um arquivo `.js`
 | Arquivo | Papel |
 |---|---|
 | `App.js` | Raiz. `SafeAreaProvider` + `NavigationContainer` (com `linking`) + Stack com `headerShown: false`. Todas as telas usam `component=`, sem render callback. |
-| `HomeScreen.js` | Grade de heróis em 3 colunas (`FlatList`), em ordem alfabética (`localeCompare` pt-BR). A busca por nome aparece ao tocar na lupa. Ao tocar num herói, navega para `Details` com `{ id: item.id }`. Mostra `InstalarApp` abaixo do logo. |
-| `Details.js` | Recebe `{ id }`, busca o herói em `HEROIS` e mostra "Herói não encontrado" se o id não existir. Mostra foto, nome, classes (chips com ícone) e duas seções no estilo do site oficial (faixa `bg-Layer.png` + capacete `hero.png`): "É forte contra" (`counters`, destaque ciano) e "É fraco contra" (`counteradoPor`, destaque vermelho). Cada herói da lista é um card com foto, nome e classes; tocar nele faz `navigation.push("Details", { id })`, empilhando telas. |
+| `HomeScreen.js` | Grade de heróis em 3 colunas (`FlatList`), em ordem alfabética (`localeCompare` pt-BR). A busca por nome aparece ao tocar na lupa. Ao tocar num herói, navega para `Details` com `{ id: item.id }`. Mostra `InstalarApp` abaixo do logo. Guarda o estado `menuAberto` e renderiza o `MenuLateral`. |
+| `Details.js` | Recebe `{ id }`, busca o herói em `HEROIS` e mostra "Herói não encontrado" se o id não existir. Mostra foto, nome, classes (chips com ícone) e duas seções no estilo do site oficial (faixa `bg-Layer.png` + capacete `hero.png`): "É forte contra" (`counters`, destaque ciano) e "É fraco contra" (`counteradoPor`, destaque vermelho). Cada herói da lista é um card com foto, nome e classes. Tocar nele faz `navigation.push("Details", { id })`, empilhando telas. O ✕ usa `navigation.popTo("Home")`. **É a referência visual do app.** |
 | `InstalarApp.js` | Botão "Instalar app" (só web/Chrome): captura o `beforeinstallprompt`. Não aparece no iPhone nem com o app já instalado. |
-| `MenuLateral.js` | Gaveta feita à mão (View absoluta com 75% de largura e overlay escuro), não usa o drawer do react-navigation. Recebe as props `visivel`, `aoFechar` e `navigation`. É renderizada pela própria `HomeScreen`, que guarda o estado `menuAberto`. |
-| `Doacoes.js` | Tela de apoio: copia uma chave Pix com `expo-clipboard`. |
+| `MenuLateral.js` | Gaveta feita à mão (não usa o drawer do react-navigation). Props: `visivel`, `aoFechar`, `navigation`. Animada com `Animated` (desliza da esquerda, `useNativeDriver` fora da web), continua montada até terminar de fechar, e com o menu aberto o voltar do Android (`BackHandler`) fecha o menu. A gaveta tem `overflow: "hidden"` porque a imagem de fundo (`fundoMG.png`, 1167x2000) transbordava e cobria a sombra, impedindo de fechar ao tocar fora. |
+| `Doacoes.js` | Tela de apoio (URL `/apoiar`): copia uma chave Pix com `expo-clipboard`. |
 | `Feedback.js` / `Sobre.js` | Links para GitHub e e-mail (`Linking`, `mailto:`) e um botão que copia um ID. Boa parte do código é duplicada entre as duas. |
 | `Configuracoes.js` | Tela estática e informativa (idioma, tema, política de privacidade). Ainda não tem configurações funcionais. |
 | `banco_herois.js` | **Fonte de todos os dados.** Exporta `HEROIS`. |
 | `LoadingScreen.js` | **Não está registrada no Stack** (código morto). |
 | `scripts/` | `gerar-icones.mjs` e `otimizar-imagens.mjs` (usam `sharp`). |
-| `DraftDetails.txt`, `cod.txt` | Rascunhos e trechos antigos. `DraftDetails.txt` é praticamente uma cópia de `Details.js`. Não são importados. |
+| `task.md` | Plano de trabalho em andamento (hoje: repaginada visual, branch `rework`). |
+| `atualizar-sdk.md` | Anotações do dono do projeto sobre como atualizar o SDK. |
+| `DraftDetails.txt`, `cod.txt` | Rascunhos e trechos antigos. `DraftDetails.txt` é uma versão antiga de `Details.js`. Não são importados. |
 
 Telas registradas no Stack e suas URLs: `Home` (`/`), `Details` (`/heroi/:id`), `Doacoes` (`/apoiar`), `Sobre` (`/sobre`), `Feedback` (`/feedback`), `Configuracoes` (`/configuracoes`). Ao criar uma tela nova, registre-a também em `linking.config.screens` no `App.js`. Parâmetros de rota devem ser simples (strings/números), pois viram parte da URL.
 
@@ -76,19 +97,42 @@ Telas registradas no Stack e suas URLs: `Home` (`/`), `Details` (`/heroi/:id`), 
 - As classes válidas são as chaves de `iconesClasses` em `Details.js`: `Assassino`, `Mago`, `Tanque`, `Suporte`, `Lutador`, `Atirador`. O ícone de `Lutador` é `soldado.png`.
 - Ao adicionar um herói: use um `id` novo e único (o maior hoje é `"133"`, do Marcel), adicione a imagem em `assets/` e insira o objeto. A Home ordena sozinha, então a posição no array não importa.
 
+## Armadilhas do SDK 58 / RN 0.88 / React Navigation 7
+
+Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código novo.
+
+- **`StyleSheet.absoluteFillObject` não existe mais** no RN 0.88. Use `StyleSheet.absoluteFill`. Na web ainda funciona (react-native-web), então o erro só aparece no celular: a View fica com altura 0 e o elemento "some".
+- **`ImageBackground` está descontinuado** (aviso no Metro: "will be removed in a future release"). Ainda funciona, mas não use em código novo: prefira uma `View` com uma `Image` em `StyleSheet.absoluteFill`.
+- **React Navigation 7:** `navigate("Tela")` **não volta** para uma tela que já está na pilha, ele empilha outra. Para voltar a uma tela existente, use `navigation.popTo("Tela")`.
+- **`app.json`:** as chaves `newArchEnabled`, `android.edgeToEdgeEnabled` e `splash` (na raiz) foram removidas. A splash agora é configurada no plugin `expo-splash-screen` (em `plugins`, com `image`, `resizeMode`, `backgroundColor` e `imageWidth`).
+- **Edge-to-edge é obrigatório no Android:** o app desenha atrás da barra de status e da barra de navegação. Use `useSafeAreaInsets` / `SafeAreaView` em vez de margens fixas para o Android.
+- **Expo Go:** a splash do app não aparece no Expo Go (só no APK).
+
 ## Problemas conhecidos (verificados no código)
 
+- O `ImageBackground` (descontinuado) ainda é usado em 7 arquivos: Home, Details, Menu, Doacoes, Sobre, Feedback, Configuracoes.
+- No **Android**, copiar (Pix e ID) não mostra nenhum aviso: só há `Alert` no iOS e `window.alert` na web.
+- O ID copiado em Sobre e Feedback leva um espaço na frente (`" 1033871650"`).
+- Erros de digitação: "Torne-se um apoidor" (menu), "Unico" e "Politica" (Configurações), "se vc pediu" (Feedback).
+- "Avalie-nos" em Configurações não faz nada (`TouchableOpacity` sem `onPress`).
+- O cabeçalho de Doações ocupa só a largura do texto (o container pai tem `alignItems: "center"`).
+- Os textos das telas secundárias usam recuo feito com espaços (`{"        "}`).
 - `LoadingScreen.js` usa a cor `'21FFB5'` sem `#`.
 - `assets/` tem vários arquivos de teste ou duplicados (`bgLayer - Copia.png`, `botaoVoltar (1).png`, `bg.layerTeste.png`, `gojo.jpg`).
+
+## Verificação e depuração
+
+- **Na web:** `npm run build:web` e depois `npm run preview:web`. Teste a navegação, o voltar do navegador e o modo offline (F12 → Network → Offline).
+- **No celular:** sempre teste também no Expo Go. Há bugs que só aparecem no nativo (ex.: o `absoluteFillObject`).
+- **Depurar no celular:** `console.log` aparece no terminal do `npx expo start`. Para elementos que "não aparecem", logue o `onLayout` (`e.nativeEvent.layout`): ele mostra se o componente renderiza com tamanho ou posição errados. Remova os logs antes do commit.
 
 ## Convenções
 
 - Nomes de variáveis, componentes de UI e comentários em **português** (`busca`, `heroisFiltrados`, `aoFechar`, `irPara`). Siga esse padrão.
 - Estilos inline via `StyleSheet.create`, num objeto chamado `style` ou `styles` (varia entre arquivos).
 - Ajustes por plataforma usam `Platform.OS === "ios" ? x : y`, ou `Platform.select({ ios, web, default })` quando a web precisa de um valor próprio.
-- Visual: fundo escuro, bordas azul-claras `hsl(191, 100%, 94%)`, texto de menu dourado `#ffd700`, imagens de fundo (`ImageBackground`) em quase todas as telas.
+- **Visual (identidade do site oficial do MLBB):** fundo azul-marinho escuro (`#0d1424`), bordas azul-claras `hsl(191, 100%, 94%)`, textos secundários `#9bd1fd`, faixas de seção com `bg-Layer.png` + `hero.png`, dourado `#D3AF37` (bordas e títulos das telas secundárias) e `#ffd700` (menu, botões). Siga a tela `Details.js` como referência.
+- Não use `fontFamily` customizada (nenhuma fonte é carregada, e a web cai em fonte serifada). Use só `fontWeight`.
+- **`FlatList`:** mantenha as props estáveis (`renderItem`, `keyExtractor`, handlers e estilos com `useCallback`, constantes ou `StyleSheet`). Funções inline fazem a grade inteira ser redesenhada a cada mudança de estado da tela (ex.: ao abrir o menu).
 - Assets são carregados com `require("./assets/...")`, com caminho relativo à raiz.
-- Para overlays use `StyleSheet.absoluteFill`. O `absoluteFillObject` foi removido no React Native 0.88 (continua existindo no react-native-web, então o erro só aparece no celular: a View fica com altura 0).
-- Commits são curtos e em inglês informal (ex.: "editing filter").
-
-commits são feitos a cada feature importante finalizada 
+- Commits são curtos e em inglês informal (ex.: "editing filter"), feitos a cada feature importante finalizada.
