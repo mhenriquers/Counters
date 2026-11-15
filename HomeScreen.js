@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useState, useRef } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useRef,
+} from "react";
 import {
   StyleSheet,
   Text,
@@ -9,6 +15,8 @@ import {
   Image,
   Keyboard,
   TouchableWithoutFeedback,
+  Pressable,
+  BackHandler,
   Platform,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -49,9 +57,7 @@ export default function HomeScreen({ navigation }) {
   // O estado do menu lateral fica aqui na própria Home
   const [menuAberto, setMenuAberto] = useState(false);
   const inputRef = useRef(null); // criando a referência
-  const alternarPesquisa = () => {
-    setPesquisar(!pesquisar);
-  };
+  const [pesquisar, setPesquisar] = useState(false);
   const [busca, setBusca] = useState("");
 
   const heroisFiltrados = useMemo(() => {
@@ -75,21 +81,34 @@ export default function HomeScreen({ navigation }) {
         heroi.nome.toLocaleLowerCase("pt-BR").includes(textoBusca),
       );
   }, [busca]);
-  const [pesquisar, setPesquisar] = useState(false);
+
+  // Fecha a busca de vez: esconde o campo, fecha o teclado e limpa o texto
+  // (a grade volta inteira).
+  const sairDaPesquisa = useCallback(() => {
+    Keyboard.dismiss();
+    setPesquisar(false);
+    setBusca("");
+  }, []);
+
+  const alternarPesquisa = () =>
+    pesquisar ? sairDaPesquisa() : setPesquisar(true);
+
+  // Toque fora do campo. Vazio (só o placeholder): fecha a busca.
+  // Com texto: só fecha o teclado, e o campo continua mostrando o filtro.
+  const tocarFora = () => (busca ? Keyboard.dismiss() : sairDaPesquisa());
+
+  // Voltar do Android com a busca aberta: fecha a busca em vez de sair do app
+  useEffect(() => {
+    if (!pesquisar) return;
+    const assinatura = BackHandler.addEventListener("hardwareBackPress", () => {
+      sairDaPesquisa();
+      return true;
+    });
+    return () => assinatura.remove();
+  }, [pesquisar, sairDaPesquisa]);
 
   // Funções da FlatList guardadas com useCallback: assim, abrir/fechar o menu
   // não faz a grade inteira ser redesenhada (as props da lista não mudam).
-  const aoComecarRolagem = useCallback(() => {
-    if (pesquisar) {
-      Keyboard.dismiss();
-      setPesquisar(false);
-    }
-  }, [pesquisar]);
-
-  const aoRolar = useCallback(() => {
-    if (pesquisar) setPesquisar(false);
-  }, [pesquisar]);
-
   const desenharHeroi = useCallback(
     ({ item }) => (
       <TouchableOpacity
@@ -117,12 +136,7 @@ export default function HomeScreen({ navigation }) {
   const fecharMenu = useCallback(() => setMenuAberto(false), []);
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss(); // fecha o teclado
-        setPesquisar(false); // esconde o textInput
-      }}
-    >
+    <TouchableWithoutFeedback onPress={tocarFora}>
       <View style={{ flex: 1, backgroundColor: cores.barraStatus }}>
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
@@ -135,8 +149,11 @@ export default function HomeScreen({ navigation }) {
                 fonte={require("./assets/bg-header.png")}
                 style={styles.cabecalho}
               >
+                {/* Com a busca aberta, o botão do menu só fecha a busca */}
                 <TouchableOpacity
-                  onPress={() => setMenuAberto(true)}
+                  onPress={() =>
+                    pesquisar ? sairDaPesquisa() : setMenuAberto(true)
+                  }
                   style={styles.botaoCabecalho}
                   hitSlop={8}
                 >
@@ -182,21 +199,30 @@ export default function HomeScreen({ navigation }) {
 
               {/* Grade de herois */}
 
-              <FlatList
-                data={heroisFiltrados}
-                keyExtractor={chaveDoHeroi}
-                numColumns={3}
-                onScrollBeginDrag={aoComecarRolagem}
-                onScroll={aoRolar}
-                scrollEventThrottle={16}
-                keyboardDismissMode="on-drag"
-                keyboardShouldPersistTaps="handled"
-                columnWrapperStyle={styles.linhaGrade}
-                contentContainerStyle={styles.conteudoGrade}
-                ListHeaderComponent={CabecalhoGrade}
-                ListEmptyComponent={ListaVazia}
-                renderItem={desenharHeroi}
-              />
+              <View style={styles.areaGrade}>
+                <FlatList
+                  data={heroisFiltrados}
+                  keyExtractor={chaveDoHeroi}
+                  numColumns={3}
+                  keyboardDismissMode="on-drag"
+                  keyboardShouldPersistTaps="handled"
+                  columnWrapperStyle={styles.linhaGrade}
+                  contentContainerStyle={styles.conteudoGrade}
+                  ListHeaderComponent={CabecalhoGrade}
+                  ListEmptyComponent={ListaVazia}
+                  renderItem={desenharHeroi}
+                />
+
+                {/* Busca aberta e vazia: esta camada invisível cobre a grade,
+                    e o primeiro toque só fecha a busca, sem abrir herói.
+                    Com texto digitado, a camada some: tocar num resultado abre direto. */}
+                {pesquisar && busca === "" && (
+                  <Pressable
+                    style={StyleSheet.absoluteFill}
+                    onPress={sairDaPesquisa}
+                  />
+                )}
+              </View>
               <StatusBar style="light" />
             </Fundo>
           </SafeAreaView>
@@ -362,6 +388,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+  },
+
+  // Envolve a grade para a camada da busca (absoluteFill) cobrir só ela
+  areaGrade: {
+    flex: 1,
   },
 
   linhaGrade: {

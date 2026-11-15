@@ -118,6 +118,49 @@ await caso("tocar fora da gaveta fecha o menu", async () => {
   return abriu && !(await gavetaNoDom());
 });
 
+// ---------------- Busca ----------------
+const buscaAberta = () => nav.avaliar(`!!document.querySelector("input")`);
+
+await caso("busca aberta: tocar num herói só fecha a busca", async () => {
+  await nav.clicarSeletor('img[src*="lupa"]', 600);
+  const abriu = await buscaAberta();
+  await nav.clicarTexto("Aamon", 600);
+  const ficouNaHome = (await nav.rota()) === "/" && !(await buscaAberta());
+  await nav.clicarTexto("Aamon"); // agora, sim, abre o herói
+  const entrou = (await nav.rota()) === "/heroi/1";
+  await nav.avaliar("history.back()");
+  await espera(1200);
+  return abriu && ficouNaHome && entrou;
+});
+
+await caso("busca com texto: tocar num resultado abre direto", async () => {
+  await nav.clicarSeletor('img[src*="lupa"]', 600);
+  await nav.enviar("Input.insertText", { text: "aam" });
+  await espera(600);
+  const filtrou = !(await nav.temTexto("Akai"));
+  await nav.clicarTexto("Aamon");
+  const entrou = (await nav.rota()) === "/heroi/1";
+  await nav.avaliar("history.back()");
+  await espera(1200);
+  return filtrou && entrou;
+});
+
+await caso("fechar a busca pela lupa limpa o filtro", async () => {
+  await nav.clicarSeletor('img[src*="lupa"]', 600);
+  await nav.enviar("Input.insertText", { text: "aam" });
+  await espera(600);
+  const filtrou = !(await nav.temTexto("Akai"));
+  await nav.clicarSeletor('img[src*="lupa"]', 600);
+  return filtrou && !(await buscaAberta()) && (await nav.temTexto("Akai"));
+});
+
+await caso("busca aberta: botão do menu só fecha a busca", async () => {
+  await nav.clicarSeletor('img[src*="lupa"]', 600);
+  const abriu = await buscaAberta();
+  await nav.clicarSeletor('img[src*="opcoes"]', 600);
+  return abriu && !(await buscaAberta()) && !(await gavetaNoDom());
+});
+
 // ---------------- Outras rotas ----------------
 await caso("/heroi/999 mostra 'Herói não encontrado'", async () => {
   await nav.abrir(BASE + "/heroi/999");
