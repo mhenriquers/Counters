@@ -42,11 +42,11 @@ Todos os arquivos ficam na raiz, sem pasta `src/`. Cada tela é um arquivo `.js`
 
 | Arquivo | Papel |
 |---|---|
-| `App.js` | Raiz. `SafeAreaProvider` + `NavigationContainer` (com `linking`) + Stack com `headerShown: false`. Controla o estado `menuAberto` e renderiza `MenuLateral` sobre a tela `Home`. |
+| `App.js` | Raiz. `SafeAreaProvider` + `NavigationContainer` (com `linking`) + Stack com `headerShown: false`. Todas as telas usam `component=`, sem render callback. |
 | `HomeScreen.js` | Grade de heróis em 3 colunas (`FlatList`), em ordem alfabética (`localeCompare` pt-BR). A busca por nome aparece ao tocar na lupa. Ao tocar num herói, navega para `Details` com `{ id: item.id }`. Mostra `InstalarApp` abaixo do logo. |
 | `Details.js` | Recebe `{ id }`, busca o herói em `HEROIS` e mostra "Herói não encontrado" se o id não existir. Mostra foto, nome, classes (chips com ícone) e duas seções no estilo do site oficial (faixa `bg-Layer.png` + capacete `hero.png`): "É forte contra" (`counters`, destaque ciano) e "É fraco contra" (`counteradoPor`, destaque vermelho). Cada herói da lista é um card com foto, nome e classes; tocar nele faz `navigation.push("Details", { id })`, empilhando telas. |
 | `InstalarApp.js` | Botão "Instalar app" (só web/Chrome): captura o `beforeinstallprompt`. Não aparece no iPhone nem com o app já instalado. |
-| `MenuLateral.js` | Gaveta feita à mão (View absoluta com 75% de largura e overlay escuro), não usa o drawer do react-navigation. Recebe as props `visivel`, `aoFechar` e `navigation`. |
+| `MenuLateral.js` | Gaveta feita à mão (View absoluta com 75% de largura e overlay escuro), não usa o drawer do react-navigation. Recebe as props `visivel`, `aoFechar` e `navigation`. É renderizada pela própria `HomeScreen`, que guarda o estado `menuAberto`. |
 | `Doacoes.js` | Tela de apoio: copia uma chave Pix com `expo-clipboard`. |
 | `Feedback.js` / `Sobre.js` | Links para GitHub e e-mail (`Linking`, `mailto:`) e um botão que copia um ID. Boa parte do código é duplicada entre as duas. |
 | `Configuracoes.js` | Tela estática e informativa (idioma, tema, política de privacidade). Ainda não tem configurações funcionais. |

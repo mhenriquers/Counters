@@ -17,10 +17,13 @@ import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
 import { HEROIS } from "./banco_herois";
 import InstalarApp from "./InstalarApp";
+import MenuLateral from "./MenuLateral";
 
-export default function HomeScreen({ navigation, route, abrirMenu }) {
+export default function HomeScreen({ navigation }) {
   //Constantes
 
+  // O estado do menu lateral fica aqui na própria Home
+  const [menuAberto, setMenuAberto] = useState(false);
   const inputRef = useRef(null); // criando a referência
   const alternarPesquisa = () => {
     setPesquisar(!pesquisar);
@@ -73,8 +76,9 @@ export default function HomeScreen({ navigation, route, abrirMenu }) {
               >
                 <View style={styles.headerSuperior}>
                   <TouchableOpacity
-                    onPress={abrirMenu}
+                    onPress={() => setMenuAberto(true)}
                     style={styles.botaoOpcoes}
+                    hitSlop={8}
                   >
                     <Image source={require("./assets/opcoes.png")} />
                   </TouchableOpacity>
@@ -167,6 +171,13 @@ export default function HomeScreen({ navigation, route, abrirMenu }) {
             </ImageBackground>
           </SafeAreaView>
         </SafeAreaProvider>
+
+        {/* Menu lateral: desenhado por cima de toda a Home */}
+        <MenuLateral
+          visivel={menuAberto}
+          aoFechar={() => setMenuAberto(false)}
+          navigation={navigation}
+        />
       </View>
     </TouchableWithoutFeedback>
   );
@@ -287,6 +298,8 @@ const styles = StyleSheet.create({
 
   botaoOpcoes: {
     width: 40,
+    height: 40,
+    justifyContent: "center",
   },
 
   headerSuperior: {

@@ -101,7 +101,7 @@ function DetailsScreen({ route, navigation }) {
         <Text style={{ color: "#fff", marginBottom: 20 }}>
           Herói não encontrado.
         </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity onPress={() => navigation.popTo("Home")}>
           <Text style={{ color: "#ffd700" }}>Voltar para a lista</Text>
         </TouchableOpacity>
       </View>
@@ -144,7 +144,7 @@ function DetailsScreen({ route, navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
+          onPress={() => navigation.popTo("Home")}
           style={style.botaoCabecalho}
           hitSlop={8}
         >
