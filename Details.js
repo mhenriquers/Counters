@@ -10,53 +10,11 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { buscarHeroi, buscarHerois } from "./herois";
-import { cores, espaco, raio } from "./tema";
+import { cores } from "./tema";
 import { Fundo, TituloSecao, BarraStatus } from "./ui";
-
-// Ícones das classes (as chaves são os nomes usados nas classes do banco)
-const iconesClasses = {
-  Assassino: require("./assets/assassino.png"),
-  Mago: require("./assets/mago.png"),
-  Tanque: require("./assets/tanque.png"),
-  Suporte: require("./assets/suporte.png"),
-  Lutador: require("./assets/soldado.png"),
-  Atirador: require("./assets/atirador.png"),
-};
-
-// Uma linha da lista: foto, nome, classes e seta
-function LinhaHeroi({ heroi, cor, aoTocar }) {
-  const { classes } = heroi;
-
-  return (
-    <TouchableOpacity
-      activeOpacity={0.7}
-      onPress={aoTocar}
-      style={[style.linhaHeroi, { borderLeftColor: cor }]}
-    >
-      <Image source={heroi.foto} style={style.fotoLinha} />
-
-      <View style={style.textosLinha}>
-        <Text style={style.nomeLinha} numberOfLines={1}>
-          {heroi.nome}
-        </Text>
-        <View style={style.classesLinha}>
-          {classes.map((classe) => (
-            <Image
-              key={classe}
-              source={iconesClasses[classe]}
-              style={style.iconeClasseLinha}
-            />
-          ))}
-          <Text style={style.textoClasseLinha} numberOfLines={1}>
-            {classes.join(" · ")}
-          </Text>
-        </View>
-      </View>
-
-      <Text style={style.seta}>›</Text>
-    </TouchableOpacity>
-  );
-}
+import IconeClasse from "./IconeClasse";
+import LinhaHeroi from "./LinhaHeroi";
+import HeroiNaoEncontrado from "./HeroiNaoEncontrado";
 
 function DetailsScreen({ route, navigation }) {
   const insets = useSafeAreaInsets();
@@ -65,34 +23,11 @@ function DetailsScreen({ route, navigation }) {
 
   // URL com id inexistente (ex.: /heroi/999)
   if (!heroi) {
-    return (
-      <Fundo
-        fonte={require("./assets/bgDetails.png")}
-        style={[style.fundo, style.naoEncontrado]}
-      >
-        <Image
-          source={require("./assets/hero.png")}
-          resizeMode="contain"
-          style={style.iconeNaoEncontrado}
-        />
-        <Text style={style.tituloNaoEncontrado}>Herói não encontrado</Text>
-        <Text style={style.textoNaoEncontrado}>
-          Esse link não corresponde a nenhum herói do banco.
-        </Text>
-        <TouchableOpacity
-          onPress={() => navigation.popTo("Home")}
-          style={style.botaoNaoEncontrado}
-          activeOpacity={0.8}
-        >
-          <Text style={style.textoBotaoNaoEncontrado}>Voltar para a lista</Text>
-        </TouchableOpacity>
-      </Fundo>
-    );
+    return <HeroiNaoEncontrado aoVoltar={() => navigation.popTo("Home")} />;
   }
 
   const forteContra = buscarHerois(heroi.counters);
   const fracoContra = buscarHerois(heroi.counteradoPor);
-  const { classes } = heroi;
 
   const abrirHeroi = (outro) => navigation.push("Details", { id: outro.id });
 
@@ -152,12 +87,9 @@ function DetailsScreen({ route, navigation }) {
           />
 
           <View style={style.chipsClasse}>
-            {classes.map((classe) => (
+            {heroi.classes.map((classe) => (
               <View key={classe} style={style.chipClasse}>
-                <Image
-                  source={iconesClasses[classe]}
-                  style={style.iconeChip}
-                />
+                <IconeClasse classe={classe} tamanho={22} />
                 <Text style={style.textoChip}>{classe}</Text>
               </View>
             ))}
@@ -206,50 +138,6 @@ const style = StyleSheet.create({
   fundo: {
     flex: 1,
     backgroundColor: cores.fundo,
-  },
-
-  // HERÓI NÃO ENCONTRADO (/heroi/999)
-  naoEncontrado: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: espaco.xl,
-  },
-
-  iconeNaoEncontrado: {
-    width: 44,
-    height: 58,
-    opacity: 0.8,
-    marginBottom: espaco.lg,
-  },
-
-  tituloNaoEncontrado: {
-    color: cores.texto,
-    fontSize: 20,
-    fontWeight: "800",
-    letterSpacing: 1,
-    textTransform: "uppercase",
-    textAlign: "center",
-  },
-
-  textoNaoEncontrado: {
-    color: cores.azulTexto,
-    fontSize: 13,
-    textAlign: "center",
-    marginTop: espaco.sm,
-    marginBottom: espaco.xl,
-  },
-
-  botaoNaoEncontrado: {
-    backgroundColor: cores.douradoVivo,
-    borderRadius: raio.pilula,
-    paddingVertical: 10,
-    paddingHorizontal: espaco.xl,
-  },
-
-  textoBotaoNaoEncontrado: {
-    color: "#000",
-    fontWeight: "700",
-    fontSize: 14,
   },
 
   brilho: {
@@ -345,77 +233,10 @@ const style = StyleSheet.create({
     backgroundColor: "rgba(155, 209, 253, 0.1)",
   },
 
-  iconeChip: {
-    width: 22,
-    height: 22,
-  },
-
   textoChip: {
     color: cores.azulBorda,
     fontSize: 13,
     fontWeight: "600",
-  },
-
-  // LINHAS DA LISTA
-  linhaHeroi: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginHorizontal: 16,
-    marginTop: 8,
-    paddingVertical: 8,
-    paddingLeft: 10,
-    paddingRight: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: cores.bordaCartao,
-    borderLeftWidth: 3,
-    backgroundColor: cores.cartao,
-  },
-
-  fotoLinha: {
-    width: 46,
-    height: 46,
-    borderRadius: 6,
-    borderWidth: 1.5,
-    borderColor: cores.azulBorda,
-  },
-
-  textosLinha: {
-    flex: 1,
-    marginLeft: 12,
-  },
-
-  nomeLinha: {
-    color: cores.texto,
-    fontSize: 15,
-    fontWeight: "700",
-  },
-
-  classesLinha: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 3,
-    gap: 4,
-  },
-
-  iconeClasseLinha: {
-    width: 14,
-    height: 14,
-    opacity: 0.85,
-  },
-
-  textoClasseLinha: {
-    color: cores.azulTexto,
-    fontSize: 12,
-    marginLeft: 2,
-    flexShrink: 1,
-  },
-
-  seta: {
-    color: "rgba(224, 250, 255, 0.45)",
-    fontSize: 26,
-    marginLeft: 8,
-    marginTop: -2,
   },
 
   rodape: {

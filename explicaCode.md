@@ -102,3 +102,68 @@ return listarHerois().filter((heroi) =>
   heroi.nome.toLocaleLowerCase("pt-BR").includes(textoBusca),
 );
 ```
+
+---
+
+## Passo 2: quebrar o `Details.js` (S do SOLID)
+
+### O problema
+
+O `Details.js` tinha 432 linhas e fazia várias coisas ao mesmo tempo: guardava o mapa de ícones das classes, desenhava o card de cada herói da lista, desenhava a tela de erro do `/heroi/999` e ainda montava a tela do herói. O **S** (responsabilidade única) diz: cada peça deve ter **um motivo para mudar**. Se eu quisesse mudar o card da lista, precisava abrir a tela inteira.
+
+### O resultado
+
+```
+Details.js (252 linhas): só junta as peças
+├── IconeClasse.js         (24)  ícone de uma classe
+├── LinhaHeroi.js         (100)  card de um herói na lista (usa o IconeClasse)
+└── HeroiNaoEncontrado.js  (77)  tela de erro do id inexistente
+```
+
+Cada componente leva **junto** os seus estilos. O `StyleSheet` de cada arquivo só tem o que aquele componente usa.
+
+### `IconeClasse`: o O do SOLID
+
+```js
+const icones = { Assassino: require(...), Mago: require(...), ... };
+
+export default function IconeClasse({ classe, tamanho, style }) {
+  return <Image source={icones[classe]} style={[{ width: tamanho, height: tamanho }, style]} />;
+}
+```
+
+- O mapa `icones` é o **O** (aberto/fechado): uma classe nova é só uma chave nova, sem `if/else` e sem mexer no componente.
+- O `tamanho` resolve os dois usos: 22 nos chips do herói e 14 nos cards da lista.
+- O `style` é para ajustes extras. O card da lista passa `opacity: 0.85`. Em `[{...}, style]`, um array de estilos, o último vence quando há conflito.
+- Antes, quem quisesse um ícone precisava conhecer o mapa e montar o `<Image>`. Agora só diz qual classe quer.
+
+### `LinhaHeroi`: polimorfismo por props
+
+As seções "É forte contra" e "É fraco contra" usam o **mesmo** componente. Só muda a cor:
+
+```js
+<LinhaHeroi heroi={outro} cor={cores.forte} aoTocar={...} />
+<LinhaHeroi heroi={outro} cor={cores.fraco} aoTocar={...} />
+```
+
+Em C# seria uma classe com um parâmetro no construtor, em vez de duas classes `LinhaForte` e `LinhaFraca`.
+
+### `HeroiNaoEncontrado`: o I do SOLID
+
+```js
+<HeroiNaoEncontrado aoVoltar={() => navigation.popTo("Home")} />
+```
+
+O componente recebe só a função `aoVoltar`, **não** o `navigation` inteiro. Isso é o **I** (segregação de interface): "não exija o que você não usa".
+
+- O componente não sabe que existe React Navigation nem uma tela chamada "Home". Ele só sabe que tem um botão que chama `aoVoltar`.
+- Quem decide **para onde** voltar é o Details. Se um dia o botão tiver que ir para outro lugar, só o Details muda.
+- Em C#, seria receber uma `Action aoVoltar` em vez do objeto `NavigationService` inteiro.
+
+### Como conferir que nada mudou na tela
+
+Refatorar é mudar o código **sem mudar o comportamento**. Para provar isso:
+
+1. Antes de mexer: `npm run build:web`, `npm run shots` e copiar `screenshots/` para `screenshots-antes/`.
+2. Depois de mexer: `npm run build:web`, `npm run test:web` e `npm run shots`.
+3. Comparar as duas pastas. Neste passo, todas as telas saíram idênticas pixel a pixel.
