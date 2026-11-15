@@ -85,3 +85,6 @@ yarn-error.*
 # Arquivos testes
 teste.js
 paralelograma.js
+# Prints gerados por npm run shots
+screenshots/
+screenshots-antes/

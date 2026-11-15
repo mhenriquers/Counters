@@ -58,9 +58,9 @@ A tela **Details** já foi refeita nesse estilo e é a **referência visual** de
 
 ## Fase 0: Preparação
 
-- [ ] 0.1. Confirme a branch `rework` e a árvore limpa: `git branch --show-current` e `git status --short` (só `task.md` pode aparecer).
-- [ ] 0.2. Faça commit do `task.md`: `git add task.md && git commit -m "add redesign plan"`.
-- [ ] 0.3. Rode `npm run build:web`. Deve terminar sem erro (linha do Workbox com "precache").
+- [x] 0.1. Confirme a branch `rework` e a árvore limpa: `git branch --show-current` e `git status --short` (só `task.md` pode aparecer).
+- [x] 0.2. Faça commit do `task.md`: `git add task.md && git commit -m "add redesign plan"`.
+- [x] 0.3. Rode `npm run build:web`. Deve terminar sem erro (linha do Workbox com "precache").
 
 ---
 
@@ -68,7 +68,7 @@ A tela **Details** já foi refeita nesse estilo e é a **referência visual** de
 
 Hoje os testes automáticos só existem fora do projeto. Esta fase traz eles para dentro, para que **toda fase seguinte** possa ser verificada com um comando.
 
-- [ ] 1.1. Crie `scripts/teste-web.mjs`: teste E2E via Chrome DevTools Protocol, sem dependências novas.
+- [x] 1.1. Crie `scripts/teste-web.mjs`: teste E2E via Chrome DevTools Protocol, sem dependências novas. (Feito: o servidor estático e a conexão com o Chrome ficam em `scripts/cdp-util.mjs`, usado pelos dois scripts. Porta 3100 para teste, 3101 para prints.)
   - Sobe `npx serve dist --single -l 3000` sozinho e derruba ao terminar.
   - Caminho do Chrome: variável `CHROME_PATH` ou o padrão `C:/Program Files/Google/Chrome/Application/chrome.exe`.
   - Viewport de celular: 384x832, `mobile: true`.
@@ -84,9 +84,9 @@ Hoje os testes automáticos só existem fora do projeto. Esta fase traz eles par
     9. erros e avisos do console (`Runtime.exceptionThrown`, `console.error`/`warn`) são listados no fim.
   - Encontrar elementos: pelo **texto visível** (comparação sem maiúsculas/minúsculas, `innerText.toLowerCase()`) ou por `img[src*="nome-do-asset"]`, sempre pegando o **último** elemento encontrado (telas empilhadas continuam no DOM) e rolando até ele (`scrollIntoView`) antes de clicar.
   - Sai com código 1 se houver alguma falha.
-- [ ] 1.2. Crie `scripts/screenshots.mjs`: tira prints em 384x832 de `/`, `/heroi/1`, `/heroi/67`, `/heroi/999`, `/apoiar`, `/sobre`, `/feedback`, `/configuracoes` e da Home com o menu aberto. Salva em `screenshots/<nome>.png`.
-- [ ] 1.3. Adicione `screenshots/` ao `.gitignore`.
-- [ ] 1.4. No `package.json`, adicione os scripts `"test:web": "node scripts/teste-web.mjs"` e `"shots": "node scripts/screenshots.mjs"`.
+- [x] 1.2. Crie `scripts/screenshots.mjs`: tira prints em 384x832 de `/`, `/heroi/1`, `/heroi/67`, `/heroi/999`, `/apoiar`, `/sobre`, `/feedback`, `/configuracoes` e da Home com o menu aberto. Salva em `screenshots/<nome>.png`.
+- [x] 1.3. Adicione `screenshots/` ao `.gitignore`.
+- [x] 1.4. No `package.json`, adicione os scripts `"test:web": "node scripts/teste-web.mjs"` e `"shots": "node scripts/screenshots.mjs"`.
 
 **✅ Verificar:** `npm run build:web && npm run test:web` mostra só `PASS` e "nenhum erro no console". Depois `npm run shots` gera 9 imagens em `screenshots/`. Guarde essas imagens como o **"antes"**: copie a pasta para `screenshots-antes/` (também no `.gitignore`).
 
