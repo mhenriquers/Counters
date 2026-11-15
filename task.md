@@ -2,10 +2,11 @@
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito:** Fases 0 a 4 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema). Último commit: `becf97a details uses theme and shared components`.
-- **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **8 commits à frente** do GitHub (sem push).
-- **Aguardando:** o dono confirmar no celular que o Details continua certo (Fase 4). Pergunta em aberto: o fundo do Details no celular mostra a marca d'água "M"? (Esperado: sim. Ver a nota da Fase 4.)
-- **Próximo passo:** Fase 5 (Home).
+- **Feito:** Fases 0 a 5 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home). Último commit da tela: `c65c7d6 home redesign`.
+- **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **11 commits à frente** do GitHub (sem push).
+- **Aguardando:** o dono testar no celular o Details (Fase 4) e a Home (Fase 5): busca, teclado, ✕ da busca, rolagem e o fundo do cabeçalho.
+- **Próximo passo:** Fase 6 (Menu lateral).
+- **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
   - deixar as perguntas para o **final** da resposta;
@@ -185,24 +186,26 @@ Commit: `details uses theme and shared components`.
 
 ## Fase 5: Home
 
-- [ ] 5.1. Troque os 2 `ImageBackground` por `Fundo` (`bgbg.png` e `bg-header.png`).
-- [ ] 5.2. **Cabeçalho:**
+- [x] 5.1. Troque os 2 `ImageBackground` por `Fundo` (`bgbg.png` e `bg-header.png`).
+- [x] 5.2. **Cabeçalho:**
   - altura fixa 56;
   - ☰ à esquerda (44x44, como já está);
   - separador;
   - lupa à direita com área de toque 44x44 e `hitSlop={8}`.
-- [ ] 5.3. **Campo de busca** (aparece ao tocar na lupa, como hoje):
+- [x] 5.3. **Campo de busca** (aparece ao tocar na lupa, como hoje):
   - pílula com fundo `rgba(155, 209, 253, 0.1)`, borda 1px `rgba(155, 209, 253, 0.35)`, `raio.pilula`, altura 36, texto `cores.texto`;
   - quando houver texto, mostra um "✕" à direita que limpa a busca (`setBusca("")`).
   - Não mude a lógica de abrir/fechar (`pesquisar`) nem o filtro.
-- [ ] 5.4. **Contador e lista vazia:**
+- [x] 5.4. **Contador e lista vazia:**
   - abaixo do logo, um texto `fonte.legenda` `cores.azulTexto` centralizado: "`N` heróis" (ou "`N` resultados para "`busca`"" quando estiver buscando), com `N = heroisFiltrados.length`;
   - se `N === 0`, a lista mostra (`ListEmptyComponent`) "Nenhum herói encontrado" em `cores.textoSuave`.
   - ⚠️ O cabeçalho da lista é a constante `cabecalhoGrade`, fora do componente. Como o contador depende de estado, crie um `useMemo` para o cabeçalho, com dependências `[heroisFiltrados.length, busca]`.
-- [ ] 5.5. **Quadros dos heróis:** troque a borda por `cores.azulBorda` (mesmo valor) importado do tema, e a sombra (`elevation: 10`) por `elevation: 4`. O resto fica igual (o tamanho e o nome foram ajustados recentemente).
-- [ ] 5.6. **Botão "Instalar app"** (`InstalarApp.js`): use `cores.douradoVivo` e `raio.pilula` do tema, e `marginBottom: espaco.md`. Só a web mostra o botão.
+- [x] 5.5. **Quadros dos heróis:** troque a borda por `cores.azulBorda` (mesmo valor) importado do tema, e a sombra (`elevation: 10`) por `elevation: 4`. O resto fica igual (o tamanho e o nome foram ajustados recentemente).
+- [x] 5.6. **Botão "Instalar app"** (`InstalarApp.js`): use `cores.douradoVivo` e `raio.pilula` do tema, e `marginBottom: espaco.md`. Só a web mostra o botão.
 
 **✅ Verificar:** `npm run test:web` tudo `PASS`. Nos prints: cabeçalho alinhado, contador visível. Na web, buscar "zzz" mostra "Nenhum herói encontrado", e o ✕ limpa a busca. No celular: busca, teclado e rolagem funcionando.
+
+> 📝 **Resultado da Fase 5:** o contador trata o singular ("1 herói", "1 resultado"). O fundo do cabeçalho (`bg-header.png`) ficou em `cover`, como o `ImageBackground` fazia no celular. A lista vazia é o componente `ListaVazia`, fora da Home (referência estável para a `FlatList`). Na web, o campo de busca não mostra o contorno azul do navegador (`outlineStyle: "none"`). Os ícones ☰ e lupa ficam no tamanho original, dentro de uma área de toque mínima de 44x44.
 
 Commit: `home redesign`.
 
