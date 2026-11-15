@@ -100,7 +100,7 @@ Commit: `add web e2e test and screenshot scripts`.
 
 Um arquivo só com cores, espaçamentos e tamanhos. Nenhuma tela muda nesta fase.
 
-- [ ] 2.1. Crie `tema.js` na raiz exportando:
+- [x] 2.1. Crie `tema.js` na raiz exportando:
   ```js
   export const cores = { /* exatamente a tabela "Cores" acima */ };
   export const espaco = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 };
