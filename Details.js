@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -7,30 +7,97 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Platform,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { HEROIS } from "./banco_herois";
-{
-  /* Função principal  */
+
+// Ícones das classes (as chaves são os nomes usados em `classe` no banco)
+const iconesClasses = {
+  Assassino: require("./assets/assassino.png"),
+  Mago: require("./assets/mago.png"),
+  Tanque: require("./assets/tanque.png"),
+  Suporte: require("./assets/suporte.png"),
+  Lutador: require("./assets/soldado.png"),
+  Atirador: require("./assets/atirador.png"),
+};
+
+// Cores
+const AZUL_BORDA = "hsl(191, 100%, 94%)";
+const AZUL_TEXTO = "#9bd1fd";
+const COR_FORTE = "#4fd8eb";
+const COR_FRACO = "#ff6b7a";
+
+const separarClasses = (classe) => classe.split("/");
+
+// Cabeçalho de seção no estilo do site oficial (faixa azul + capacete)
+function TituloSecao({ titulo, subtitulo, cor }) {
+  return (
+    <ImageBackground
+      source={require("./assets/bg-Layer.png")}
+      resizeMode="stretch"
+      style={style.faixaSecao}
+    >
+      <Image
+        source={require("./assets/hero.png")}
+        resizeMode="contain"
+        style={style.iconeSecao}
+      />
+      <View style={{ flex: 1 }}>
+        <Text style={style.tituloSecao}>{titulo}</Text>
+        <Text style={[style.subtituloSecao, { color: cor }]} numberOfLines={1}>
+          {subtitulo}
+        </Text>
+      </View>
+    </ImageBackground>
+  );
+}
+
+// Uma linha da lista: foto, nome, classes e seta
+function LinhaHeroi({ heroi, cor, aoTocar }) {
+  const classes = separarClasses(heroi.classe);
+
+  return (
+    <TouchableOpacity
+      activeOpacity={0.7}
+      onPress={aoTocar}
+      style={[style.linhaHeroi, { borderLeftColor: cor }]}
+    >
+      <Image source={heroi.foto} style={style.fotoLinha} />
+
+      <View style={style.textosLinha}>
+        <Text style={style.nomeLinha} numberOfLines={1}>
+          {heroi.nome}
+        </Text>
+        <View style={style.classesLinha}>
+          {classes.map((classe) => (
+            <Image
+              key={classe}
+              source={iconesClasses[classe]}
+              style={style.iconeClasseLinha}
+            />
+          ))}
+          <Text style={style.textoClasseLinha} numberOfLines={1}>
+            {classes.join(" · ")}
+          </Text>
+        </View>
+      </View>
+
+      <Text style={style.seta}>›</Text>
+    </TouchableOpacity>
+  );
 }
 
 function DetailsScreen({ route, navigation }) {
-  // O 'route.params' é onde o 'pacote' que você enviou chega
+  const insets = useSafeAreaInsets();
+
   const id = String(route.params?.id ?? "");
   const heroi = HEROIS.find((h) => h.id === id);
 
   // URL com id inexistente (ex.: /heroi/999)
   if (!heroi) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "#000",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <View style={style.naoEncontrado}>
         <Text style={{ color: "#fff", marginBottom: 20 }}>
           Herói não encontrado.
         </Text>
@@ -41,438 +108,342 @@ function DetailsScreen({ route, navigation }) {
     );
   }
 
-  {
-    /* Origem dos Icones das Classe */
-  }
+  // Converte a lista de ids em heróis, mantendo a ordem do banco
+  const buscarHerois = (ids) =>
+    (ids || []).map((x) => HEROIS.find((h) => h.id === x)).filter(Boolean);
 
-  const iconesClasses = {
-    Assassino: require("./assets/assassino.png"),
-    Mago: require("./assets/mago.png"),
-    Tanque: require("./assets/tanque.png"),
-    Suporte: require("./assets/suporte.png"),
-    Lutador: require("./assets/soldado.png"),
-    Atirador: require("./assets/atirador.png"),
-  };
+  const forteContra = buscarHerois(heroi.counters);
+  const fracoContra = buscarHerois(heroi.counteradoPor);
+  const classes = separarClasses(heroi.classe);
 
-  {
-    /* Filtro da classe */
-  }
+  const abrirHeroi = (outro) => navigation.push("Details", { id: outro.id });
 
-  const iconeDaClasse = iconesClasses[heroi.classe];
-  const listaDaClasse = heroi.classe.split("/");
-
-  {
-    /* Filtro dos counters/counterados */
-  }
-
-  const counterList = HEROIS.filter((h) =>
-    (heroi.counters || []).includes(h.id),
-  );
-  const counteradoPorList = HEROIS.filter((h) =>
-    (heroi.counteradoPor || []).includes(h.id),
-  );
   return (
     <ImageBackground
-      // Imagem de fundo e gradiente
-
       source={require("./assets/bgDetails.png")}
       resizeMode="cover"
-      style={style.fundoDetails}
+      style={style.fundo}
     >
+      {/* Brilho azul atrás do herói */}
       <LinearGradient
-        colors={["rgba(0,0,0,0.5)", "transparent"]}
-        style={style.gradient}
-      ></LinearGradient>
-      {/*Botão de voltar*/}
+        colors={["rgba(79, 216, 235, 0.16)", "transparent"]}
+        style={style.brilho}
+      />
 
-      <View style={style.HeaderDetails}>
+      {/* Botões de voltar e fechar */}
+      <View style={[style.cabecalho, { paddingTop: insets.top + 6 }]}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          style={style.botaoVoltar}
+          style={style.botaoCabecalho}
+          hitSlop={8}
         >
           <Image
             source={require("./assets/botaoVoltar.png")}
-            style={style.iconeBotaoVoltar}
+            style={style.iconeVoltar}
           />
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => navigation.navigate("Home")}
-          style={style.botaoFechar}
+          style={style.botaoCabecalho}
+          hitSlop={8}
         >
           <Image
             source={require("./assets/botao-fechar.png")}
-            style={style.iconeBotaofechar}
+            style={style.iconeFechar}
           />
         </TouchableOpacity>
       </View>
 
-      {/* CARD DO HEROI PRINCIPAL */}
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* HERÓI PRINCIPAL */}
+        <View style={style.blocoHeroi}>
+          <View style={style.molduraFoto}>
+            <Image source={heroi.foto} style={style.fotoHeroi} />
+          </View>
 
-      <ScrollView style={style.scrollHero}>
-        <View style={style.cardHeroi}>
-          {/* iMAGENS */}
+          <Text style={style.nomeHeroi}>{heroi.nome}</Text>
 
-          <Image source={heroi.foto} style={style.imagemHeroi} />
+          <LinearGradient
+            colors={["transparent", AZUL_TEXTO, "transparent"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={style.divisor}
+          />
 
-          <View style={style.nomeTexto}>
-            <Text style={style.nomeHeroi}>{heroi.nome}</Text>
-            <View style={style.containerIcones}>
-              {listaDaClasse.map((item, index) => (
+          <View style={style.chipsClasse}>
+            {classes.map((classe) => (
+              <View key={classe} style={style.chipClasse}>
                 <Image
-                  key={index}
-                  source={iconesClasses[item]}
-                  style={style.iconeClasse}
+                  source={iconesClasses[classe]}
+                  style={style.iconeChip}
                 />
-              ))}
-            </View>
+                <Text style={style.textoChip}>{classe}</Text>
+              </View>
+            ))}
           </View>
         </View>
 
-        {/* CONTAINER HEROIS */}
+        {/* É FORTE CONTRA */}
+        <TituloSecao
+          titulo="É forte contra"
+          subtitulo={`${heroi.nome} leva vantagem contra estes heróis`}
+          cor={COR_FORTE}
+        />
+        {forteContra.map((outro) => (
+          <LinhaHeroi
+            key={outro.id}
+            heroi={outro}
+            cor={COR_FORTE}
+            aoTocar={() => abrirHeroi(outro)}
+          />
+        ))}
 
-        {/* Layer do heroi counter*/}
-        <ScrollView>
-          <View style={style.secao}>
-            <ImageBackground
-              source={require("./assets/bg-Layer.png")}
-              resizeMode="stretch"
-              style={style.fundoLayer}
-            >
-              <View style={style.layer}>
-                <ImageBackground
-                  source={require("./assets/hero.png")}
-                  resizeMode="contain"
-                  style={style.imgLayer}
-                />
-                <Text style={style.textoLayer}>É forte contra :</Text>
-              </View>
-            </ImageBackground>
+        {/* É FRACO CONTRA */}
+        <TituloSecao
+          titulo="É fraco contra"
+          subtitulo={`Estes heróis levam vantagem contra ${heroi.nome}`}
+          cor={COR_FRACO}
+        />
+        {fracoContra.map((outro) => (
+          <LinhaHeroi
+            key={outro.id}
+            heroi={outro}
+            cor={COR_FRACO}
+            aoTocar={() => abrirHeroi(outro)}
+          />
+        ))}
 
-            {/* Imagens dos herois counter */}
-
-            <View
-              showsHorizontalScrollIndicator={false}
-              style={style.scrollHerois}
-            >
-              <View style={style.containerCirculos}>
-                {/* fazer com que o .map percorre o array 'counter' na ordem dos ID's */}
-
-                {heroi.counters?.map((idDoHeroi) => {
-                  const dadosDoHeroi = HEROIS.find((h) => h.id === idDoHeroi);
-                  if (!dadosDoHeroi) return null;
-
-                  return (
-                    <TouchableOpacity
-                      key={idDoHeroi}
-                      onPress={() =>
-                        navigation.push("Details", { id: dadosDoHeroi.id })
-                      }
-                    >
-                      <View style={style.containerHerois}>
-                        <Image
-                          source={dadosDoHeroi.foto}
-                          style={style.circuloHeroi}
-                        />
-
-                        {/* nome herois counter */}
-
-                        <Text
-                          style={style.nomeHeroiCirculo}
-                          numberOfLines={1} // Força o texto a ficar em uma única linha
-                          ellipsizeMode="tail" // Se o nome for gigante (ex: Yi Sun-shin), ele coloca "..." no final
-                        >
-                          {" "}
-                          {dadosDoHeroi.nome}{" "}
-                        </Text>
-                        <View style={style.linha}></View>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </View>
-          </View>
-
-          {/* Layer herois counterado */}
-
-          <View style={style.secao}>
-            <ImageBackground
-              source={require("./assets/bg-Layer.png")}
-              resizeMode="stretch"
-              style={style.fundoLayer}
-            >
-              <View style={style.layer}>
-                <ImageBackground
-                  source={require("./assets/hero.png")}
-                  resizeMode="contain"
-                  style={style.imgLayer}
-                />
-
-                <Text style={style.textoLayer}>É fraco contra :</Text>
-              </View>
-            </ImageBackground>
-
-            {/* Imagem herois counterado */}
-
-            <View
-              showsHorizontalScrollIndicator={false}
-              style={style.scrollHerois}
-            >
-              <View style={style.containerCirculos}>
-                {/* fazer com que o .map percorre o array 'counteradoPor' na ordem dos ID's */}
-
-                {heroi.counteradoPor?.map((idDoHeroi) => {
-                  const dadosDoHeroi = HEROIS.find((h) => h.id === idDoHeroi);
-                  if (!dadosDoHeroi) return null;
-
-                  return (
-                    <TouchableOpacity
-                      key={idDoHeroi}
-                      onPress={() =>
-                        navigation.push("Details", { id: dadosDoHeroi.id })
-                      }
-                      style={{ flex: 1 }}
-                    >
-                      <View style={style.containerHerois}>
-                        <Image
-                          source={dadosDoHeroi.foto}
-                          style={style.circuloHeroi}
-                        />
-
-                        {/* nome herois counterado */}
-
-                        <Text
-                          style={style.nomeHeroiCirculo}
-                          numberOfLines={1} // Força o texto a ficar em uma única linha
-                          // ellipsizeMode="tail" // Se o nome for gigante (ex: Yi Sun-shin), ele coloca "..." no final
-                        >
-                          {" "}
-                          {dadosDoHeroi.nome}{" "}
-                        </Text>
-                        <View style={style.linha}></View>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            </View>
-          </View>
-        </ScrollView>
-        <View style={style.espaço}></View>
+        <Text style={style.rodape}>
+          Pesquisa realizada no site oficial do MLBB
+        </Text>
       </ScrollView>
-
-      <Text style={style.textoRodapé}>
-        pesquisa realizada no site oficial do MLBB
-      </Text>
     </ImageBackground>
   );
 }
+
 const style = StyleSheet.create({
-  fundoDetails: {
+  fundo: {
     flex: 1,
+    backgroundColor: "#0d1424",
   },
 
-  gradient: {
+  naoEncontrado: {
+    flex: 1,
+    backgroundColor: "#000",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  brilho: {
     position: "absolute",
     top: 0,
-    right: 0,
     left: 0,
-    height: "50%",
-    paddingTop: 40,
-    zIndex: -1,
+    right: 0,
+    height: 360,
   },
 
-  HeaderDetails: {
-    position: "absolute",
-    top: 50,
-    left: 0,
-    right: 0,
-    zIndex: 9,
-    // para separar os botões
+  // CABEÇALHO
+  cabecalho: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 10,
-  },
-
-  botaoVoltar: {
-    width: 30,
-    height: 40,
-    paddingLeft: 10,
-  },
-
-  iconeBotaoVoltar: {
-    height: "100%",
-    width: "100%",
-  },
-
-  botaoFechar: {
-    width: 45,
-    height: 45,
-  },
-
-  iconeBotaofechar: {
-    height: "100%",
-    width: "100%",
-  },
-
-  cardHeroi: {
-    marginTop: Platform.OS === "ios" ? 100 : 100,
-    marginLeft: 30,
-    marginRight: 20,
     alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-around",
+    paddingHorizontal: 8,
   },
 
-  imagemHeroi: {
-    width: 148,
-    height: 148,
+  botaoCabecalho: {
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  iconeVoltar: {
+    width: 13,
+    height: 24,
+  },
+
+  iconeFechar: {
+    width: 34,
+    height: 34,
+  },
+
+  // HERÓI PRINCIPAL
+  blocoHeroi: {
+    alignItems: "center",
+    paddingTop: 4,
+    paddingBottom: 8,
+  },
+
+  molduraFoto: {
+    padding: 4,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "rgba(224, 250, 255, 0.35)",
+    backgroundColor: "rgba(13, 20, 36, 0.6)",
+  },
+
+  fotoHeroi: {
+    width: 136,
+    height: 136,
+    borderRadius: 10,
     borderWidth: 2,
-    borderRadius: 8,
-    borderColor: "hsl(191, 100%, 94%)",
-    elevation: 10,
+    borderColor: AZUL_BORDA,
   },
 
   nomeHeroi: {
     color: "#fff",
-    fontSize: 24,
-    fontWeight: "bold",
-    fontFamily: "Roboto-Bold",
-    letterSpacing: 0.9,
-  },
-
-  iconeClasse: {
-    width: 50,
-    height: 50,
-  },
-
-  containerIcones: {
-    flexDirection: "row",
-    marginTop: 10,
-    gap: 10,
-    justifyContent: "center",
-  },
-
-  NomeTexto: {
-    alignItems: "center",
-    flex: 1,
-    marginLeft: 10,
-  },
-
-  scrollHero: {
-    marginBottom: 50,
-  },
-
-  circuloHeroi: {
-    width: 50,
-    height: 50,
-    borderRadius: 35, //circulo perfeito
-    borderWidth: 2,
-    borderColor: "hsl(191, 100%, 94%)", //borda
-  },
-
-  secao: {
-    marginBottom: 0,
-  },
-
-  fundoLayer: {
-    alignContent: "center",
-    width: "100%",
-    height: 60,
-    marginLeft: 5,
-    paddingLeft: 0,
-    marginTop: Platform.OS === "ios" ? 20 : 55,
-  },
-  layer: {
-    // layer { imgLayer/textoLayer}
-    width: 145,
-    height: 44,
-    marginLeft: 10,
-    marginTop: 8,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-
-  textoLayer: {
+    fontSize: 26,
+    fontWeight: "800",
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    marginTop: 14,
     textAlign: "center",
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontFamily: "sans-serif-condensed",
   },
 
-  imgLayer: {
-    justifyContent: "center",
-    width: 40,
-    height: 40,
+  divisor: {
+    width: 160,
+    height: 1,
+    marginTop: 8,
+    marginBottom: 12,
   },
 
-  containerCirculos: {
-    // flexDirection: "column",
-    gap: Platform.OS === "ios" ? 0 : 5,
-    marginRight: 30,
-    // alignItems: "center",
-  },
-
-  containerHerois: {
-    alignItems: "center",
-    paddingRight: 20,
-    //height: Platform.OS === "ios" ? 110 : 80,
-    width: 85,
-    marginTop: -5,
-    paddingLeft: 20,
-    // borderWidth: 1,
-    // borderColor: "red",
-    width: "100%",
+  chipsClasse: {
     flexDirection: "row",
-    gap: 10,
-    padding: 5,
-    margin: 5,
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: 8,
   },
 
-  linha: {
-    position: "absolute",
-    borderWidth: 0.5,
-    borderColor: "#9bd1fd",
-    width: "100%",
-    alignSelf: "flex-end",
-    marginLeft: 20,
+  chipClasse: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 5,
+    paddingLeft: 6,
+    paddingRight: 12,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "rgba(155, 209, 253, 0.35)",
+    backgroundColor: "rgba(155, 209, 253, 0.1)",
   },
 
-  nomeHeroiCirculo: {
-    color: "#FFFFFF",
+  iconeChip: {
+    width: 22,
+    height: 22,
+  },
+
+  textoChip: {
+    color: AZUL_BORDA,
+    fontSize: 13,
+    fontWeight: "600",
+  },
+
+  // SEÇÕES
+  faixaSecao: {
+    flexDirection: "row",
+    alignItems: "center",
+    height: 56,
+    marginTop: 24,
+    marginBottom: 6,
+    marginLeft: 8,
+    paddingLeft: 14,
+    paddingRight: 12,
+    gap: 12,
+  },
+
+  iconeSecao: {
+    width: 26,
+    height: 34,
+  },
+
+  tituloSecao: {
+    color: "#fff",
+    fontSize: 15,
+    fontWeight: "800",
+    letterSpacing: 1.2,
+    textTransform: "uppercase",
+  },
+
+  subtituloSecao: {
+    fontSize: 11,
+    marginTop: 2,
+    opacity: 0.9,
+  },
+
+  // LINHAS DA LISTA
+  linhaHeroi: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 16,
+    marginTop: 8,
+    paddingVertical: 8,
+    paddingLeft: 10,
+    paddingRight: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "rgba(155, 209, 253, 0.16)",
+    borderLeftWidth: 3,
+    backgroundColor: "rgba(10, 17, 32, 0.72)",
+  },
+
+  fotoLinha: {
+    width: 46,
+    height: 46,
+    borderRadius: 6,
+    borderWidth: 1.5,
+    borderColor: AZUL_BORDA,
+  },
+
+  textosLinha: {
+    flex: 1,
+    marginLeft: 12,
+  },
+
+  nomeLinha: {
+    color: "#fff",
+    fontSize: 15,
+    fontWeight: "700",
+  },
+
+  classesLinha: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 3,
+    gap: 4,
+  },
+
+  iconeClasseLinha: {
+    width: 14,
+    height: 14,
+    opacity: 0.85,
+  },
+
+  textoClasseLinha: {
+    color: AZUL_TEXTO,
+    fontSize: 12,
+    marginLeft: 2,
+    flexShrink: 1,
+  },
+
+  seta: {
+    color: "rgba(224, 250, 255, 0.45)",
+    fontSize: 26,
+    marginLeft: 8,
+    marginTop: -2,
+  },
+
+  rodape: {
+    color: "#fff",
+    opacity: 0.45,
+    fontSize: 11,
     fontStyle: "italic",
-    opacity: 0.6,
-    numberOfLines: 1,
-    includeFontPadding: false,
-    fontSize: Platform.OS === "ios" ? 12 : 10,
-  },
-
-  scrollHerois: {
-    marginTop: 10,
-    width: "100%",
-    //height: Platform.OS === "ios" ? 140 : 120,
-    marginLeft: 0,
-    marginBottom: Platform.OS === "ios" ? 5 : 0,
-    zIndex: 10,
-  },
-
-  textoRodapé: {
-    position: "absolute",
-    alignSelf: "center",
-    color: "#FFFFFF",
-    opacity: 0.5,
-    fontStyle: "italic",
-    bottom: 45,
-  },
-
-  bgNome: {
-    width: 150,
-    height: 150,
-  },
-  espaço: {
-    height: 50,
+    textAlign: "center",
+    marginTop: 28,
   },
 });
+
 export default DetailsScreen;

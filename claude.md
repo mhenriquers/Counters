@@ -44,7 +44,7 @@ Todos os arquivos ficam na raiz, sem pasta `src/`. Cada tela é um arquivo `.js`
 |---|---|
 | `App.js` | Raiz. `SafeAreaProvider` + `NavigationContainer` (com `linking`) + Stack com `headerShown: false`. Controla o estado `menuAberto` e renderiza `MenuLateral` sobre a tela `Home`. |
 | `HomeScreen.js` | Grade de heróis em 3 colunas (`FlatList`), em ordem alfabética (`localeCompare` pt-BR). A busca por nome aparece ao tocar na lupa. Ao tocar num herói, navega para `Details` com `{ id: item.id }`. Mostra `InstalarApp` abaixo do logo. |
-| `Details.js` | Recebe `{ id }`, busca o herói em `HEROIS` e mostra "Herói não encontrado" se o id não existir. Exibe os ícones de classe e as listas "É forte contra" (`counters`) e "É fraco contra" (`counteradoPor`). Tocar num herói da lista faz `navigation.push("Details", { id })`, empilhando telas. |
+| `Details.js` | Recebe `{ id }`, busca o herói em `HEROIS` e mostra "Herói não encontrado" se o id não existir. Mostra foto, nome, classes (chips com ícone) e duas seções no estilo do site oficial (faixa `bg-Layer.png` + capacete `hero.png`): "É forte contra" (`counters`, destaque ciano) e "É fraco contra" (`counteradoPor`, destaque vermelho). Cada herói da lista é um card com foto, nome e classes; tocar nele faz `navigation.push("Details", { id })`, empilhando telas. |
 | `InstalarApp.js` | Botão "Instalar app" (só web/Chrome): captura o `beforeinstallprompt`. Não aparece no iPhone nem com o app já instalado. |
 | `MenuLateral.js` | Gaveta feita à mão (View absoluta com 75% de largura e overlay escuro), não usa o drawer do react-navigation. Recebe as props `visivel`, `aoFechar` e `navigation`. |
 | `Doacoes.js` | Tela de apoio: copia uma chave Pix com `expo-clipboard`. |
@@ -79,7 +79,6 @@ Telas registradas no Stack e suas URLs: `Home` (`/`), `Details` (`/heroi/:id`), 
 ## Problemas conhecidos (verificados no código)
 
 - `LoadingScreen.js` usa a cor `'21FFB5'` sem `#`.
-- `Details.js` importa `lazy` e calcula `iconeDaClasse`, `counterList` e `counteradoPorList`, mas não usa nenhum deles.
 - `assets/` tem vários arquivos de teste ou duplicados (`bgLayer - Copia.png`, `botaoVoltar (1).png`, `bg.layerTeste.png`, `gojo.jpg`).
 
 ## Convenções
