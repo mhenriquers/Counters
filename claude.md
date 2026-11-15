@@ -73,13 +73,11 @@ Todos os arquivos ficam na raiz, sem pasta `src/`. Cada tela é um arquivo `.js`
 | `contatos.js` | `EMAIL`, `GITHUB_USUARIO`, `ID_JOGO` e as ações `abrirGit` e `enviarEmail` (`mailto:`). Só dados e ações: a parte visual é a `ListaContatos` de `ui.js`. |
 | `Configuracoes.js` | Tela estática e informativa (idioma, tema, política de privacidade). Ainda não tem configurações funcionais. |
 | `banco_herois.js` | **Fonte de todos os dados.** Exporta `HEROIS`. |
-| `LoadingScreen.js` | **Não está registrada no Stack** (código morto). |
 | `tema.js` | Tokens visuais: `cores`, `espaco`, `raio`, `fonte`. Toda cor, espaçamento ou tamanho de fonte novo deve vir daqui. |
 | `ui.js` | Componentes compartilhados: `Fundo` (substitui o `ImageBackground`), `TituloSecao` (faixa do site + capacete), `BarraStatus` (faixa preta atrás da hora), `CabecalhoTela` (já inclui a `BarraStatus`), `Cartao`, `Paragrafo` (justificado e com recuo de primeira linha: não faça recuo com espaços), `LinhaAcao`, `BotaoCopiar` (mostra "Copiado ✓", sem `Alert`), `ListaContatos` (e-mail, GitHub e ID, igual em Sobre e Feedback) e `Rodape`. |
 | `scripts/` | `gerar-icones.mjs` e `otimizar-imagens.mjs` (usam `sharp`); `teste-web.mjs` (E2E) e `screenshots.mjs` (prints), que usam `cdp-util.mjs`: servidor estático de `dist/` + Chrome headless via DevTools Protocol, sem dependências. Chrome em `CHROME_PATH` ou no caminho padrão do Windows. |
 | `task.md` | Plano de trabalho em andamento (hoje: repaginada visual, na `main`). A seção "Estado atual" no topo diz o que foi feito e o próximo passo. |
 | `atualizar-sdk.md` | Anotações do dono do projeto sobre como atualizar o SDK. |
-| `DraftDetails.txt`, `cod.txt` | Rascunhos e trechos antigos. `DraftDetails.txt` é uma versão antiga de `Details.js`. Não são importados. |
 
 Telas registradas no Stack e suas URLs: `Home` (`/`), `Details` (`/heroi/:id`), `Doacoes` (`/apoiar`), `Sobre` (`/sobre`), `Feedback` (`/feedback`), `Configuracoes` (`/configuracoes`). Ao criar uma tela nova, registre-a também em `linking.config.screens` no `App.js`. Parâmetros de rota devem ser simples (strings/números), pois viram parte da URL.
 
@@ -118,8 +116,7 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 ## Problemas conhecidos (verificados no código)
 
-- `LoadingScreen.js` usa a cor `'21FFB5'` sem `#`.
-- `assets/` tem arquivos que não são mais usados depois da repaginada (`botao-copiar.png`, `separadorbaixo.png`) e vários de teste ou duplicados (`bgLayer - Copia.png`, `botaoVoltar (1).png`, `bg.layerTeste.png`, `gojo.jpg`).
+- `assets/` ainda tem imagens que nenhum código usa (ex.: `liveLogoCut.gif`, de 11 MB, `logoInVideo.mp4`, `profile.jpeg`, `heroi_ml_10.png`). O Metro só empacota o que tem `require`, então elas não pesam no app, só no repositório. Antes de apagar, confira com `git grep`.
 
 ## Verificação e depuração
 

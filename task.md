@@ -2,10 +2,10 @@
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito:** Fases 0 a 11 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações, Feedback, Sobre, Configurações). Último commit: `settings screen redesign`.
+- **Feito:** Fases 0 a 12 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações, Feedback, Sobre, Configurações, limpeza). Último commit: `cleanup after redesign`.
 - **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **16 commits à frente** do GitHub (sem push).
-- **Aguardando:** o dono testar Configurações no celular (Fase 11, com um cartão por assunto de privacidade e os títulos fora dos cartões).
-- **Próximo passo:** Fase 12 (limpeza e consistência). Depois a 13 (finalizar) e, por último, a 14 (idiomas: o dono pediu para deixar por último).
+- **Aguardando:** o dono decidir se apaga as imagens sem uso listadas na nota da Fase 12, e conferir no celular os cartões azuis e as linhas, que voltaram a ter fundo (bug do `tema.js`).
+- **Próximo passo:** Fase 13 (finalizar: teste completo no celular, `claude.md`, push). Depois, por último, a 14 (idiomas).
 - **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
@@ -342,18 +342,20 @@ Commit: `settings screen redesign`.
 
 ## Fase 12: Limpeza e consistência
 
-- [ ] 12.1. `git grep -n "ImageBackground" -- "*.js"` deve dar **0 resultados**.
-- [ ] 12.2. `git grep -n "absoluteFillObject\|fontFamily" -- "*.js"` deve dar **0 resultados**.
-- [ ] 12.3. `git grep -n '{"  ' -- "*.js"` (recuo feito com espaços) deve dar **0 resultados**.
-- [ ] 12.4. Procure cores soltas que já existem no tema (`#D3AF37`, `#ffd700`, `#9bd1fd`, `hsl(191`) fora de `tema.js` e troque por `cores.*`.
-- [ ] 12.5. Rode `npx expo-doctor` (deve dar todas as verificações OK).
-- [ ] 12.6. Apague o código morto e os arquivos de teste, um `git rm` por vez, conferindo antes com `git grep` que nada os importa:
+- [x] 12.1. `git grep -n "ImageBackground" -- "*.js"` deve dar **0 resultados**.
+- [x] 12.2. `git grep -n "absoluteFillObject\|fontFamily" -- "*.js"` deve dar **0 resultados**.
+- [x] 12.3. `git grep -n '{"  ' -- "*.js"` (recuo feito com espaços) deve dar **0 resultados**.
+- [x] 12.4. Procure cores soltas que já existem no tema (`#D3AF37`, `#ffd700`, `#9bd1fd`, `hsl(191`) fora de `tema.js` e troque por `cores.*`.
+- [x] 12.5. Rode `npx expo-doctor` (deve dar todas as verificações OK).
+- [x] 12.6. Apague o código morto e os arquivos de teste, um `git rm` por vez, conferindo antes com `git grep` que nada os importa:
   - `LoadingScreen.js`, `DraftDetails.txt`, `cod.txt`;
   - `assets/gojo.jpg`, `"assets/bgLayer - Copia.png"`, `"assets/botaoVoltar (1).png"`, `assets/bg.layerTeste.png`.
   
   Depois, tire `LoadingScreen.js` e os rascunhos da tabela de Estrutura do `claude.md`, e os dois itens correspondentes de "Problemas conhecidos".
 
 **✅ Verificar:** `npm run build:web && npm run test:web` tudo `PASS`, com "nenhum erro no console". `npm run shots`: coloque o "antes" e o "depois" lado a lado e revise tela por tela.
+
+> 📝 **Resultado da Fase 12:** 12.1 só achou um **comentário** citando o `ImageBackground` (no `Fundo`, explica o que ele substitui), que ficou. 12.4 não achou as 4 cores, mas achou outras do tema escritas à mão: `#fff` → `cores.texto` (Home e Details) e a borda/fundo dos cards do Details → `cores.bordaCartao`/`cores.cartao`. **Bug encontrado:** ao comparar os prints, o Details mudou. No `tema.js`, a linha `cartao:` estava **dentro do comentário** da `barraStatus` (uma quebra de linha se perdeu numa edição do commit `9e1893b`), e `cores.cartao` era `undefined`: cartões azuis, `LinhaAcao` e itens do menu estavam com fundo **transparente**. Corrigido no commit `5678a74`, e esses cartões voltaram a ficar um pouco mais escuros, como planejado. 12.5: `expo-doctor` 20/20. 12.6: apagados `LoadingScreen.js`, `DraftDetails.txt`, `cod.txt`, `gojo.jpg`, `bgLayer - Copia.png`, `botaoVoltar (1).png`, `bg.layerTeste.png`, `botao-copiar.png` e `separadorbaixo.png` (nenhum era usado). **Sem uso, mas não apagados** (fora do plano, decisão do dono): `bg.layer.png`, `bgLayer.png`, `botao-voltar.png`, `doubleBgLayer.png`, `fundo-circulo.png`, `fundo-layer.png`, `fundoM.png`, `hero-bg.png`, `iconlogo.png`, `liveLogoCut.gif` (11 MB), `logoInVideo.mp4` (1,2 MB), `lupa1.png`, `profile.jpeg` e `heroi_ml_10.png`.
 
 Commit: `cleanup after redesign`.
 
