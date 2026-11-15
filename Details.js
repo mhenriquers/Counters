@@ -17,7 +17,29 @@ import { HEROIS } from "./banco_herois";
 
 function DetailsScreen({ route, navigation }) {
   // O 'route.params' é onde o 'pacote' que você enviou chega
-  const { heroi } = route.params;
+  const id = String(route.params?.id ?? "");
+  const heroi = HEROIS.find((h) => h.id === id);
+
+  // URL com id inexistente (ex.: /heroi/999)
+  if (!heroi) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#000",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text style={{ color: "#fff", marginBottom: 20 }}>
+          Herói não encontrado.
+        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Text style={{ color: "#ffd700" }}>Voltar para a lista</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   {
     /* Origem dos Icones das Classe */
@@ -144,7 +166,7 @@ function DetailsScreen({ route, navigation }) {
                     <TouchableOpacity
                       key={idDoHeroi}
                       onPress={() =>
-                        navigation.push("Details", { heroi: dadosDoHeroi })
+                        navigation.push("Details", { id: dadosDoHeroi.id })
                       }
                     >
                       <View style={style.containerHerois}>
@@ -208,7 +230,7 @@ function DetailsScreen({ route, navigation }) {
                     <TouchableOpacity
                       key={idDoHeroi}
                       onPress={() =>
-                        navigation.push("Details", { heroi: dadosDoHeroi })
+                        navigation.push("Details", { id: dadosDoHeroi.id })
                       }
                       style={{ flex: 1 }}
                     >

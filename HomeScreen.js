@@ -165,7 +165,7 @@ export default function HomeScreen({ navigation, route, abrirMenu }) {
                     onPress={() => {
                       setBusca("");
                       setPesquisar(false);
-                      navigation.navigate("Details", { heroi: item });
+                      navigation.navigate("Details", { id: item.id });
                     }}
                   >
                     <View>
