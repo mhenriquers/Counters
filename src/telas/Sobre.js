@@ -1,6 +1,6 @@
 import { StyleSheet, Image, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { cores, espaco } from "./tema";
+import { cores, espaco } from "../tema";
 import {
   Fundo,
   CabecalhoTela,
@@ -9,13 +9,13 @@ import {
   Paragrafo,
   ListaContatos,
   Rodape,
-} from "./ui";
+} from "../componentes/ui";
 
 export default function Sobre({ navigation }) {
   const insets = useSafeAreaInsets();
 
   return (
-    <Fundo fonte={require("./assets/bg-up-side.png")} style={styles.fundo}>
+    <Fundo fonte={require("../../assets/bg-up-side.png")} style={styles.fundo}>
       <CabecalhoTela titulo="Sobre" aoVoltar={() => navigation.goBack()} />
 
       <ScrollView
@@ -24,7 +24,7 @@ export default function Sobre({ navigation }) {
       >
         {/* TOPO: logo */}
         <Image
-          source={require("./assets/logo.png")}
+          source={require("../../assets/logo.png")}
           resizeMode="contain"
           style={styles.logo}
         />

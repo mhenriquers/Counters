@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from "expo-clipboard";
-import { cores, espaco, raio, fonte } from "./tema";
-import { EMAIL, GITHUB_USUARIO, ID_JOGO, abrirGit, enviarEmail } from "./contatos";
+import { cores, espaco, raio, fonte } from "../tema";
+import { EMAIL, GITHUB_USUARIO, ID_JOGO, abrirGit, enviarEmail } from "../dados/contatos";
 
 // ---------------------------------------------------------------------------
 // Fundo: substitui o ImageBackground (descontinuado no React Native 0.88).
@@ -36,12 +36,12 @@ export function Fundo({ fonte: imagem, modo = "cover", style, children }) {
 export function TituloSecao({ titulo, subtitulo, cor = cores.azulTexto, style }) {
   return (
     <Fundo
-      fonte={require("./assets/bg-Layer.png")}
+      fonte={require("../../assets/bg-Layer.png")}
       modo="stretch"
       style={[estilos.faixaSecao, style]}
     >
       <Image
-        source={require("./assets/hero.png")}
+        source={require("../../assets/hero.png")}
         resizeMode="contain"
         style={estilos.iconeSecao}
       />
@@ -75,10 +75,10 @@ export function CabecalhoTela({ titulo, aoVoltar }) {
   return (
     <View>
       <BarraStatus />
-      <Fundo fonte={require("./assets/header.png")} style={estilos.cabecalho}>
+      <Fundo fonte={require("../../assets/header.png")} style={estilos.cabecalho}>
         <TouchableOpacity onPress={aoVoltar} style={estilos.botaoVoltar} hitSlop={8}>
           <Image
-            source={require("./assets/seta-branca.png")}
+            source={require("../../assets/seta-branca.png")}
             resizeMode="contain"
             style={estilos.iconeVoltar}
           />
@@ -185,19 +185,19 @@ export function ListaContatos() {
   return (
     <>
       <LinhaAcao
-        icone={require("./assets/gmail.png")}
+        icone={require("../../assets/gmail.png")}
         titulo={EMAIL}
         subtitulo="Enviar e-mail"
         aoTocar={enviarEmail}
       />
       <LinhaAcao
-        icone={require("./assets/gitHub.png")}
+        icone={require("../../assets/gitHub.png")}
         titulo={GITHUB_USUARIO}
         subtitulo="Abrir GitHub"
         aoTocar={abrirGit}
       />
       <LinhaAcao
-        icone={require("./assets/imortal.png")}
+        icone={require("../../assets/imortal.png")}
         titulo="Owdail"
         subtitulo={"ID: " + ID_JOGO}
         direita={<BotaoCopiar texto={ID_JOGO} />}

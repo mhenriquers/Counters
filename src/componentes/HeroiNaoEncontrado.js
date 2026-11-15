@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { cores, espaco, raio } from "./tema";
+import { cores, espaco, raio } from "../tema";
 import { Fundo } from "./ui";
 
 // Tela de erro para um id que não existe (ex.: a URL /heroi/999).
@@ -8,9 +8,9 @@ import { Fundo } from "./ui";
 // voltar é quem usa o componente.
 export default function HeroiNaoEncontrado({ aoVoltar }) {
   return (
-    <Fundo fonte={require("./assets/bgDetails.png")} style={style.fundo}>
+    <Fundo fonte={require("../../assets/bgDetails.png")} style={style.fundo}>
       <Image
-        source={require("./assets/hero.png")}
+        source={require("../../assets/hero.png")}
         resizeMode="contain"
         style={style.icone}
       />

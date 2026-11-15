@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Platform, TouchableOpacity, Text, StyleSheet } from "react-native";
-import { cores, espaco, raio } from "./tema";
+import { cores, espaco, raio } from "../tema";
 
 export default function InstalarApp() {
   const [evento, setEvento] = useState(null);

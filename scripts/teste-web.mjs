@@ -12,7 +12,7 @@ if (!existsSync("dist/index.html")) {
 }
 
 // Dados do banco (sem executar o arquivo, que tem require de imagens)
-const banco = readFileSync("banco_herois.js", "utf8");
+const banco = readFileSync("src/dados/banco_herois.js", "utf8");
 const nomes = {};
 for (const m of banco.matchAll(/id: "(\d+)",\s*nome: "([^"]+)"/g)) nomes[m[1]] = m[2];
 const idCounterAamon = banco.match(/nome: "Aamon"[\s\S]*?counters: \["(\d+)"/)[1];

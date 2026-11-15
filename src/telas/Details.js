@@ -9,12 +9,12 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { buscarHeroi, buscarHerois } from "./herois";
-import { cores } from "./tema";
-import { Fundo, TituloSecao, BarraStatus } from "./ui";
-import IconeClasse from "./IconeClasse";
-import LinhaHeroi from "./LinhaHeroi";
-import HeroiNaoEncontrado from "./HeroiNaoEncontrado";
+import { buscarHeroi, buscarHerois } from "../dados/herois";
+import { cores } from "../tema";
+import { Fundo, TituloSecao, BarraStatus } from "../componentes/ui";
+import IconeClasse from "../componentes/IconeClasse";
+import LinhaHeroi from "../componentes/LinhaHeroi";
+import HeroiNaoEncontrado from "../componentes/HeroiNaoEncontrado";
 
 function DetailsScreen({ route, navigation }) {
   const insets = useSafeAreaInsets();
@@ -32,7 +32,7 @@ function DetailsScreen({ route, navigation }) {
   const abrirHeroi = (outro) => navigation.push("Details", { id: outro.id });
 
   return (
-    <Fundo fonte={require("./assets/bgDetails.png")} style={style.fundo}>
+    <Fundo fonte={require("../../assets/bgDetails.png")} style={style.fundo}>
       {/* Brilho azul atrás do herói */}
       <LinearGradient
         colors={["rgba(79, 216, 235, 0.16)", "transparent"]}
@@ -50,7 +50,7 @@ function DetailsScreen({ route, navigation }) {
           hitSlop={8}
         >
           <Image
-            source={require("./assets/botaoVoltar.png")}
+            source={require("../../assets/botaoVoltar.png")}
             style={style.iconeVoltar}
           />
         </TouchableOpacity>
@@ -61,7 +61,7 @@ function DetailsScreen({ route, navigation }) {
           hitSlop={8}
         >
           <Image
-            source={require("./assets/botao-fechar.png")}
+            source={require("../../assets/botao-fechar.png")}
             style={style.iconeFechar}
           />
         </TouchableOpacity>

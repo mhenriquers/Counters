@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import IconeClasse from "./IconeClasse";
-import { cores } from "./tema";
+import { cores } from "../tema";
 
 // Card de um herói numa lista: foto, nome, classes e seta.
 // `cor` pinta a borda da esquerda (ex.: cores.forte ou cores.fraco).

@@ -1,6 +1,6 @@
 import { StyleSheet, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { cores, espaco } from "./tema";
+import { cores, espaco } from "../tema";
 import {
   Fundo,
   CabecalhoTela,
@@ -8,13 +8,13 @@ import {
   Cartao,
   Paragrafo,
   ListaContatos,
-} from "./ui";
+} from "../componentes/ui";
 
 export default function Feedback({ navigation }) {
   const insets = useSafeAreaInsets();
 
   return (
-    <Fundo fonte={require("./assets/bg-up-side.png")} style={styles.fundo}>
+    <Fundo fonte={require("../../assets/bg-up-side.png")} style={styles.fundo}>
       <CabecalhoTela titulo="Feedback" aoVoltar={() => navigation.goBack()} />
 
       <ScrollView

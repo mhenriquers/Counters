@@ -5,12 +5,12 @@ import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 // TELAS
-import DetailsScreen from "./Details";
-import HomeScreen from "./HomeScreen";
-import Doacoes from "./Doacoes";
-import Sobre from "./Sobre";
-import Feedback from "./Feedback";
-import Configuracoes from "./Configuracoes";
+import DetailsScreen from "./src/telas/Details";
+import HomeScreen from "./src/telas/HomeScreen";
+import Doacoes from "./src/telas/Doacoes";
+import Sobre from "./src/telas/Sobre";
+import Feedback from "./src/telas/Feedback";
+import Configuracoes from "./src/telas/Configuracoes";
 
 const Stack = createNativeStackNavigator();
 

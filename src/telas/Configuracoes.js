@@ -1,6 +1,6 @@
 import { Text, StyleSheet, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { cores, espaco, fonte } from "./tema";
+import { cores, espaco, fonte } from "../tema";
 import {
   Fundo,
   CabecalhoTela,
@@ -8,13 +8,13 @@ import {
   Cartao,
   Paragrafo,
   LinhaAcao,
-} from "./ui";
+} from "../componentes/ui";
 
 export default function Configuracoes({ navigation }) {
   const insets = useSafeAreaInsets();
 
   return (
-    <Fundo fonte={require("./assets/bg-up-side.png")} style={styles.fundo}>
+    <Fundo fonte={require("../../assets/bg-up-side.png")} style={styles.fundo}>
       <CabecalhoTela
         titulo="Configurações"
         aoVoltar={() => navigation.goBack()}

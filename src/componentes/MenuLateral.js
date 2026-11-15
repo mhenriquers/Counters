@@ -12,7 +12,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { cores, espaco } from "./tema";
+import { cores, espaco } from "../tema";
 import { Fundo, LinhaAcao, Rodape } from "./ui";
 
 // Duração das animações (ms)
@@ -95,11 +95,11 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
           { width: larguraGaveta, transform: [{ translateX: deslocamento }] },
         ]}
       >
-        <Fundo fonte={require("./assets/fundoMG.png")} style={style.bgGaveta}>
+        <Fundo fonte={require("../../assets/fundoMG.png")} style={style.bgGaveta}>
           {/* TOPO: logo e botão de fechar na mesma linha */}
           <View style={[style.topo, { paddingTop: insets.top + espaco.sm }]}>
             <Image
-              source={require("./assets/logo.png")}
+              source={require("../../assets/logo.png")}
               style={[style.logo, { width: larguraGaveta - SOBRA_TOPO }]}
               resizeMode="contain"
             />
@@ -109,7 +109,7 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
               hitSlop={8}
             >
               <Image
-                source={require("./assets/botao-fechar.png")}
+                source={require("../../assets/botao-fechar.png")}
                 style={style.iconeFechar}
               />
             </TouchableOpacity>
@@ -118,25 +118,25 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
           {/* ITENS */}
           <View style={style.itens}>
             <LinhaAcao
-              icone={require("./assets/icon-doar.png")}
+              icone={require("../../assets/icon-doar.png")}
               titulo="Torne-se um apoiador"
               corTitulo={cores.douradoVivo}
               aoTocar={() => irPara("Doacoes")}
             />
             <LinhaAcao
-              icone={require("./assets/icon-config.png")}
+              icone={require("../../assets/icon-config.png")}
               titulo="Configurações"
               corTitulo={cores.douradoVivo}
               aoTocar={() => irPara("Configuracoes")}
             />
             <LinhaAcao
-              icone={require("./assets/icon-feedback.png")}
+              icone={require("../../assets/icon-feedback.png")}
               titulo="Feedback"
               corTitulo={cores.douradoVivo}
               aoTocar={() => irPara("Feedback")}
             />
             <LinhaAcao
-              icone={require("./assets/icon-sobre.png")}
+              icone={require("../../assets/icon-sobre.png")}
               titulo="Sobre"
               corTitulo={cores.douradoVivo}
               aoTocar={() => irPara("Sobre")}

@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { View, Text, StyleSheet, Animated, Platform } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { cores, espaco, raio, fonte } from "./tema";
+import { cores, espaco, raio, fonte } from "../tema";
 import {
   Fundo,
   CabecalhoTela,
@@ -11,7 +11,7 @@ import {
   Paragrafo,
   BotaoCopiar,
   Rodape,
-} from "./ui";
+} from "../componentes/ui";
 
 const CHAVE_PIX = "9bfe32d9-8633-41c0-835b-5287ecd44293";
 
@@ -51,7 +51,7 @@ export default function Doacoes({ navigation }) {
   });
 
   return (
-    <Fundo fonte={require("./assets/bg-up-side.png")} style={styles.fundo}>
+    <Fundo fonte={require("../../assets/bg-up-side.png")} style={styles.fundo}>
       <CabecalhoTela
         titulo="Apoiar o projeto"
         aoVoltar={() => navigation.goBack()}
@@ -66,7 +66,7 @@ export default function Doacoes({ navigation }) {
         {/* DESTAQUE: emblema + título (como o bloco do herói no Details) */}
         <View style={styles.destaque}>
           <Animated.Image
-            source={require("./assets/imortal.png")}
+            source={require("../../assets/imortal.png")}
             resizeMode="contain"
             style={[
               styles.emblema,

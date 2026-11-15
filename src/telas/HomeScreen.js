@@ -22,11 +22,11 @@ import {
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
-import { listarHerois } from "./herois";
-import InstalarApp from "./InstalarApp";
-import MenuLateral from "./MenuLateral";
-import { cores, espaco, raio, fonte } from "./tema";
-import { Fundo } from "./ui";
+import { listarHerois } from "../dados/herois";
+import InstalarApp from "../componentes/InstalarApp";
+import MenuLateral from "../componentes/MenuLateral";
+import { cores, espaco, raio, fonte } from "../tema";
+import { Fundo } from "../componentes/ui";
 
 const chaveDoHeroi = (item) => item.id;
 
@@ -42,7 +42,7 @@ function CabecalhoGrade() {
   return (
     <View>
       <Image
-        source={require("./assets/logo.png")}
+        source={require("../../assets/logo.png")}
         style={styles.logo}
         resizeMode="contain"
       />
@@ -128,12 +128,12 @@ export default function HomeScreen({ navigation }) {
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
             <Fundo
-              fonte={require("./assets/bgbg.png")}
+              fonte={require("../../assets/bgbg.png")}
               style={styles.backgroundImage}
             >
               {/* CABEÇALHO: menu | separador | busca + lupa */}
               <Fundo
-                fonte={require("./assets/bg-header.png")}
+                fonte={require("../../assets/bg-header.png")}
                 style={styles.cabecalho}
               >
                 {/* Com a busca aberta, o botão do menu só fecha a busca */}
@@ -144,10 +144,10 @@ export default function HomeScreen({ navigation }) {
                   style={styles.botaoCabecalho}
                   hitSlop={8}
                 >
-                  <Image source={require("./assets/opcoes.png")} />
+                  <Image source={require("../../assets/opcoes.png")} />
                 </TouchableOpacity>
                 <Image
-                  source={require("./assets/separador.png")}
+                  source={require("../../assets/separador.png")}
                   style={styles.separador}
                 />
 
@@ -179,7 +179,7 @@ export default function HomeScreen({ navigation }) {
                     style={styles.botaoCabecalho}
                     hitSlop={8}
                   >
-                    <Image source={require("./assets/lupa.png")} />
+                    <Image source={require("../../assets/lupa.png")} />
                   </TouchableOpacity>
                 </View>
               </Fundo>
