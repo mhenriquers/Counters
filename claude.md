@@ -143,3 +143,48 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 - **`FlatList`:** mantenha as props estáveis (`renderItem`, `keyExtractor`, handlers e estilos com `useCallback`, constantes ou `StyleSheet`). Funções inline fazem a grade inteira ser redesenhada a cada mudança de estado da tela (ex.: ao abrir o menu).
 - Assets são carregados com `require("./assets/...")`, com caminho relativo à raiz.
 - Commits são curtos e em inglês informal (ex.: "editing filter"), feitos a cada arquivo ou tela finalizado.
+
+## Arquitetura (conversa de 2026-11-15, ainda não aplicada)
+
+O dono está aprendendo C# (POO, SOLID) e quis entender a arquitetura deste projeto. Resumo do que foi conversado, para retomar depois.
+
+### Como está hoje
+
+- **Sem arquitetura formal:** estrutura plana e centrada em telas. Cada tela busca dados, transforma, desenha e estiliza sozinha.
+- Camadas começando a surgir: `App.js` (entrada + rotas, como um `Program.cs`) → telas → `ui.js` (componentes) → `tema.js` (tokens) → `banco_herois.js` (dados).
+- O padrão é o do React: **composição de componentes** com dados descendo por props (fluxo unidirecional). Não é MVC nem MVVM.
+
+### POO e SOLID neste projeto
+
+- **POO:** não há classes nem herança, e isso não faz falta. As ideias continuam aqui: encapsulamento (só o que tem `export` sai do módulo, e o `useState` é privado), composição em vez de herança (`children`) e polimorfismo por props (`<Cartao destaque="dourado">`).
+- **S (responsabilidade única):** o mais útil. Criar o `ui.js` já foi aplicar o S. Violações atuais: as telas acessam os dados direto, o `Details.js` faz cerca de 8 coisas, e `Sobre.js`/`Feedback.js` duplicam código (a Fase 7 do `task.md` resolve essa duplicação).
+- **D (inversão de dependência):** o equivalente ao `IHeroiRepository` do C#. Em JS não há `interface`: as **funções exportadas por um módulo são o contrato**. Não precisa de injeção de dependência.
+- **O (aberto/fechado):** exemplo existente é o mapa `iconesClasses` (classe nova = chave nova, sem `if/else`). Componentes se estendem por props/`children`.
+- **I (segregação de interface):** "não exija props que não usa". Ex.: o `MenuLateral` recebe o `navigation` inteiro, mas talvez só precise de `irPara(tela)`.
+- **L (Liskov):** quase não se aplica (fala de herança). Versão solta: componentes com o mesmo contrato de props são intercambiáveis (`Fundo` no lugar do `ImageBackground`).
+- **Alerta:** não exagerar. Repository/Service/UseCase num app offline seria cerimônia sem ganho. S + D resolvem 90%.
+
+### Plano (depois da repaginada do `task.md`)
+
+1. **Camada de dados (D), pode ser feita a qualquer momento**, mesmo antes de mover pastas: um `herois.js` com `buscarHeroi(id)`, `buscarHerois(ids)` e `listarHerois()` (já ordenado). Por dentro, um `Map` por id (troca o `HEROIS.find`, que percorre o array) e um herói já "preparado", com `classes: [...]` (as telas param de fazer `split("/")`). **Nenhuma tela importa `banco_herois.js` direto.**
+2. **Details com S:** sai `LinhaHeroi`, `HeroiNaoEncontrado` e `IconeClasse` para componentes. A tela só compõe as peças, indo de cerca de 435 para 150 a 200 linhas.
+3. **Pastas:** um commit **só de mudança de pasta**, com `git mv` (preserva o histórico) e os caminhos ajustados. Não fazer no meio da repaginada, para não misturar "moveu" com "mudou" no diff. Custo medido em 2026-11-15: 69 imports relativos nos `.js` + 133 `require` de imagens no `banco_herois.js`. Caminho errado faz o Metro parar o build (erro barulhento).
+   ```
+   App.js
+   src/
+     telas/        Home, Details, Sobre...
+     componentes/  ui.js, MenuLateral, InstalarApp, LinhaHeroi, IconeClasse...
+     dados/        banco_herois.js, herois.js
+     tema.js
+   ```
+4. Depois de mover, transformar estas regras em convenções (seção acima) e atualizar a tabela de Estrutura e os scripts de teste.
+
+### Decisões tomadas
+
+- `IconeClasse` fica em **componentes** (decisão do dono: mesmo sabendo uma regra do domínio, o que ele devolve é visual).
+- Reorganizar as pastas só **depois** da repaginada.
+
+### Regras propostas (valem quando o plano for aplicado)
+
+- Tela nova vai em `telas/`. Componente usado em 2+ telas vai em `componentes/`.
+- Telas pegam dados só pelas funções de `dados/herois.js`.
