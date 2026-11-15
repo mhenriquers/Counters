@@ -297,7 +297,7 @@ Commit: `about screen redesign`.
 - [ ] 11.2. **Preferências**: `TituloSecao titulo="Preferências"` + 2 `LinhaAcao` **sem `aoTocar`** (informativas):
   - "Idioma" com subtítulo "Português";
   - "Tema" com subtítulo **"Único"** (corrige "Unico").
-- [ ] 11.3. "Avalie-nos": hoje não faz nada. **Remova** (ver Decisões pendentes).
+- [ ] 11.3. "Avalie-nos": hoje não faz nada. **Remova** (decidido: o app não está numa loja, então não há página para avaliar; volta quando estiver na Play Store).
 - [ ] 11.4. **Privacidade e uso**: `TituloSecao titulo="Privacidade e uso"` + `Cartao` com 3 blocos, cada um com um subtítulo em negrito (`fonte.item`, branco, `fontWeight: "700"`) e um `Paragrafo`:
   - **"Política de privacidade"** (corrige "Politica");
   - "Uso de imagens e direitos autorais";
@@ -342,9 +342,14 @@ Commit: `cleanup after redesign`.
 
 ---
 
-## Decisões pendentes (responder antes da fase indicada)
+## Decisões
 
-1. **Fase 11, "Avalie-nos":** remover (padrão deste plano), ou transformar num link para a página do app (Play Store ou site)? Se for link, qual URL?
-2. **Fase 8, título do cabeçalho:** "Apoiar o projeto" (padrão) ou manter "Doações"? A URL continua `/apoiar`.
+**Tomadas:**
+
+- **Fase 11, "Avalie-nos":** remover. Quando o app estiver na Play Store, volta como link para a página da loja.
+- **Fase 8, título do cabeçalho:** "Apoiar o projeto". Combina com o item do menu ("Torne-se um apoiador") e com a URL `/apoiar`.
+
+**Pendentes (responder antes da fase indicada):**
+
 3. **Fase 10, textos longos:** o "Lore" tem um tom bem pessoal ("como jogador sou um ótimo programador"). Manter como está (padrão) ou revisar?
 4. **Fora deste plano:** apagar código morto e arquivos de teste (`LoadingScreen.js`, `DraftDetails.txt`, `cod.txt`, `assets/gojo.jpg`, `assets/bgLayer - Copia.png`, `assets/botaoVoltar (1).png`, `assets/bg.layerTeste.png`)? Seria uma fase extra, depois da 12.
