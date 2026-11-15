@@ -16,6 +16,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
 import { HEROIS } from "./banco_herois";
+import InstalarApp from "./InstalarApp";
 
 export default function HomeScreen({ navigation, route, abrirMenu }) {
   //Constantes
@@ -138,6 +139,7 @@ export default function HomeScreen({ navigation, route, abrirMenu }) {
                       style={styles.fotoIcone}
                       resizeMode="contain"
                     />
+                    <InstalarApp />
                   </View>
                 }
                 renderItem={({ item }) => (
