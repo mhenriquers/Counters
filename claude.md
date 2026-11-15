@@ -88,6 +88,7 @@ Telas registradas no Stack e suas URLs: `Home` (`/`), `Details` (`/heroi/:id`), 
 - Ajustes por plataforma usam `Platform.OS === "ios" ? x : y`, ou `Platform.select({ ios, web, default })` quando a web precisa de um valor próprio.
 - Visual: fundo escuro, bordas azul-claras `hsl(191, 100%, 94%)`, texto de menu dourado `#ffd700`, imagens de fundo (`ImageBackground`) em quase todas as telas.
 - Assets são carregados com `require("./assets/...")`, com caminho relativo à raiz.
+- Para overlays use `StyleSheet.absoluteFill`. O `absoluteFillObject` foi removido no React Native 0.88 (continua existindo no react-native-web, então o erro só aparece no celular: a View fica com altura 0).
 - Commits são curtos e em inglês informal (ex.: "editing filter").
 
 commits são feitos a cada feature importante finalizada 

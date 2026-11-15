@@ -20,7 +20,7 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
   };
 
   return (
-    <View style={StyleSheet.absoluteFillObject}>
+    <View style={StyleSheet.absoluteFill}>
       <TouchableWithoutFeedback onPress={aoFechar}>
         <View style={style.sombra} />
       </TouchableWithoutFeedback>
@@ -105,7 +105,7 @@ const style = StyleSheet.create({
     marginBottom: 30,
   },
   sombra: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: "rgba(0,0,0,0.5)",
     zIndex: 1,
   },
