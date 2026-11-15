@@ -6,8 +6,9 @@
 - **Branch:** o trabalho está direto na `main`.
 - **Decisões já tomadas:** cartões mais escuros aprovados; **manter** todas as imagens sem uso.
 - **Próximo passo:** a arquitetura, que vem **ANTES da Fase 14** (decisão do dono em 2026-11-15), na ordem do plano da seção "Arquitetura" do `claude.md`:
-  1. `herois.js` (commit `add heroes data layer`). O Claude escreve e explica. `buscarHeroi(id)` devolve **`null`** quando não acha.
-  2. Quebrar o `Details.js` (commit `split details screen`).
+  1. ✅ `herois.js` (commit `add heroes data layer`). `buscarHeroi(id)` devolve **`null`** quando não acha.
+  2. ✅ Quebrar o `Details.js` (commit `split details screen`): saíram `IconeClasse`, `LinhaHeroi` e `HeroiNaoEncontrado`. O dono decidiu **não** criar um `SecaoHerois` (as duas seções repetidas ficam como estão).
+  - O Claude escreve e explica, e cada explicação vai para o `explicaCode.md` (arquivo de estudo do dono).
   3. Mover para `src/` (commit `move files to src`, só `git mv` e caminhos).
   4. Atualizar `claude.md` e `task.md`. Depois disso, a Fase 14 (o `idioma.js` já nasce em `src/`).
 - **Jeito de trabalhar combinado com o dono:**
