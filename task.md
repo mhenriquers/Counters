@@ -9,8 +9,9 @@
   1. ✅ `herois.js` (commit `add heroes data layer`). `buscarHeroi(id)` devolve **`null`** quando não acha.
   2. ✅ Quebrar o `Details.js` (commit `split details screen`): saíram `IconeClasse`, `LinhaHeroi` e `HeroiNaoEncontrado`. O dono decidiu **não** criar um `SecaoHerois` (as duas seções repetidas ficam como estão).
   - O Claude escreve e explica, e cada explicação vai para o `explicaCode.md` (arquivo de estudo do dono).
-  3. Mover para `src/` (commit `move files to src`, só `git mv` e caminhos).
-  4. Atualizar `claude.md` e `task.md`. Depois disso, a Fase 14 (o `idioma.js` já nasce em `src/`).
+  3. ✅ Mover para `src/` (commit `move files to src`, só `git mv` e caminhos). Testado no celular.
+  4. ✅ Atualizar `claude.md` (Estrutura, Modelo de dados, Convenções e Arquitetura) e `task.md`.
+  - Depois disso, a Fase 14. O `idioma.js` já nasce em `src/` (pasta a decidir com o dono no 14.2).
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
   - deixar as perguntas para o **final** da resposta;

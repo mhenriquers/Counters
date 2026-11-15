@@ -59,45 +59,66 @@ Não há lint nem formatter. Os testes são só da versão web (`npm run test:we
 
 ## Estrutura
 
-Todos os arquivos ficam na raiz, sem pasta `src/`. Cada tela é um arquivo `.js` com `StyleSheet.create` no final.
+```
+App.js              entrada + rotas (fica na raiz: o expo/AppEntry.js importa o App daqui)
+assets/             imagens (fica na raiz: app.json e scripts/ apontam para cá)
+src/
+  telas/            uma tela por arquivo (tem rota no App.js)
+  componentes/      tudo que desenha algo e não é tela
+  dados/            dados e acesso a eles
+  tema.js           tokens visuais
+scripts/            build, testes e prints
+```
+
+Cada tela ou componente é um arquivo `.js` com `StyleSheet.create` no final, com só os estilos que ele usa.
 
 | Arquivo | Papel |
 |---|---|
 | `App.js` | Raiz. `SafeAreaProvider` + `NavigationContainer` (com `linking`) + Stack com `headerShown: false`. Todas as telas usam `component=`, sem render callback. |
-| `HomeScreen.js` | Grade de heróis em 3 colunas (`FlatList`), em ordem alfabética (`localeCompare` pt-BR). A busca por nome aparece ao tocar na lupa. Ao tocar num herói, navega para `Details` com `{ id: item.id }`. Mostra `InstalarApp` abaixo do logo. Guarda o estado `menuAberto` e renderiza o `MenuLateral`. |
-| `Details.js` | Recebe `{ id }`, busca o herói em `HEROIS` e mostra "Herói não encontrado" se o id não existir. Mostra foto, nome, classes (chips com ícone) e duas seções no estilo do site oficial (faixa `bg-Layer.png` + capacete `hero.png`): "É forte contra" (`counters`, destaque ciano) e "É fraco contra" (`counteradoPor`, destaque vermelho). Cada herói da lista é um card com foto, nome e classes. Tocar nele faz `navigation.push("Details", { id })`, empilhando telas. O ✕ usa `navigation.popTo("Home")`. **É a referência visual do app.** |
-| `InstalarApp.js` | Botão "Instalar app" (só web/Chrome): captura o `beforeinstallprompt`. Não aparece no iPhone nem com o app já instalado. |
-| `MenuLateral.js` | Gaveta feita à mão (não usa o drawer do react-navigation). Props: `visivel`, `aoFechar`, `navigation`. Animada com `Animated` (desliza da esquerda, `useNativeDriver` fora da web), continua montada até terminar de fechar, e com o menu aberto o voltar do Android (`BackHandler`) fecha o menu. A gaveta tem `overflow: "hidden"` porque a imagem de fundo (`fundoMG.png`, 1167x2000) transbordava e cobria a sombra, impedindo de fechar ao tocar fora. |
+| **`src/telas/`** | |
+| `HomeScreen.js` | Grade de heróis em 3 colunas (`FlatList`), com a lista de `listarHerois()` (já em ordem alfabética). A busca aparece ao tocar na lupa: com o campo **vazio**, uma camada invisível (`Pressable`) cobre a grade e o primeiro toque só fecha a busca; com **texto**, tocar num resultado abre direto. Fechar a busca (lupa, ☰, voltar do Android) limpa o texto. Ao tocar num herói, navega para `Details` com `{ id: item.id }`. Mostra `InstalarApp` abaixo do logo. Guarda o estado `menuAberto` e renderiza o `MenuLateral`. |
+| `Details.js` | Recebe `{ id }` e usa `buscarHeroi`. Se não existir, mostra o `HeroiNaoEncontrado`. Mostra foto, nome, classes (chips com `IconeClasse`) e duas seções com `TituloSecao`: "É forte contra" (`counters`, `cores.forte`) e "É fraco contra" (`counteradoPor`, `cores.fraco`), cada herói num `LinhaHeroi`. Tocar nele faz `navigation.push("Details", { id })`, empilhando telas. O ✕ usa `navigation.popTo("Home")`. A tela só compõe as peças. **É a referência visual do app.** |
 | `Doacoes.js` | Tela de apoio (URL `/apoiar`): chave Pix com `BotaoCopiar`. Primeira tela secundária no padrão novo (`CabecalhoTela`, `Cartao`, `Paragrafo`, `Rodape`): use-a como modelo para as outras. |
 | `Feedback.js` / `Sobre.js` | Links para GitHub e e-mail e um botão que copia um ID. As ações vêm de `contatos.js`. |
-| `contatos.js` | `EMAIL`, `GITHUB_USUARIO`, `ID_JOGO` e as ações `abrirGit` e `enviarEmail` (`mailto:`). Só dados e ações: a parte visual é a `ListaContatos` de `ui.js`. |
 | `Configuracoes.js` | Tela estática e informativa (idioma, tema, política de privacidade). Ainda não tem configurações funcionais. |
-| `banco_herois.js` | **Fonte de todos os dados.** Exporta `HEROIS`. |
-| `tema.js` | Tokens visuais: `cores`, `espaco`, `raio`, `fonte`. Toda cor, espaçamento ou tamanho de fonte novo deve vir daqui. |
+| **`src/componentes/`** | |
 | `ui.js` | Componentes compartilhados: `Fundo` (substitui o `ImageBackground`), `TituloSecao` (faixa do site + capacete), `BarraStatus` (faixa preta atrás da hora), `CabecalhoTela` (já inclui a `BarraStatus`), `Cartao`, `Paragrafo` (justificado e com recuo de primeira linha: não faça recuo com espaços), `LinhaAcao`, `BotaoCopiar` (mostra "Copiado ✓", sem `Alert`), `ListaContatos` (e-mail, GitHub e ID, igual em Sobre e Feedback) e `Rodape`. |
-| `scripts/` | `gerar-icones.mjs` e `otimizar-imagens.mjs` (usam `sharp`); `teste-web.mjs` (E2E) e `screenshots.mjs` (prints), que usam `cdp-util.mjs`: servidor estático de `dist/` + Chrome headless via DevTools Protocol, sem dependências. Chrome em `CHROME_PATH` ou no caminho padrão do Windows. |
-| `task.md` | Plano de trabalho em andamento (hoje: repaginada visual, na `main`). A seção "Estado atual" no topo diz o que foi feito e o próximo passo. |
+| `IconeClasse.js` | `<IconeClasse classe tamanho style />`. Guarda o mapa classe → ícone (classe nova = chave nova). |
+| `LinhaHeroi.js` | Card de um herói numa lista: foto, nome, classes e seta. Props: `heroi`, `cor` (borda da esquerda), `aoTocar`. |
+| `HeroiNaoEncontrado.js` | Tela de erro do id inexistente (`/heroi/999`). Recebe só `aoVoltar`. |
+| `MenuLateral.js` | Gaveta feita à mão (não usa o drawer do react-navigation). Props: `visivel`, `aoFechar`, `navigation`. Animada com `Animated` (desliza da esquerda, `useNativeDriver` fora da web), continua montada até terminar de fechar, e com o menu aberto o voltar do Android (`BackHandler`) fecha o menu. A gaveta tem `overflow: "hidden"` porque a imagem de fundo (`fundoMG.png`, 1167x2000) transbordava e cobria a sombra, impedindo de fechar ao tocar fora. |
+| `InstalarApp.js` | Botão "Instalar app" (só web/Chrome): captura o `beforeinstallprompt`. Não aparece no iPhone nem com o app já instalado. |
+| **`src/dados/`** | |
+| `herois.js` | **Única porta de entrada para os heróis.** `buscarHeroi(id)` (devolve `null` se não existir), `buscarHerois(ids)` (ignora ids inexistentes) e `listarHerois()` (ordem alfabética pt-BR, lista congelada). Por dentro: um `Map` por id e o herói "preparado", com `classes: [...]` no lugar de `classe`. |
+| `banco_herois.js` | **Fonte de todos os dados.** Exporta `HEROIS`. Só o `herois.js` importa este arquivo. |
+| `contatos.js` | `EMAIL`, `GITHUB_USUARIO`, `ID_JOGO` e as ações `abrirGit` e `enviarEmail` (`mailto:`). Só dados e ações: a parte visual é a `ListaContatos` de `ui.js`. |
+| **outros** | |
+| `src/tema.js` | Tokens visuais: `cores`, `espaco`, `raio`, `fonte`. Toda cor, espaçamento ou tamanho de fonte novo deve vir daqui. |
+| `scripts/` | `gerar-icones.mjs` e `otimizar-imagens.mjs` (usam `sharp`); `teste-web.mjs` (E2E, lê `src/dados/banco_herois.js` como texto) e `screenshots.mjs` (prints), que usam `cdp-util.mjs`: servidor estático de `dist/` + Chrome headless via DevTools Protocol, sem dependências. Chrome em `CHROME_PATH` ou no caminho padrão do Windows. |
+| `task.md` | Plano de trabalho em andamento, na `main`. A seção "Estado atual" no topo diz o que foi feito e o próximo passo. |
+| `explicaCode.md` | Anotações de estudo do dono: a explicação de cada passo da arquitetura, com comparações com C#. Quando ele pedir para explicar uma mudança de arquitetura, acrescente uma seção aqui. |
 | `atualizar-sdk.md` | Anotações do dono do projeto sobre como atualizar o SDK. |
 
 Telas registradas no Stack e suas URLs: `Home` (`/`), `Details` (`/heroi/:id`), `Doacoes` (`/apoiar`), `Sobre` (`/sobre`), `Feedback` (`/feedback`), `Configuracoes` (`/configuracoes`). Ao criar uma tela nova, registre-a também em `linking.config.screens` no `App.js`. Parâmetros de rota devem ser simples (strings/números), pois viram parte da URL.
 
-## Modelo de dados (`banco_herois.js`)
+## Modelo de dados (`src/dados/banco_herois.js`)
 
 ```js
 {
   id: "1",                      // string. É a chave usada nas referências e no keyExtractor
   nome: "Aamon",
   classe: "Assassino",          // uma ou duas classes separadas por "/", ex.: "Lutador/Tanque"
-  foto: require("./assets/heroi_ml_49.png"),
+  foto: require("../../assets/heroi_ml_49.png"),
   counters: ["27", "51", ...],      // ids de heróis contra os quais ele é FORTE (5 itens)
   counteradoPor: ["44", "98", ...], // ids de heróis contra os quais ele é FRACO (5 itens)
 }
 ```
 
+- As telas **não** veem esse formato: elas recebem o herói do `herois.js`, que troca `classe` por `classes: ["Lutador", "Tanque"]`.
 - Cada referência tem um comentário com os nomes, ex.: `// Guinevere, Eudora, ...`. Mantenha esses comentários atualizados ao editar.
 - Os dados vêm do site oficial do MLBB (o rodapé da tela Details cita isso). Em Marcel, a convenção está anotada: `counters` = "MOST COUNTERED BY" do site e `counteradoPor` = "BEST COUNTERS".
 - O nome do arquivo de imagem (`heroi_ml_N.png`) **não** corresponde ao `id` do herói. Sempre confira o `require` existente.
-- As classes válidas são as chaves de `iconesClasses` em `Details.js`: `Assassino`, `Mago`, `Tanque`, `Suporte`, `Lutador`, `Atirador`. O ícone de `Lutador` é `soldado.png`.
+- As classes válidas são as chaves do mapa `icones` em `src/componentes/IconeClasse.js`: `Assassino`, `Mago`, `Tanque`, `Suporte`, `Lutador`, `Atirador`. O ícone de `Lutador` é `soldado.png`.
 - Ao adicionar um herói: use um `id` novo e único (o maior hoje é `"133"`, do Marcel), adicione a imagem em `assets/` e insira o objeto. A Home ordena sozinha, então a posição no array não importa.
 
 ## Armadilhas do SDK 58 / RN 0.88 / React Navigation 7
@@ -120,7 +141,7 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 ## Verificação e depuração
 
-- **Teste automático (web):** `npm run build:web && npm run test:web`. Cobre a navegação, o voltar, o ✕ do Details, os itens do menu, fechar o menu tocando fora, `/heroi/999`, os botões de copiar e os erros no console. Sai com código 1 se algo falhar. Quando mudar um texto que o teste procura (ex.: um item do menu), atualize `scripts/teste-web.mjs` no mesmo commit.
+- **Teste automático (web):** `npm run build:web && npm run test:web`. Cobre a navegação, o voltar, o ✕ do Details, os itens do menu, fechar o menu tocando fora, a busca (camada que bloqueia o toque, resultado abre direto, lupa limpa o filtro), `/heroi/999`, os botões de copiar e os erros no console. Sai com código 1 se algo falhar. Quando mudar um texto que o teste procura (ex.: um item do menu), atualize `scripts/teste-web.mjs` no mesmo commit.
 - **Comparação visual:** `npm run shots` gera prints em `screenshots/`. Antes de mexer numa tela, copie a pasta para `screenshots-antes/` e compare depois.
 - **Na web, manual:** `npm run preview:web`. Teste o modo offline (F12 → Network → Offline).
 - **No celular:** sempre teste também no Expo Go. Há bugs que só aparecem no nativo (ex.: o `absoluteFillObject`).
@@ -134,50 +155,41 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 - **Visual (identidade do site oficial do MLBB):** fundo azul-marinho escuro (`#0d1424`), bordas azul-claras `hsl(191, 100%, 94%)`, textos secundários `#9bd1fd`, faixas de seção com `bg-Layer.png` + `hero.png`, dourado `#D3AF37` (bordas e títulos das telas secundárias) e `#ffd700` (menu, botões). Siga a tela `Details.js` como referência. Cores, espaços e fontes vêm de `tema.js`, e telas novas usam os componentes de `ui.js`.
 - Não use `fontFamily` customizada (nenhuma fonte é carregada, e a web cai em fonte serifada). Use só `fontWeight`.
 - **`FlatList`:** mantenha as props estáveis (`renderItem`, `keyExtractor`, handlers e estilos com `useCallback`, constantes ou `StyleSheet`). Funções inline fazem a grade inteira ser redesenhada a cada mudança de estado da tela (ex.: ao abrir o menu).
-- Assets são carregados com `require("./assets/...")`, com caminho relativo à raiz.
+- Assets são carregados com `require`, com caminho relativo ao arquivo: de `src/telas/` ou `src/componentes/` é `require("../../assets/...")`.
+- **Onde fica cada coisa:** tela (tem rota no `App.js`) vai em `src/telas/`; todo o resto que desenha algo vai em `src/componentes/`, mesmo que só uma tela use; dados e acesso a eles vão em `src/dados/`.
+- **Dados de heróis só pelo `herois.js`:** nenhuma tela ou componente importa `banco_herois.js` direto. Se precisar de algo novo (ex.: heróis por classe), crie uma função no `herois.js`.
+- **Componente recebe só o que usa** (I do SOLID): prefira uma função (`aoVoltar`, `aoTocar`) a passar o `navigation` inteiro.
+- **Mudança de pasta** vai num commit só dela, com `git mv` (preserva o histórico), sem misturar com mudança de lógica.
 - Commits são curtos e em inglês informal (ex.: "editing filter"), feitos a cada arquivo ou tela finalizado.
 
-## Arquitetura (conversa de 2026-11-15, ainda não aplicada)
+## Arquitetura (aplicada em 2026-11-15)
 
-O dono está aprendendo C# (POO, SOLID) e quis entender a arquitetura deste projeto. Resumo do que foi conversado, para retomar depois.
+O dono está aprendendo C# (POO, SOLID). A explicação passo a passo, com comparações com C#, está no `explicaCode.md`.
 
-### Como está hoje
+### Como está
 
-- **Sem arquitetura formal:** estrutura plana e centrada em telas. Cada tela busca dados, transforma, desenha e estiliza sozinha.
-- Camadas começando a surgir: `App.js` (entrada + rotas, como um `Program.cs`) → telas → `ui.js` (componentes) → `tema.js` (tokens) → `banco_herois.js` (dados).
 - O padrão é o do React: **composição de componentes** com dados descendo por props (fluxo unidirecional). Não é MVC nem MVVM.
+- Camadas, uma por pasta:
+  ```
+  App.js (entrada + rotas, como um Program.cs)
+    └▶ telas ──usam──▶ componentes ──usam──▶ tema
+         └──pedem dados──▶ dados/herois.js ──lê──▶ dados/banco_herois.js
+  ```
+- Feito em 3 commits: `add heroes data layer`, `split details screen`, `move files to src`.
 
 ### POO e SOLID neste projeto
 
-- **POO:** não há classes nem herança, e isso não faz falta. As ideias continuam aqui: encapsulamento (só o que tem `export` sai do módulo, e o `useState` é privado), composição em vez de herança (`children`) e polimorfismo por props (`<Cartao destaque="dourado">`).
-- **S (responsabilidade única):** o mais útil. Criar o `ui.js` já foi aplicar o S. Violações atuais: as telas acessam os dados direto, o `Details.js` faz cerca de 8 coisas. A duplicação entre `Sobre.js` e `Feedback.js` já foi resolvida na Fase 7 com o `contatos.js`, que é um exemplo de S.
-- **D (inversão de dependência):** o equivalente ao `IHeroiRepository` do C#. Em JS não há `interface`: as **funções exportadas por um módulo são o contrato**. Não precisa de injeção de dependência.
-- **O (aberto/fechado):** exemplo existente é o mapa `iconesClasses` (classe nova = chave nova, sem `if/else`). Componentes se estendem por props/`children`.
-- **I (segregação de interface):** "não exija props que não usa". Ex.: o `MenuLateral` recebe o `navigation` inteiro, mas talvez só precise de `irPara(tela)`.
+- **POO:** não há classes nem herança, e isso não faz falta. As ideias continuam aqui: encapsulamento (só o que tem `export` sai do módulo, e o `useState` é privado), composição em vez de herança (`children`) e polimorfismo por props (`<Cartao destaque="dourado">`, `<LinhaHeroi cor={cores.forte}>`).
+- **S (responsabilidade única):** o mais útil. Exemplos: `ui.js`, `contatos.js` (tirou a duplicação entre Sobre e Feedback) e o Details quebrado em `IconeClasse`, `LinhaHeroi` e `HeroiNaoEncontrado`.
+- **D (inversão de dependência):** o `herois.js` é o equivalente ao `IHeroiRepository` do C#. Em JS não há `interface`: as **funções exportadas por um módulo são o contrato**. Não precisa de injeção de dependência.
+- **O (aberto/fechado):** o mapa `icones` do `IconeClasse` (classe nova = chave nova, sem `if/else`). Componentes se estendem por props/`children`.
+- **I (segregação de interface):** "não exija props que não usa". Exemplo: o `HeroiNaoEncontrado` recebe só `aoVoltar`. Pendente: o `MenuLateral` ainda recebe o `navigation` inteiro, mas talvez só precise de `irPara(tela)`.
 - **L (Liskov):** quase não se aplica (fala de herança). Versão solta: componentes com o mesmo contrato de props são intercambiáveis (`Fundo` no lugar do `ImageBackground`).
 - **Alerta:** não exagerar. Repository/Service/UseCase num app offline seria cerimônia sem ganho. S + D resolvem 90%.
 
-### Plano (depois da repaginada do `task.md`)
+### Decisões do dono
 
-1. **Camada de dados (D), pode ser feita a qualquer momento**, mesmo antes de mover pastas: um `herois.js` com `buscarHeroi(id)`, `buscarHerois(ids)` e `listarHerois()` (já ordenado). Por dentro, um `Map` por id (troca o `HEROIS.find`, que percorre o array) e um herói já "preparado", com `classes: [...]` (as telas param de fazer `split("/")`). **Nenhuma tela importa `banco_herois.js` direto.**
-2. **Details com S:** sai `LinhaHeroi`, `HeroiNaoEncontrado` e `IconeClasse` para componentes. A tela só compõe as peças, indo de cerca de 435 para 150 a 200 linhas.
-3. **Pastas:** um commit **só de mudança de pasta**, com `git mv` (preserva o histórico) e os caminhos ajustados. Não fazer no meio da repaginada, para não misturar "moveu" com "mudou" no diff. Custo medido em 2026-11-15: 69 imports relativos nos `.js` + 133 `require` de imagens no `banco_herois.js`. Caminho errado faz o Metro parar o build (erro barulhento).
-   ```
-   App.js
-   src/
-     telas/        Home, Details, Sobre...
-     componentes/  ui.js, MenuLateral, InstalarApp, LinhaHeroi, IconeClasse...
-     dados/        banco_herois.js, herois.js
-     tema.js
-   ```
-4. Depois de mover, transformar estas regras em convenções (seção acima) e atualizar a tabela de Estrutura e os scripts de teste.
-
-### Decisões tomadas
-
-- `IconeClasse` fica em **componentes** (decisão do dono: mesmo sabendo uma regra do domínio, o que ele devolve é visual).
-- Reorganizar as pastas só **depois** da repaginada.
-
-### Regras propostas (valem quando o plano for aplicado)
-
-- Tela nova vai em `telas/`. Componente usado em 2+ telas vai em `componentes/`.
-- Telas pegam dados só pelas funções de `dados/herois.js`.
+- `IconeClasse` fica em **componentes**: mesmo sabendo uma regra do domínio, o que ele devolve é visual.
+- `contatos.js` fica em **dados**.
+- **Não** criar um `SecaoHerois` no Details: as duas seções (forte/fraco) repetidas ficam como estão, porque são só duas e o código fica fácil de ler.
+- As regras de pastas e de dados estão na seção "Convenções".

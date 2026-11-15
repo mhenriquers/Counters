@@ -167,3 +167,66 @@ Refatorar é mudar o código **sem mudar o comportamento**. Para provar isso:
 1. Antes de mexer: `npm run build:web`, `npm run shots` e copiar `screenshots/` para `screenshots-antes/`.
 2. Depois de mexer: `npm run build:web`, `npm run test:web` e `npm run shots`.
 3. Comparar as duas pastas. Neste passo, todas as telas saíram idênticas pixel a pixel.
+
+---
+
+## Passo 3: organizar em pastas (`src/`)
+
+### A estrutura
+
+```
+App.js              ← entrada + rotas (fica na raiz: o Expo procura o App aqui)
+assets/             ← imagens (fica na raiz: app.json e scripts apontam para cá)
+src/
+  telas/            HomeScreen, Details, Doacoes, Feedback, Sobre, Configuracoes
+  componentes/      ui, MenuLateral, InstalarApp, LinhaHeroi, IconeClasse, HeroiNaoEncontrado
+  dados/            banco_herois, herois, contatos
+  tema.js           ← usado por todo mundo, fica no meio
+```
+
+As pastas mostram as **camadas** que já existiam no código, mas que antes só dava para ver lendo os imports:
+
+```
+telas ──usam──▶ componentes ──usam──▶ tema
+  │
+  └──pedem dados──▶ dados/herois.js ──lê──▶ dados/banco_herois.js
+```
+
+Em C#, seria como separar os projetos (ou pastas) `UI`, `Components` e `Data` de uma solution.
+
+### Por que um commit só de mudança de pasta
+
+Um commit que **move** e **muda** ao mesmo tempo é difícil de revisar: o diff mostra o arquivo inteiro como apagado e criado, e a mudança de verdade some no meio. Separando os dois:
+
+- O commit de mudança de pasta tem **só** caminhos trocados (201 linhas, todas de `import`/`require`).
+- O `git mv` avisa o git que é o **mesmo arquivo** em outro lugar. O histórico continua: `git log --follow src/telas/Details.js` mostra os commits de quando ele ainda estava na raiz.
+
+### Caminhos relativos
+
+O caminho de um `import` é relativo **ao arquivo que importa**:
+
+| Quem importa | Importa | Caminho |
+|---|---|---|
+| `App.js` (raiz) | a tela Details | `./src/telas/Details` |
+| `src/telas/Details.js` | o `herois.js` | `../dados/herois` (sobe para `src/`, entra em `dados/`) |
+| `src/telas/Details.js` | o `tema.js` | `../tema` |
+| `src/componentes/LinhaHeroi.js` | o `IconeClasse.js` | `./IconeClasse` (mesma pasta) |
+| `src/dados/banco_herois.js` | uma imagem | `../../assets/heroi_ml_49.png` (sobe 2 níveis até a raiz) |
+
+`./` = "nesta pasta"; `../` = "uma pasta acima".
+
+### Como foi feito: um script em vez de editar à mão
+
+Eram 205 caminhos (133 só no `banco_herois.js`). Editar à mão seria lento e fácil de errar. O script fez, para cada arquivo:
+
+1. `git mv` para a pasta nova.
+2. Para cada `import`/`require` relativo: descobrir **qual arquivo** o caminho antigo apontava (a partir da posição antiga), descobrir **onde esse arquivo está agora** e recalcular o caminho a partir da posição nova (`path.relative`).
+
+Errar um caminho não quebra em silêncio: o Metro (e o `expo export` da web) **para o build** com "Unable to resolve module". É um erro barulhento, que é o tipo bom de erro.
+
+### Verificação
+
+- `npm run build:web` sem erro: todos os caminhos resolvem.
+- `npm run test:web`: tudo passou.
+- Prints comparados pixel a pixel: idênticos. Na primeira rodada, o print de um herói deu diferente, mas era só a foto que ainda estava carregando quando o print foi tirado. Na segunda, saiu idêntico. Lição: se a diferença é pequena e fica numa imagem, tire o print de novo antes de procurar um bug.
+- No celular: rodar `npx expo start -c`. O `-c` limpa o cache do Metro, que ainda lembra dos caminhos antigos.
