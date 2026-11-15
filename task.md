@@ -2,10 +2,10 @@
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito:** Fases 0 a 12 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações, Feedback, Sobre, Configurações, limpeza). Último commit: `cleanup after redesign`.
-- **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **16 commits à frente** do GitHub (sem push).
-- **Aguardando:** o dono decidir se apaga as imagens sem uso listadas na nota da Fase 12, e conferir no celular os cartões azuis e as linhas, que voltaram a ter fundo (bug do `tema.js`).
-- **Próximo passo:** Fase 13 (finalizar: teste completo no celular, `claude.md`, push). Depois, por último, a 14 (idiomas).
+- **Feito:** Fases 0 a 12 e a 13.2/13.3 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações, Feedback, Sobre, Configurações, limpeza, `claude.md`, push). Último commit: `update claude.md after redesign`, já no GitHub.
+- **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está em dia com o GitHub (push em 2026-11-15).
+- **Aguardando:** o dono passar o checklist completo da 13.1 no celular. Ele já aprovou os cartões mais escuros e decidiu **manter** todas as imagens sem uso.
+- **Próximo passo:** fechar a 13.1 e seguir para a Fase 14 (idiomas), a última. Depois, a arquitetura (ver abaixo).
 - **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
@@ -369,12 +369,14 @@ Commit: `cleanup after redesign`.
   - o gesto de voltar funciona;
   - copiar funciona (Pix e ID);
   - menu: abrir, fechar e navegar.
-- [ ] 13.2. Atualize o `claude.md`:
+- [x] 13.2. Atualize o `claude.md`:
   - o topo ainda diz **"Expo SDK 54, React Native 0.81, React 19.1"** e **"native-stack v6"**: troque para **SDK 58, React Native 0.88, React 19.3, React Navigation 7**;
   - na Estrutura, adicione `tema.js`, `ui.js`, `contatos.js` e `scripts/teste-web.mjs` / `scripts/screenshots.mjs`;
   - nos Comandos, adicione `npm run test:web` e `npm run shots`;
   - nas Convenções, troque "imagens de fundo (`ImageBackground`)" por "imagens de fundo com o componente `Fundo` de `ui.js`", e adicione "cores, espaços e fontes vêm de `tema.js`; telas novas usam os componentes de `ui.js`".
-- [ ] 13.3. Commit `update claude.md after redesign` e `git push` (o trabalho já está na `main`).
+- [x] 13.3. Commit `update claude.md after redesign` e `git push` (o trabalho já está na `main`).
+
+> 📝 **Resultado da Fase 13:** 13.2: o `claude.md` já tinha sido atualizado tela a tela (SDK 58, `tema.js`, `ui.js`, `contatos.js`, scripts, `test:web`/`shots`, convenção do `Fundo`); só faltou registrar a decisão de manter as imagens sem uso. Antes do push: `build:web` + `test:web` com 14/14 `PASS` e console limpo. 13.1 fica com o dono (checklist no celular).
 
 ---
 

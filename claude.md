@@ -116,7 +116,7 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 ## Problemas conhecidos (verificados no código)
 
-- `assets/` ainda tem imagens que nenhum código usa (ex.: `liveLogoCut.gif`, de 11 MB, `logoInVideo.mp4`, `profile.jpeg`, `heroi_ml_10.png`). O Metro só empacota o que tem `require`, então elas não pesam no app, só no repositório. Antes de apagar, confira com `git grep`.
+- `assets/` ainda tem imagens que nenhum código usa (ex.: `liveLogoCut.gif`, de 11 MB, `logoInVideo.mp4`, `profile.jpeg`, `heroi_ml_10.png`). O Metro só empacota o que tem `require`, então elas não pesam no app, só no repositório. **Decisão do dono (2026-11-15): ficam todas.** Não proponha apagá-las de novo; se um dia ele mudar de ideia, confira com `git grep` antes.
 
 ## Verificação e depuração
 
