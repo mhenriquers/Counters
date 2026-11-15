@@ -1,190 +1,84 @@
-import React from "react";
+import { Text, StyleSheet, ScrollView } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { cores, espaco, fonte } from "./tema";
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ScrollView,
-  ImageBackground,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
-import { CabecalhoTela } from "./ui";
+  Fundo,
+  CabecalhoTela,
+  TituloSecao,
+  Cartao,
+  Paragrafo,
+  LinhaAcao,
+} from "./ui";
 
 export default function Configuracoes({ navigation }) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <ImageBackground
-      source={require("./assets/bg-up-side.png")}
-      style={styles.fundo}
-    >
+    <Fundo fonte={require("./assets/bg-up-side.png")} style={styles.fundo}>
       <CabecalhoTela
         titulo="Configurações"
         aoVoltar={() => navigation.goBack()}
       />
-     
 
-      <ScrollView style={styles.container}>
-        <Image
-          source={require("./assets/logo.png")}
-          resizeMode="contain"
-          style={styles.logo}
-        />
-        <View style={styles.conteudo}>
-          <Text style={styles.titulo}> Idioma</Text>
-          <Image
-            source={require("./assets/separadorbaixo.png")}
-            style={styles.separador}
-          />
-          <Text style={styles.subtitulo}> Português</Text>
-          <Text style={styles.titulo}> Tema </Text>
-          <Image
-            source={require("./assets/separadorbaixo.png")}
-            style={styles.separador}
-          />
-          <Text style={styles.subtitulo}> Unico </Text>
-          <TouchableOpacity>
-            <Text style={styles.titulo}> Avalie-nos </Text>
-          </TouchableOpacity>
-          <Image
-            source={require("./assets/separadorbaixo.png")}
-            style={styles.separador}
-          />
-          <Text style={styles.subtitulo}> </Text>
-          <Text style={styles.titulo}> Politica de Privacidade </Text>
-          <Image
-            source={require("./assets/separadorbaixo.png")}
-            style={styles.separador}
-          />
-          <Text style={styles.subtitulo}>
-            {"    "}
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: insets.bottom + espaco.xl }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* PREFERÊNCIAS (informativas: ainda não dá para mudar) */}
+        <TituloSecao titulo="Preferências" style={styles.primeiraSecao} />
+        <LinhaAcao titulo="Idioma" subtitulo="Português" />
+        <LinhaAcao titulo="Tema" subtitulo="Único" />
+
+        {/* PRIVACIDADE E USO */}
+        <TituloSecao titulo="Privacidade e uso" />
+        <Cartao>
+          <Text style={[styles.subtitulo, styles.primeiroSubtitulo]}>
+            Política de privacidade
+          </Text>
+          <Paragrafo>
             Este aplicativo não coleta informações de identificação pessoal dos
             usuários. Não solicitamos acesso a contatos, localização ou arquivos
             privados.
-          </Text>
-          <Text style={styles.titulo}>
-            {" "}
-            Uso de Imagens e Direitos Autorais{" "}
-          </Text>
-          <Image
-            source={require("./assets/separadorbaixo.png")}
-            style={styles.separador}
-          />
-          <Text style={styles.subtitulo}>
-            {" "}
+          </Paragrafo>
+
+          <Text style={styles.subtitulo}>Uso de imagens e direitos autorais</Text>
+          <Paragrafo>
             Todas as imagens de heróis e marcas registradas pertencem à Moonton
-            Games. Este é um aplicativo desenvolvido por fã para a comunidade,
-            sem fins lucrativos ou vínculo oficial. Este é apenas um guia informativo
+            Games. Este é um aplicativo desenvolvido por fã para a comunidade, sem
+            fins lucrativos ou vínculo oficial. Este é apenas um guia informativo
             gratuito.
-          </Text>
-          <Text style={styles.titulo}> Links Externos </Text>
-          <Image
-            source={require("./assets/separadorbaixo.png")}
-            style={styles.separador}
-          />
-          <Text style={styles.ultsubtitulo}>
-            {" "}
+          </Paragrafo>
+
+          <Text style={styles.subtitulo}>Links externos</Text>
+          <Paragrafo ultimo>
             Ao acessar links de terceiros, você estará sujeito às políticas de
             privacidade dos respectivos serviços.
-          </Text>
-        </View>
+          </Paragrafo>
+        </Cartao>
       </ScrollView>
-    </ImageBackground>
+    </Fundo>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  iconeBotaoVoltar: {
-    width: 45,
-    height: 45,
-    zIndex: 9,
-    left: -15,
-    top: 0,
-  },
-  botaoVoltarContainer: {
-    zIndex: 9,
-    left: 20,
-    top: 0,
-    width: 50,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  conteudo: {
-    padding: 20,
-  },
-  logo: {
-    marginTop: 6, // logo na mesma altura de antes (o cabeçalho agora não sobrepõe o conteúdo)
-    width: 250,
-    height: 150,
-    alignSelf: "center",
-    marginBottom: -50,
-  },
-  titulo: {
-    fontSize: 24,
-    color: "#FFF",
-    fontWeight: "bold",
-    marginTop: 30,
-  },
-  subtitulo: {
-    fontSize: 16,
-    color: "#888",
-    marginTop: 0,
-  },
   fundo: {
     flex: 1,
-    width: "100%",
-    height: "100%",
+    backgroundColor: cores.fundo,
   },
 
-  separador: {
-    top: 0,
-    marginBottom: 0,
-    width: 300,
-    marginLeft: 7,
-    borderWidth: 1,
-    borderColor: "#D3AF37",
+  primeiraSecao: {
+    marginTop: espaco.lg,
   },
 
-  bgHeader: {
-    width: "100%",
-    height: 60,
-    flexDirection: "row",
-    alignItems: "center",
+  // Subtítulo de cada bloco dentro do cartão de privacidade
+  subtitulo: {
+    color: cores.texto,
+    fontSize: fonte.item,
+    fontWeight: "700",
+    marginTop: espaco.sm,
+    marginBottom: espaco.xs,
   },
-
-  headerSuperior: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  container2: {
-    marginBottom: Platform.OS === "ios" ? 5 : -48,
-    flexDirection: "row",
-    alignItems: "center",
-    zIndex: 10,
-    elevation: 10,
-  },
-
-  textoHeader: {
-    marginLeft: 15,
-    fontSize: Platform.OS === "ios" ? 30 : 16,
-    fontWeight: "bold",
-    color: "#FFFF",
-  },
-
-  ultsubtitulo: {
-    fontSize: 16,
-    color: "#888",
+  primeiroSubtitulo: {
     marginTop: 0,
-    marginBottom: 50,
   },
-
-  containerHead: {
-  zIndex: 100,         // Garante que fique por cima no iOS
-  elevation: 10,       // Garante que fique por cima no Android 
-  height: 60,
-},
 });

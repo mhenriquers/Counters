@@ -118,12 +118,8 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 ## Problemas conhecidos (verificados no código)
 
-- O `ImageBackground` (descontinuado) ainda é usado em 1 arquivo (só no fundo da tela): Configuracoes. As outras telas já usam o `Fundo`. A troca está planejada no `task.md`.
-- Erros de digitação: "Unico" e "Politica" (Configurações).
-- "Avalie-nos" em Configurações não faz nada (`TouchableOpacity` sem `onPress`).
-- A tela Configurações ainda usa recuo feito com espaços (`{"        "}`). As outras já usam o `Paragrafo`.
 - `LoadingScreen.js` usa a cor `'21FFB5'` sem `#`.
-- `assets/` tem vários arquivos de teste ou duplicados (`bgLayer - Copia.png`, `botaoVoltar (1).png`, `bg.layerTeste.png`, `gojo.jpg`).
+- `assets/` tem arquivos que não são mais usados depois da repaginada (`botao-copiar.png`, `separadorbaixo.png`) e vários de teste ou duplicados (`bgLayer - Copia.png`, `botaoVoltar (1).png`, `bg.layerTeste.png`, `gojo.jpg`).
 
 ## Verificação e depuração
 

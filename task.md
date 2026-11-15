@@ -2,10 +2,10 @@
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito:** Fases 0 a 10 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações, Feedback, Sobre). Último commit: `about screen redesign`.
+- **Feito:** Fases 0 a 11 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações, Feedback, Sobre, Configurações). Último commit: `settings screen redesign`.
 - **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **16 commits à frente** do GitHub (sem push).
-- **Aguardando:** o dono testar o Sobre no celular (Fase 10) e o recuo dos parágrafos (vale para Doações, Feedback e Sobre). Feedback (Fase 9) e a faixa preta já foram aprovados.
-- **Próximo passo:** Fase 11 (Configurações). O cabeçalho dela (11.1, parte do `CabecalhoTela`) já foi trocado.
+- **Aguardando:** o dono testar Configurações no celular (Fase 11). Sobre e o recuo (Fase 10) já foram aprovados.
+- **Próximo passo:** Fase 12 (limpeza e consistência).
 - **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
@@ -320,19 +320,21 @@ Commit: `about screen redesign`.
 
 ## Fase 11: Configurações
 
-- [ ] 11.1. `CabecalhoTela titulo="Configurações"` e `Fundo`. Remova o logo grande.
-- [ ] 11.2. **Preferências**: `TituloSecao titulo="Preferências"` + 2 `LinhaAcao` **sem `aoTocar`** (informativas):
+- [x] 11.1. `CabecalhoTela titulo="Configurações"` e `Fundo`. Remova o logo grande.
+- [x] 11.2. **Preferências**: `TituloSecao titulo="Preferências"` + 2 `LinhaAcao` **sem `aoTocar`** (informativas):
   - "Idioma" com subtítulo "Português";
   - "Tema" com subtítulo **"Único"** (corrige "Unico").
-- [ ] 11.3. "Avalie-nos": hoje não faz nada. **Remova** (decidido: o app não está numa loja, então não há página para avaliar; volta quando estiver na Play Store).
-- [ ] 11.4. **Privacidade e uso**: `TituloSecao titulo="Privacidade e uso"` + `Cartao` com 3 blocos, cada um com um subtítulo em negrito (`fonte.item`, branco, `fontWeight: "700"`) e um `Paragrafo`:
+- [x] 11.3. "Avalie-nos": hoje não faz nada. **Remova** (decidido: o app não está numa loja, então não há página para avaliar; volta quando estiver na Play Store).
+- [x] 11.4. **Privacidade e uso**: `TituloSecao titulo="Privacidade e uso"` + `Cartao` com 3 blocos, cada um com um subtítulo em negrito (`fonte.item`, branco, `fontWeight: "700"`) e um `Paragrafo`:
   - **"Política de privacidade"** (corrige "Politica");
   - "Uso de imagens e direitos autorais";
   - "Links externos".
   - Textos atuais, sem os espaços de recuo.
-- [ ] 11.5. Remova estilos e imports sem uso.
+- [x] 11.5. Remova estilos e imports sem uso.
 
 **✅ Verificar:** `npm run test:web` tudo `PASS`. Print `configuracoes.png` no padrão das outras telas.
+
+> 📝 **Resultado da Fase 11:** as linhas "Idioma" e "Tema" ficaram sem ícone (não há asset próprio). Com isso, nenhuma tela usa mais `ImageBackground`, e o `separadorbaixo.png` deixou de ser usado (junto com o `botao-copiar.png`, dá para apagar na Fase 12.6).
 
 Commit: `settings screen redesign`.
 
