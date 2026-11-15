@@ -4,23 +4,38 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from "expo-clipboard";
+import { Asset } from "expo-asset";
 import { cores, espaco, raio, fonte } from "./tema";
 
 // ---------------------------------------------------------------------------
 // Fundo: substitui o ImageBackground (descontinuado no React Native 0.88).
 // A imagem fica atrás, ocupando todo o espaço do container.
 // ---------------------------------------------------------------------------
+// modo "largura": a imagem encaixa na largura da tela (aparece inteira de lado
+// a lado, sem zoom), presa no topo. O que sobra embaixo fica com o
+// backgroundColor do `style`, que deve ser a cor do fim da imagem.
 export function Fundo({ fonte: imagem, modo = "cover", style, children }) {
+  const estiloImagem =
+    modo === "largura"
+      ? [estilos.imagemLargura, { aspectRatio: proporcao(imagem) }]
+      : [StyleSheet.absoluteFill, estilos.imagemFundo];
+
   return (
     <View style={style}>
       <Image
         source={imagem}
-        resizeMode={modo}
-        style={[StyleSheet.absoluteFill, estilos.imagemFundo]}
+        resizeMode={modo === "largura" ? "stretch" : modo}
+        style={estiloImagem}
       />
       {children}
     </View>
   );
+}
+
+// largura / altura do arquivo de imagem (o expo-asset sabe isso em todas as plataformas)
+function proporcao(imagem) {
+  const { width, height } = Asset.fromModule(imagem);
+  return width && height ? width / height : 1;
 }
 
 // ---------------------------------------------------------------------------
@@ -174,6 +189,18 @@ const estilos = StyleSheet.create({
     web: { width: "100%", height: "100%" },
     default: {},
   }),
+
+  // modo "largura": presa no topo, a altura sai do aspectRatio.
+  // left/right em vez de width: "100%" pelo mesmo motivo do imagemFundo.
+  imagemLargura: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    // na web, sem height o react-native-web usa a altura do arquivo (2000px);
+    // "auto" deixa o aspect-ratio do CSS calcular
+    ...Platform.select({ web: { width: "100%", height: "auto" }, default: {} }),
+  },
 
   // TituloSecao (valores iguais aos que estavam no Details.js)
   faixaSecao: {
