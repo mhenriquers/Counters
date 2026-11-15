@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { CabecalhoTela } from "./ui";
 import { abrirGit, enviarEmail, copiarId } from "./contatos";
 
 export default function Sobre({ navigation }) {
@@ -18,26 +18,10 @@ export default function Sobre({ navigation }) {
       source={require(`./assets/bg-up-side.png`)}
       style={styles.fundo}
     >
-      <View >
-        <SafeAreaView style={styles.container2}>
-          <ImageBackground
-            source={require("./assets/header.png")}
-            resizeMethod="stretch"
-            style={styles.bgHeader}
-          >
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.botaoVoltarContainer}
-            >
-              <Image
-                source={require("./assets/seta-branca.png")}
-                style={styles.iconeBotaoVoltar}
-              />
-            </TouchableOpacity>
-            <Text style={styles.textoHeader}> Sobre</Text>
-          </ImageBackground>
-        </SafeAreaView>
-      </View>
+      <CabecalhoTela
+        titulo="Sobre"
+        aoVoltar={() => navigation.goBack()}
+      />
       <ScrollView style={styles.container}>
         <Image
           source={require("./assets/logo.png")}
@@ -188,7 +172,7 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    marginTop: Platform.OS === 'ios' ? 10 : 50,
+    marginTop: 6, // logo na mesma altura de antes (o cabeçalho agora não sobrepõe o conteúdo)
     marginBottom: -50,
     width: 250,
     height: 150,

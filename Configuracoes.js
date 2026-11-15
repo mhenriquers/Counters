@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { CabecalhoTela } from "./ui";
 
 export default function Configuracoes({ navigation }) {
   return (
@@ -17,26 +17,10 @@ export default function Configuracoes({ navigation }) {
       source={require("./assets/bg-up-side.png")}
       style={styles.fundo}
     >
-      <View style={styles.containerHead}>
-        <SafeAreaView style={styles.container2}>
-          <ImageBackground
-            source={require("./assets/header.png")}
-            resizeMethod="stretch"
-            style={styles.bgHeader}
-          >
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={styles.botaoVoltarContainer}
-            >
-              <Image
-                source={require("./assets/seta-branca.png")}
-                style={styles.iconeBotaoVoltar}
-              />
-            </TouchableOpacity>
-            <Text style={styles.textoHeader}> Configurações</Text>
-          </ImageBackground>
-        </SafeAreaView>
-      </View>
+      <CabecalhoTela
+        titulo="Configurações"
+        aoVoltar={() => navigation.goBack()}
+      />
      
 
       <ScrollView style={styles.container}>
@@ -132,7 +116,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   logo: {
-    marginTop: Platform.OS === 'ios' ? 20 : 50,
+    marginTop: 6, // logo na mesma altura de antes (o cabeçalho agora não sobrepõe o conteúdo)
     width: 250,
     height: 150,
     alignSelf: "center",
