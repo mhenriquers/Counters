@@ -135,4 +135,4 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 - Não use `fontFamily` customizada (nenhuma fonte é carregada, e a web cai em fonte serifada). Use só `fontWeight`.
 - **`FlatList`:** mantenha as props estáveis (`renderItem`, `keyExtractor`, handlers e estilos com `useCallback`, constantes ou `StyleSheet`). Funções inline fazem a grade inteira ser redesenhada a cada mudança de estado da tela (ex.: ao abrir o menu).
 - Assets são carregados com `require("./assets/...")`, com caminho relativo à raiz.
-- Commits são curtos e em inglês informal (ex.: "editing filter"), feitos a cada feature importante finalizada.
+- Commits são curtos e em inglês informal (ex.: "editing filter"), feitos a cada arquivo ou tela finalizado.

@@ -10,7 +10,7 @@ A tela **Details** já foi refeita nesse estilo e é a **referência visual** de
 
 1. Siga as fases **na ordem**. Dentro de cada fase, faça uma tarefa por vez.
 2. Cada fase termina com **✅ Verificar**. Se falhar, **não avance**: corrija primeiro.
-3. Commit ao fim de cada fase (mensagem curta em inglês informal, como pede o `claude.md`).
+3. **Commit a cada arquivo ou tela finalizado** (não só no fim da fase), com mensagem curta em inglês informal, como pede o `claude.md`. Se uma tarefa mexe em vários arquivos de uma vez (ex.: tela + teste), eles vão juntos no mesmo commit.
 4. **Não mude textos** (conteúdo das telas) além do que a tarefa manda. Correções de digitação estão listadas explicitamente.
 5. Nomes de variáveis, componentes e comentários em **português**.
 6. Nunca use `StyleSheet.absoluteFillObject` (removido no RN 0.88). Use `StyleSheet.absoluteFill`.
@@ -126,29 +126,29 @@ Commit: `add theme tokens`.
 
 Todos ficam num arquivo só, `ui.js`, na raiz, e usam `tema.js`. Cada tarefa cria **um** componente. Nenhuma tela usa eles ainda.
 
-- [ ] 3.1. **`Fundo`**: substitui o `ImageBackground` (descontinuado no RN 0.88).
+- [x] 3.1. **`Fundo`**: substitui o `ImageBackground` (descontinuado no RN 0.88).
   - Props: `fonte` (o `require` da imagem), `modo` (`resizeMode`, padrão `"cover"`), `style`, `children`.
-  - Implementação: `<View style={[{ overflow: "hidden" }, style]}>` + `<Image source={fonte} resizeMode={modo} style={[StyleSheet.absoluteFill, { width: "100%", height: "100%" }]} />` + `children`.
-- [ ] 3.2. **`TituloSecao`**: mova do `Details.js` **sem mudar o visual** (faixa `bg-Layer.png` + `hero.png` + título em maiúsculas + subtítulo opcional).
+  - Implementação: `<View style={style}>` + `<Image source={fonte} resizeMode={modo} style={[StyleSheet.absoluteFill, { width: "100%", height: "100%" }]} />` + `children`. (Feito sem `overflow: "hidden"` fixo: a imagem já tem 100% do tamanho e nunca vaza, e cortar por padrão poderia esconder conteúdo que transborda de propósito, como o logo da Home. Quem precisar, passa `overflow` no `style`.)
+- [x] 3.2. **`TituloSecao`**: mova do `Details.js` **sem mudar o visual** (faixa `bg-Layer.png` + `hero.png` + título em maiúsculas + subtítulo opcional).
   - Props: `titulo`, `subtitulo` (opcional), `cor` (cor do subtítulo, padrão `cores.azulTexto`).
   - Usa `Fundo` com `modo="stretch"`.
-- [ ] 3.3. **`CabecalhoTela`**: cabeçalho padrão das telas secundárias.
+- [x] 3.3. **`CabecalhoTela`**: cabeçalho padrão das telas secundárias.
   - Props: `titulo`, `aoVoltar`.
   - Altura 56 + `useSafeAreaInsets().top` (padding no topo). Fundo `header.png` via `Fundo`. Seta `seta-branca.png` (24x24) num botão de toque 44x44 com `hitSlop={8}`. Título branco, `fontWeight: "700"`, `fonte.cabecalho`. Linha inferior de 1px `cores.bordaCartao`.
-- [ ] 3.4. **`Cartao`**: caixa de conteúdo.
+- [x] 3.4. **`Cartao`**: caixa de conteúdo.
   - Props: `destaque` (`"azul"` padrão, ou `"dourado"`), `style`, `children`.
   - Fundo `cores.cartao`, borda 1px (`cores.bordaCartao` ou `cores.dourado` com 50% de opacidade, `rgba(211, 175, 55, 0.5)`), `raio.md`, padding `espaco.lg`, margem horizontal `espaco.lg`.
-- [ ] 3.5. **`Paragrafo`**: texto corrido.
+- [x] 3.5. **`Paragrafo`**: texto corrido.
   - `fonte.corpo`, `lineHeight: 21`, cor `cores.textoSuave`, `marginBottom: espaco.md` (o último parágrafo recebe `ultimo` para zerar a margem).
   - **Sem recuo com espaços.** Parágrafos separados viram `<Paragrafo>` separados.
-- [ ] 3.6. **`LinhaAcao`**: linha tocável, usada no menu, nos contatos e nas configurações.
+- [x] 3.6. **`LinhaAcao`**: linha tocável, usada no menu, nos contatos e nas configurações.
   - Props: `icone` (require, opcional), `titulo`, `subtitulo` (opcional), `aoTocar` (opcional: sem ele, a linha não é tocável e não mostra seta), `direita` (elemento opcional no lugar da seta), `corTitulo` (padrão `cores.texto`).
   - Altura mínima 56, ícone 28x28 com `resizeMode="contain"`, título `fonte.item` `fontWeight: "600"`, subtítulo `fonte.legenda` `cores.azulTexto`, seta "›" `rgba(224, 250, 255, 0.45)` tamanho 26. Mesmo estilo de card das linhas do Details (`cores.cartao`, borda `cores.bordaCartao`, `raio.md`), `marginHorizontal: espaco.lg`, `marginTop: espaco.sm`.
-- [ ] 3.7. **`BotaoCopiar`**: copia um texto e confirma **sem `Alert`** (funciona igual em Android, iOS e web).
+- [x] 3.7. **`BotaoCopiar`**: copia um texto e confirma **sem `Alert`** (funciona igual em Android, iOS e web).
   - Props: `texto` (o que vai para a área de transferência), `rotulo` (padrão "Copiar").
   - Usa `expo-clipboard`. Depois de copiar, mostra "Copiado ✓" por 2 segundos e volta ao rótulo (`useState` + `setTimeout`, limpando o timer no unmount).
   - Visual: pílula dourada (`cores.douradoVivo`, texto preto `fontWeight: "700"`), padding 8x16.
-- [ ] 3.8. **`Rodape`**: texto pequeno de rodapé.
+- [x] 3.8. **`Rodape`**: texto pequeno de rodapé.
   - `fonte.rodape`, itálico, `cores.textoFraco`, centralizado, `marginTop: espaco.xl`, `marginHorizontal: espaco.xl`.
 
 **✅ Verificar:** `npm run build:web` sem erro. `ui.js` importa só `react`, `react-native`, `react-native-safe-area-context`, `expo-clipboard`, `./tema`.
