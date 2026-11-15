@@ -69,7 +69,8 @@ Todos os arquivos ficam na raiz, sem pasta `src/`. Cada tela é um arquivo `.js`
 | `InstalarApp.js` | Botão "Instalar app" (só web/Chrome): captura o `beforeinstallprompt`. Não aparece no iPhone nem com o app já instalado. |
 | `MenuLateral.js` | Gaveta feita à mão (não usa o drawer do react-navigation). Props: `visivel`, `aoFechar`, `navigation`. Animada com `Animated` (desliza da esquerda, `useNativeDriver` fora da web), continua montada até terminar de fechar, e com o menu aberto o voltar do Android (`BackHandler`) fecha o menu. A gaveta tem `overflow: "hidden"` porque a imagem de fundo (`fundoMG.png`, 1167x2000) transbordava e cobria a sombra, impedindo de fechar ao tocar fora. |
 | `Doacoes.js` | Tela de apoio (URL `/apoiar`): copia uma chave Pix com `expo-clipboard`. |
-| `Feedback.js` / `Sobre.js` | Links para GitHub e e-mail (`Linking`, `mailto:`) e um botão que copia um ID. Boa parte do código é duplicada entre as duas. |
+| `Feedback.js` / `Sobre.js` | Links para GitHub e e-mail e um botão que copia um ID. As ações vêm de `contatos.js`. |
+| `contatos.js` | `EMAIL`, `GITHUB_USUARIO`, `ID_JOGO` e as ações `abrirGit`, `enviarEmail` (`mailto:`) e `copiarId` (provisória: sai quando as telas usarem o `BotaoCopiar`). |
 | `Configuracoes.js` | Tela estática e informativa (idioma, tema, política de privacidade). Ainda não tem configurações funcionais. |
 | `banco_herois.js` | **Fonte de todos os dados.** Exporta `HEROIS`. |
 | `LoadingScreen.js` | **Não está registrada no Stack** (código morto). |
@@ -119,7 +120,6 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 - O `ImageBackground` (descontinuado) ainda é usado em 4 arquivos: Doacoes, Sobre, Feedback, Configuracoes. Details, Home e Menu já usam o `Fundo`. A troca está planejada no `task.md`.
 - No **Android**, copiar (Pix e ID) não mostra nenhum aviso: só há `Alert` no iOS e `window.alert` na web.
-- O ID copiado em Sobre e Feedback leva um espaço na frente (`" 1033871650"`).
 - Erros de digitação: "Unico" e "Politica" (Configurações), "se vc pediu" (Feedback).
 - "Avalie-nos" em Configurações não faz nada (`TouchableOpacity` sem `onPress`).
 - O cabeçalho de Doações ocupa só a largura do texto (o container pai tem `alignItems: "center"`).
@@ -159,7 +159,7 @@ O dono está aprendendo C# (POO, SOLID) e quis entender a arquitetura deste proj
 ### POO e SOLID neste projeto
 
 - **POO:** não há classes nem herança, e isso não faz falta. As ideias continuam aqui: encapsulamento (só o que tem `export` sai do módulo, e o `useState` é privado), composição em vez de herança (`children`) e polimorfismo por props (`<Cartao destaque="dourado">`).
-- **S (responsabilidade única):** o mais útil. Criar o `ui.js` já foi aplicar o S. Violações atuais: as telas acessam os dados direto, o `Details.js` faz cerca de 8 coisas, e `Sobre.js`/`Feedback.js` duplicam código (a Fase 7 do `task.md` resolve essa duplicação).
+- **S (responsabilidade única):** o mais útil. Criar o `ui.js` já foi aplicar o S. Violações atuais: as telas acessam os dados direto, o `Details.js` faz cerca de 8 coisas. A duplicação entre `Sobre.js` e `Feedback.js` já foi resolvida na Fase 7 com o `contatos.js`, que é um exemplo de S.
 - **D (inversão de dependência):** o equivalente ao `IHeroiRepository` do C#. Em JS não há `interface`: as **funções exportadas por um módulo são o contrato**. Não precisa de injeção de dependência.
 - **O (aberto/fechado):** exemplo existente é o mapa `iconesClasses` (classe nova = chave nova, sem `if/else`). Componentes se estendem por props/`children`.
 - **I (segregação de interface):** "não exija props que não usa". Ex.: o `MenuLateral` recebe o `navigation` inteiro, mas talvez só precise de `irPara(tela)`.

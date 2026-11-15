@@ -7,53 +7,10 @@ import {
   ScrollView,
   ImageBackground,
   TouchableOpacity,
-  Linking,
   Platform,
-  Alert,
 } from "react-native";
-import * as Clipboard from "expo-clipboard";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-
-const abrirGit = () => {
-  Linking.openURL("https://github.com/mhenriquers");
-};
-
-const enviarEmail = async () => {
-  const email = "mlbbcounters@gmail.com";
-
-  const assunto = encodeURIComponent("Feedback - App Counters");
-  const corpo = encodeURIComponent("Olá! Gostaria de sugerir...");
-
-  const url = `mailto:${email}?subject=${assunto}&body=${corpo}`;
-  const supported = await Linking.canOpenURL(url);
-
-  if (supported) {
-    await Linking.openURL(url);
-  } else {
-    Alert.alert(
-      "App de E-mail não encontrado",
-      "Para enviar um e-mail, configure o aplicativo 'Mail' padrão do seu iPhone ou copie o endereço: mlbbcounters@gmail.com",
-      [{ text: "OK" }],
-    );
-  }
-
-  //Linking.openURL(`mailto:${email}?subject=${assunto}&body${corpo}`);
-};
-
-const copiaId = async () => {
-  const id = " 1033871650";
-  await Clipboard.setStringAsync(id);
-
-  if (Platform.OS === "web") {
-    window.alert("Copiado para a área de transferência.");
-  } else if (Platform.OS === 'ios'){
-    Alert.alert(
-      "Sucesso",
-      "Copiado para a área de tranferência",
-      [{ text: "OK"}]
-    );
-  }
-};
+import { abrirGit, enviarEmail, copiarId } from "./contatos";
 
 export default function Sobre({ navigation }) {
   return (
@@ -176,7 +133,7 @@ export default function Sobre({ navigation }) {
             </TouchableOpacity>
 
             <TouchableOpacity 
-            onPress={copiaId}
+            onPress={copiarId}
             
             >
               <View style={styles.linhaContato}>

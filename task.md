@@ -2,10 +2,10 @@
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito:** Fases 0 a 6 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral). Último commit da tela: `side menu redesign`.
+- **Feito:** Fases 0 a 7 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`). Último commit: `share contact helpers`.
 - **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **16 commits à frente** do GitHub (sem push).
-- **Aguardando:** o dono testar o menu lateral no celular (Fase 6): abrir, fechar pelo ✕, tocar fora, gesto de voltar, topo e rodapé fora das barras do Android. Home e Details (Fases 4 e 5) já confirmados no celular.
-- **Próximo passo:** Fase 7 (`contatos.js`).
+- **Aguardando:** nada no celular para a Fase 7 (só reorganizou código, prints idênticos). Se quiser, confira em Sobre/Feedback: e-mail, GitHub e copiar o ID.
+- **Próximo passo:** Fase 8 (Doações).
 - **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
@@ -237,12 +237,14 @@ Commit: `side menu redesign`.
 
 `Sobre.js` e `Feedback.js` têm as **mesmas** funções copiadas. Esta fase junta tudo num lugar, sem mudar visual.
 
-- [ ] 7.1. Crie `contatos.js` exportando:
+- [x] 7.1. Crie `contatos.js` exportando:
   - `EMAIL = "mlbbcounters@gmail.com"`, `GITHUB_USUARIO = "mhenriquers"`, `ID_JOGO = "1033871650"` (**sem** o espaço na frente que existe hoje);
   - `abrirGit()` e `enviarEmail()`, copiados de `Sobre.js` sem mudança de comportamento.
-- [ ] 7.2. Em `Sobre.js` e `Feedback.js`, apague as cópias locais de `abrirGit`, `enviarEmail` e `copiaId` e importe de `contatos.js`. (O `copiaId` vira `BotaoCopiar` nas fases 9 e 10. Até lá, use `Clipboard.setStringAsync(ID_JOGO)` direto.)
+- [x] 7.2. Em `Sobre.js` e `Feedback.js`, apague as cópias locais de `abrirGit`, `enviarEmail` e `copiaId` e importe de `contatos.js`. (O `copiaId` vira `BotaoCopiar` nas fases 9 e 10. Até lá, use `Clipboard.setStringAsync(ID_JOGO)` direto.)
 
 **✅ Verificar:** `npm run test:web` tudo `PASS`. Os prints de Sobre e Feedback continuam iguais ao "antes".
+
+> 📝 **Resultado da Fase 7:** o `copiaId` virou `copiarId()` em `contatos.js`, mantendo o aviso de hoje (`window.alert` na web, `Alert` no iOS), em vez do `Clipboard` direto: sem o aviso, o teste de copiar em Sobre/Feedback falharia até as fases 9 e 10. Nessas fases, troque por `BotaoCopiar` e apague o `copiarId`. As duas cópias diferiam (só o Sobre avisava no iOS): ficou a versão do Sobre. O ID agora é copiado sem o espaço na frente. Prints de Sobre e Feedback idênticos pixel a pixel.
 
 Commit: `share contact helpers`.
 
