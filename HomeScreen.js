@@ -8,7 +8,6 @@ import {
   ImageBackground,
   TouchableOpacity,
   Image,
-  RefreshControl,
   Keyboard,
   TouchableWithoutFeedback,
   Platform,
@@ -25,14 +24,7 @@ export default function HomeScreen({ navigation, route, abrirMenu }) {
   const alternarPesquisa = () => {
     setPesquisar(!pesquisar);
   };
-  const [atualizando, setAtualizando] = useState(false);
   const [busca, setBusca] = useState("");
-  const aoRecarregar = () => {
-    setAtualizando(true);
-    setTimeout(() => {
-      setAtualizando(false);
-    }, 1000);
-  };
 
   const heroisFiltrados = useMemo(() => {
     const textoBusca = busca.trim().toLocaleLowerCase("pt-BR");
@@ -132,16 +124,8 @@ export default function HomeScreen({ navigation, route, abrirMenu }) {
                   if (pesquisar) setPesquisar(false);
                 }}
                 scrollEventThrottle={16}
-                delayContentThrittle={false}
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps="handled"
-                refreshControl={
-                  <RefreshControl
-                    refreshing={atualizando} // Ele olha para o estado 'atualizando'
-                    onRefresh={aoRecarregar} // Quando puxas a tela, ele chama a função acima
-                    colors={["#00e5ff"]} // Cor da bolinha (azul ciano)
-                  />
-                }
                 columnWrapperStyle={{ justifyContent: "center", gap: 1 }}
                 contentContainerStyle={{
                   paddingHorizontal: 10,
@@ -153,9 +137,6 @@ export default function HomeScreen({ navigation, route, abrirMenu }) {
                       source={require("./assets/logo.png")}
                       style={styles.fotoIcone}
                       resizeMode="contain"
-                      onPress={() => {
-                        navigation.navigate("Doacoes");
-                      }}
                     />
                   </View>
                 }
@@ -231,7 +212,7 @@ const styles = StyleSheet.create({
 
   nomeHeroi: {
     color: "#fff",
-    fontSize: Platform.OS === "ios" ? 17 : 10,
+    fontSize: Platform.select({ ios: 17, web: 12, default: 10 }),
     marginTop: 5,
     position: "absolute",
     fontWeight: "bold",

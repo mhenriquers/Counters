@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Linking,
   Platform,
+  Alert,
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -42,6 +43,9 @@ const enviarEmail = async () => {
 const copiaId = async () => {
   const id = " 1033871650";
   await Clipboard.setStringAsync(id);
+  if (Platform.OS === "web") {
+    window.alert("Copiado para a área de transferência.");
+  }
 };
 
 export default function Feedback({ navigation }) {

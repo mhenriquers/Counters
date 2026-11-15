@@ -17,7 +17,9 @@ const copiaPix = async () => {
   const chavePix = "9bfe32d9-8633-41c0-835b-5287ecd44293";
   await Clipboard.setStringAsync(chavePix);
 
-  if (Platform.OS === "ios") {
+  if (Platform.OS === "web") {
+    window.alert("Copiado para a área de transferência.");
+  } else if (Platform.OS === "ios") {
     Alert.alert("Sucesso", "Copiado para a área de transferência.", [
       { text: "OK" },
     ]);

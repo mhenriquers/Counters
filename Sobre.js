@@ -44,7 +44,9 @@ const copiaId = async () => {
   const id = " 1033871650";
   await Clipboard.setStringAsync(id);
 
-  if (Platform.OS === 'ios'){
+  if (Platform.OS === "web") {
+    window.alert("Copiado para a área de transferência.");
+  } else if (Platform.OS === 'ios'){
     Alert.alert(
       "Sucesso",
       "Copiado para a área de tranferência",
