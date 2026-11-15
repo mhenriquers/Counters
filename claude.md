@@ -117,10 +117,10 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 ## Problemas conhecidos (verificados no código)
 
-- O `ImageBackground` (descontinuado) ainda é usado em 6 arquivos: Home, Menu, Doacoes, Sobre, Feedback, Configuracoes. O Details já usa o `Fundo`. A troca está planejada no `task.md`.
+- O `ImageBackground` (descontinuado) ainda é usado em 4 arquivos: Doacoes, Sobre, Feedback, Configuracoes. Details, Home e Menu já usam o `Fundo`. A troca está planejada no `task.md`.
 - No **Android**, copiar (Pix e ID) não mostra nenhum aviso: só há `Alert` no iOS e `window.alert` na web.
 - O ID copiado em Sobre e Feedback leva um espaço na frente (`" 1033871650"`).
-- Erros de digitação: "Torne-se um apoidor" (menu), "Unico" e "Politica" (Configurações), "se vc pediu" (Feedback).
+- Erros de digitação: "Unico" e "Politica" (Configurações), "se vc pediu" (Feedback).
 - "Avalie-nos" em Configurações não faz nada (`TouchableOpacity` sem `onPress`).
 - O cabeçalho de Doações ocupa só a largura do texto (o container pai tem `alignItems: "center"`).
 - Os textos das telas secundárias usam recuo feito com espaços (`{"        "}`).

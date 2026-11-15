@@ -20,7 +20,7 @@ const nomeCounterAamon = nomes[idCounterAamon];
 
 // Itens do menu: [texto visível, rota esperada]
 const ITENS_MENU = [
-  ["Torne-se um apoidor", "/apoiar"],
+  ["Torne-se um apoiador", "/apoiar"],
   ["Configurações", "/configuracoes"],
   ["Feedback", "/feedback"],
   ["Sobre", "/sobre"],

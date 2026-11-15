@@ -2,10 +2,10 @@
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito:** Fases 0 a 5 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home). Último commit da tela: `c65c7d6 home redesign`.
-- **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **11 commits à frente** do GitHub (sem push).
-- **Aguardando:** o dono testar de novo no celular a Home (o cabeçalho ia só até antes da borda direita, já corrigido) e o Details (Fase 4): busca, teclado, ✕ da busca, rolagem.
-- **Próximo passo:** Fase 6 (Menu lateral).
+- **Feito:** Fases 0 a 6 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral). Último commit da tela: `side menu redesign`.
+- **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **16 commits à frente** do GitHub (sem push).
+- **Aguardando:** o dono testar o menu lateral no celular (Fase 6): abrir, fechar pelo ✕, tocar fora, gesto de voltar, topo e rodapé fora das barras do Android. Home e Details (Fases 4 e 5) já confirmados no celular.
+- **Próximo passo:** Fase 7 (`contatos.js`).
 - **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
@@ -213,19 +213,21 @@ Commit: `home redesign`.
 
 ## Fase 6: Menu lateral
 
-- [ ] 6.1. Troque o `ImageBackground` (`fundoMG.png`) por `Fundo`.
-- [ ] 6.2. **Topo da gaveta:**
+- [x] 6.1. Troque o `ImageBackground` (`fundoMG.png`) por `Fundo`.
+- [x] 6.2. **Topo da gaveta:**
   - `paddingTop: insets.top + espaco.md` (`useSafeAreaInsets`);
   - troque o texto "Fechar" (hoje preto, quase invisível) por um botão com `botao-fechar.png` (32x32), alinhado à direita, área 44x44;
   - logo logo abaixo, `width: "80%"`, altura 70, `resizeMode="contain"`.
-- [ ] 6.3. **Itens:**
+- [x] 6.3. **Itens:**
   - troque os 4 `TouchableOpacity` por `LinhaAcao` (com `icone` e `titulo`, `corTitulo={cores.douradoVivo}`, `aoTocar={() => irPara(...)}`);
   - corrija "Torne-se um apoidor" para **"Torne-se um apoiador"**;
   - atualize o texto em `scripts/teste-web.mjs` na mesma tarefa.
-- [ ] 6.4. **Rodapé da gaveta** (fixo embaixo): `Rodape` com "Versão 1.0.0" e, abaixo, "Dados: site oficial do MLBB". `paddingBottom: insets.bottom + espaco.lg`.
-- [ ] 6.5. Não mexa na animação, no `BackHandler` nem no `overflow: "hidden"` da gaveta.
+- [x] 6.4. **Rodapé da gaveta** (fixo embaixo): `Rodape` com "Versão 1.0.0" e, abaixo, "Dados: site oficial do MLBB". `paddingBottom: insets.bottom + espaco.lg`.
+- [x] 6.5. Não mexa na animação, no `BackHandler` nem no `overflow: "hidden"` da gaveta.
 
 **✅ Verificar:** `npm run test:web` tudo `PASS` (inclusive "tocar fora fecha"). Print `menu.png`: ✕ visível, itens alinhados, rodapé. No celular: abrir, fechar pelo ✕, tocar fora e o gesto de voltar.
+
+> 📝 **Resultado da Fase 6:** o texto "Fechar" virou o botão `botao-fechar.png`. Na web, o fundo da gaveta agora mostra a marca "M" do `fundoMG.png` (mesma correção de tamanho de imagem das fases anteriores). A cor `#121212` da gaveta ficou porque o teste web acha a gaveta por ela.
 
 Commit: `side menu redesign`.
 

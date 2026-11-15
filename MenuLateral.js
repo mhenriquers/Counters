@@ -1,24 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   View,
-  Text,
   TouchableOpacity,
   StyleSheet,
   TouchableWithoutFeedback,
   Image,
-  ImageBackground,
   Animated,
   Easing,
   BackHandler,
   Platform,
   useWindowDimensions,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { cores, espaco } from "./tema";
+import { Fundo, LinhaAcao, Rodape } from "./ui";
 
 // Duração das animações (ms)
 const TEMPO_ABRIR = 260;
 const TEMPO_FECHAR = 200;
 
 export default function MenuLateral({ visivel, aoFechar, navigation }) {
+  // A gaveta cobre a tela inteira (inclusive atrás das barras do Android),
+  // então o topo e o rodapé usam as margens seguras.
+  const insets = useSafeAreaInsets();
+
   // Na web o app fica numa coluna de no máximo 480px (ver App.js)
   const { width } = useWindowDimensions();
   const larguraGaveta = Math.min(width, 480) * 0.75;
@@ -87,13 +92,18 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
           { width: larguraGaveta, transform: [{ translateX: deslocamento }] },
         ]}
       >
-        <ImageBackground
-          source={require("./assets/fundoMG.png")}
-          style={style.bgGaveta}
-        >
-          <View style={style.containerGaveta}>
-            <TouchableOpacity onPress={aoFechar}>
-              <Text>Fechar</Text>
+        <Fundo fonte={require("./assets/fundoMG.png")} style={style.bgGaveta}>
+          {/* TOPO: botão de fechar + logo */}
+          <View style={{ paddingTop: insets.top + espaco.md }}>
+            <TouchableOpacity
+              onPress={aoFechar}
+              style={style.botaoFechar}
+              hitSlop={8}
+            >
+              <Image
+                source={require("./assets/botao-fechar.png")}
+                style={style.iconeFechar}
+              />
             </TouchableOpacity>
 
             <Image
@@ -101,40 +111,44 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
               style={style.logo}
               resizeMode="contain"
             />
-
-            <TouchableOpacity
-              style={style.itemMenu}
-              onPress={() => irPara("Doacoes")}
-            >
-              <Image source={require('./assets/icon-doar.png')} style={style.iconeMenu}/>
-              <Text style={style.textoItem}>Torne-se um apoidor</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={style.itemMenu}
-              onPress={() => irPara("Configuracoes")}
-            >
-              <Image source={require('./assets/icon-config.png')} style={style.iconeMenu}/>
-              <Text style={style.textoItem}>Configurações</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={style.itemMenu}
-              onPress={() => irPara("Feedback")}
-            >
-              <Image source={require('./assets/icon-feedback.png')} style={style.iconeMenu}/>
-              <Text style={style.textoItem}>Feedback </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={style.itemMenu}
-              onPress={() => irPara("Sobre")}
-            >
-              <Image source={require('./assets/icon-sobre.png')} style={style.iconeMenu}/>
-              <Text style={style.textoItem}>Sobre</Text>
-            </TouchableOpacity>
           </View>
-        </ImageBackground>
+
+          {/* ITENS */}
+          <View style={style.itens}>
+            <LinhaAcao
+              icone={require("./assets/icon-doar.png")}
+              titulo="Torne-se um apoiador"
+              corTitulo={cores.douradoVivo}
+              aoTocar={() => irPara("Doacoes")}
+            />
+            <LinhaAcao
+              icone={require("./assets/icon-config.png")}
+              titulo="Configurações"
+              corTitulo={cores.douradoVivo}
+              aoTocar={() => irPara("Configuracoes")}
+            />
+            <LinhaAcao
+              icone={require("./assets/icon-feedback.png")}
+              titulo="Feedback"
+              corTitulo={cores.douradoVivo}
+              aoTocar={() => irPara("Feedback")}
+            />
+            <LinhaAcao
+              icone={require("./assets/icon-sobre.png")}
+              titulo="Sobre"
+              corTitulo={cores.douradoVivo}
+              aoTocar={() => irPara("Sobre")}
+            />
+          </View>
+
+          {/* RODAPÉ: fica sempre embaixo */}
+          <View style={{ paddingBottom: insets.bottom + espaco.lg }}>
+            <Rodape>Versão 1.0.0</Rodape>
+            <Rodape style={style.rodapeSegundaLinha}>
+              Dados: site oficial do MLBB
+            </Rodape>
+          </View>
+        </Fundo>
       </Animated.View>
     </View>
   );
@@ -148,44 +162,45 @@ const style = StyleSheet.create({
     // a largura é calculada no componente (75% da tela)
     height: "100%",
     overflow: "hidden", // a imagem de fundo é maior que a gaveta e cobria a sombra
-    backgroundColor: "#121212",
+    backgroundColor: "#121212", // o teste web acha a gaveta por esta cor
     zIndex: 999, // Valor alto para ficar na frente de tudo
-    padding: 1,
-    paddingTop: 1,
-  },
-  itemMenu: {
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#333",
-    flexDirection: 'row',
-  },
-  textoItem: {
-    color: "#ffd700",
-    fontSize: 18,
-  },
-  botaoFechar: {
-    marginBottom: 30,
   },
   sombra: {
     ...StyleSheet.absoluteFill,
     backgroundColor: "rgba(0,0,0,0.5)",
     zIndex: 1,
   },
-  logo: {
-    width: "100%",
-    marginTop: 30,
-  },
   bgGaveta: {
     flex: 1,
   },
-  containerGaveta: {
-    padding: 20,
+
+  // TOPO
+  botaoFechar: {
+    alignSelf: "flex-end",
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: espaco.sm,
   },
-  
-  iconeMenu: {
-    width: 30,
-    height: 30,
-    marginLeft: 5,
-    marginRight: 5,
+  iconeFechar: {
+    width: 32,
+    height: 32,
+  },
+  logo: {
+    width: "80%",
+    height: 70,
+    alignSelf: "center",
+    marginTop: espaco.sm,
+    marginBottom: espaco.lg,
+  },
+
+  // ITENS (o espaço entre eles e as margens laterais vêm do LinhaAcao)
+  itens: {
+    flex: 1, // empurra o rodapé para baixo
+  },
+
+  rodapeSegundaLinha: {
+    marginTop: espaco.xs,
   },
 });
