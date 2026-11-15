@@ -2,10 +2,10 @@
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito:** Fases 0 a 9 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações, Feedback). Último commit: `feedback screen redesign`.
+- **Feito:** Fases 0 a 10 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações, Feedback, Sobre). Último commit: `about screen redesign`.
 - **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **16 commits à frente** do GitHub (sem push).
-- **Aguardando:** o dono testar no celular o Feedback (Fase 9) e a faixa preta em Sobre e Configurações. Doações (Fase 8) já foi aprovada.
-- **Próximo passo:** Fase 10 (Sobre). O cabeçalho dela (10.1) já foi trocado.
+- **Aguardando:** o dono testar o Sobre no celular (Fase 10) e o recuo dos parágrafos (vale para Doações, Feedback e Sobre). Feedback (Fase 9) e a faixa preta já foram aprovados.
+- **Próximo passo:** Fase 11 (Configurações). O cabeçalho dela (11.1, parte do `CabecalhoTela`) já foi trocado.
 - **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
@@ -300,17 +300,19 @@ Commit: `feedback screen redesign`.
 ## Fase 10: Sobre
 
 - [x] 10.1. `CabecalhoTela titulo="Sobre"` e `Fundo`.
-- [ ] 10.2. Topo: `logo.png` (`width: "70%"`, altura 90, `resizeMode="contain"`, centralizado), com "Versão 1.0.0 — Build: Perfurador" logo abaixo (`fonte.legenda`, `cores.azulTexto`). Esse texto sai do fim da tela.
-- [ ] 10.3. Cada seção vira `TituloSecao` + `Cartao` + `Paragrafo`, com os textos atuais **sem recuo**:
+- [x] 10.2. Topo: `logo.png` (`width: "70%"`, altura 90, `resizeMode="contain"`, centralizado), com "Versão 1.0.0 — Build: Perfurador" logo abaixo (`fonte.legenda`, `cores.azulTexto`). Esse texto sai do fim da tela.
+- [x] 10.3. Cada seção vira `TituloSecao` + `Cartao` + `Paragrafo`, com os textos atuais **sem recuo**:
   - "Early Game": 1 parágrafo;
   - "Lore": 4 parágrafos (separe pelos `{"\n"}` atuais);
   - "Aviso legal": 2 parágrafos.
-- [ ] 10.4. "Contato": as mesmas 3 `LinhaAcao` da Fase 9.4, mais o `Rodape` "Ao utilizar nossos canais…".
-- [ ] 10.5. Apague o bloco comentado do perfil (`profile.jpeg`).
-- [ ] 10.6. Remova estilos e imports sem uso.
-- [ ] 10.7. Atualize o teste de copiar em `/sobre`.
+- [x] 10.4. "Contato": as mesmas 3 `LinhaAcao` da Fase 9.4, mais o `Rodape` "Ao utilizar nossos canais…".
+- [x] 10.5. Apague o bloco comentado do perfil (`profile.jpeg`).
+- [x] 10.6. Remova estilos e imports sem uso.
+- [x] 10.7. Atualize o teste de copiar em `/sobre`.
 
 **✅ Verificar:** `npm run test:web` tudo `PASS`. No print, todas as seções no mesmo padrão. No celular: rolar até o fim sem nada cortado.
+
+> 📝 **Resultado da Fase 10:** a pedido do dono, a versão ("Versão 1.0.0 — Build: Perfurador") ficou no **rodapé** (`Rodape` no fim da tela), não abaixo do logo, e **todo `Paragrafo` tem recuo** de primeira linha (2 x U+2003 dentro do componente, já que o RN não tem `textIndent`). A lista de contatos virou `ListaContatos` em `ui.js` (usada em Sobre e Feedback), e o `copiarId` provisório saiu de `contatos.js`. "Aviso legal" usa o `Cartao` azul. Os textos narrativos usam o dourado. O typo "otimo" (sem acento) foi mantido, pois a regra 4 só permite as correções listadas.
 
 Commit: `about screen redesign`.
 

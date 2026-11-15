@@ -1,7 +1,7 @@
-// Dados e ações de contato, usados pelas telas Sobre e Feedback.
-// Antes, cada tela tinha a sua cópia destas funções.
-import { Linking, Platform, Alert } from "react-native";
-import * as Clipboard from "expo-clipboard";
+// Dados e ações de contato. A parte visual (ListaContatos) fica em ui.js.
+// Antes, Sobre e Feedback tinham cada uma a sua cópia destas funções.
+// (Copiar o ID é feito pelo BotaoCopiar de ui.js.)
+import { Linking, Alert } from "react-native";
 
 export const EMAIL = "mlbbcounters@gmail.com";
 export const GITHUB_USUARIO = "mhenriquers";
@@ -26,17 +26,5 @@ export const enviarEmail = async () => {
       `Para enviar um e-mail, configure o aplicativo 'Mail' padrão do seu iPhone ou copie o endereço: ${EMAIL}`,
       [{ text: "OK" }],
     );
-  }
-};
-
-// Provisório: nas fases 9 e 10 do task.md, Sobre e Feedback passam a usar o
-// BotaoCopiar (de ui.js), que confirma na própria tela, e esta função sai.
-export const copiarId = async () => {
-  await Clipboard.setStringAsync(ID_JOGO);
-
-  if (Platform.OS === "web") {
-    window.alert("Copiado para a área de transferência.");
-  } else if (Platform.OS === "ios") {
-    Alert.alert("Sucesso", "Copiado para a área de tranferência", [{ text: "OK" }]);
   }
 };

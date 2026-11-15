@@ -7,11 +7,8 @@ import {
   TituloSecao,
   Cartao,
   Paragrafo,
-  LinhaAcao,
-  BotaoCopiar,
-  Rodape,
+  ListaContatos,
 } from "./ui";
-import { EMAIL, GITHUB_USUARIO, ID_JOGO, abrirGit, enviarEmail } from "./contatos";
 
 export default function Feedback({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -38,28 +35,7 @@ export default function Feedback({ navigation }) {
 
         {/* CONTATO */}
         <TituloSecao titulo="Contato" />
-        <LinhaAcao
-          icone={require("./assets/gmail.png")}
-          titulo={EMAIL}
-          subtitulo="Enviar e-mail"
-          aoTocar={enviarEmail}
-        />
-        <LinhaAcao
-          icone={require("./assets/gitHub.png")}
-          titulo={GITHUB_USUARIO}
-          subtitulo="Abrir GitHub"
-          aoTocar={abrirGit}
-        />
-        <LinhaAcao
-          icone={require("./assets/imortal.png")}
-          titulo="Owdail"
-          subtitulo={"ID: " + ID_JOGO}
-          direita={<BotaoCopiar texto={ID_JOGO} />}
-        />
-        <Rodape>
-          Ao utilizar nossos canais de contato, você concorda com nossos termos e
-          política de privacidade.
-        </Rodape>
+        <ListaContatos />
 
         {/* RETORNO */}
         <TituloSecao titulo="Retorno" />

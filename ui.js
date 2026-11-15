@@ -5,6 +5,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from "expo-clipboard";
 import { cores, espaco, raio, fonte } from "./tema";
+import { EMAIL, GITHUB_USUARIO, ID_JOGO, abrirGit, enviarEmail } from "./contatos";
 
 // ---------------------------------------------------------------------------
 // Fundo: substitui o ImageBackground (descontinuado no React Native 0.88).
@@ -105,11 +106,17 @@ export function Cartao({ destaque = "azul", style, children }) {
 }
 
 // ---------------------------------------------------------------------------
-// Paragrafo: texto corrido, sem recuo. Use `ultimo` no último do bloco.
+// Paragrafo: texto corrido, justificado e com recuo. Use `ultimo` no último do bloco.
 // ---------------------------------------------------------------------------
+// Recuo da primeira linha: o React Native não tem textIndent, então cada
+// parágrafo começa com 2 espaços largos (U+2003, da largura da letra M).
+// Diferente do espaço comum, o navegador não junta esses espaços.
+const RECUO = "  ";
+
 export function Paragrafo({ ultimo, style, children }) {
   return (
     <Text style={[estilos.paragrafo, ultimo && { marginBottom: 0 }, style]}>
+      {RECUO}
       {children}
     </Text>
   );
@@ -167,6 +174,39 @@ export function BotaoCopiar({ texto, rotulo = "Copiar", style }) {
     <TouchableOpacity onPress={copiar} activeOpacity={0.8} style={[estilos.botaoCopiar, style]}>
       <Text style={estilos.textoBotaoCopiar}>{copiado ? "Copiado ✓" : rotulo}</Text>
     </TouchableOpacity>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// ListaContatos: e-mail, GitHub e ID do jogo (com "Copiar"), mais o aviso.
+// Igual em Sobre e Feedback. Os dados e as ações vêm de contatos.js.
+// ---------------------------------------------------------------------------
+export function ListaContatos() {
+  return (
+    <>
+      <LinhaAcao
+        icone={require("./assets/gmail.png")}
+        titulo={EMAIL}
+        subtitulo="Enviar e-mail"
+        aoTocar={enviarEmail}
+      />
+      <LinhaAcao
+        icone={require("./assets/gitHub.png")}
+        titulo={GITHUB_USUARIO}
+        subtitulo="Abrir GitHub"
+        aoTocar={abrirGit}
+      />
+      <LinhaAcao
+        icone={require("./assets/imortal.png")}
+        titulo="Owdail"
+        subtitulo={"ID: " + ID_JOGO}
+        direita={<BotaoCopiar texto={ID_JOGO} />}
+      />
+      <Rodape>
+        Ao utilizar nossos canais de contato, você concorda com nossos termos e
+        política de privacidade.
+      </Rodape>
+    </>
   );
 }
 

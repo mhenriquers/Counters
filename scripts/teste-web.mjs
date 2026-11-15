@@ -125,14 +125,7 @@ await caso("/heroi/999 mostra 'Herói não encontrado'", async () => {
 });
 
 // ---------------- Copiar ----------------
-// Aceita os dois jeitos de confirmar: window.alert (antigo) ou o texto "Copiado" na tela (BotaoCopiar)
-async function copiouEm(rota, clicar) {
-  await nav.abrir(BASE + rota);
-  const antes = dialogos.length;
-  await clicar();
-  return dialogos.length > antes || (await nav.temTexto("Copiado"));
-}
-// Telas que já usam o BotaoCopiar: tem que confirmar na tela, sem window.alert
+// Todas as telas usam o BotaoCopiar: tem que confirmar na tela, sem window.alert
 async function copiadoNaTela(rota, rotulo) {
   await nav.abrir(BASE + rota);
   const antes = dialogos.length;
@@ -140,9 +133,7 @@ async function copiadoNaTela(rota, rotulo) {
   return dialogos.length === antes && (await nav.temTexto("Copiado ✓"));
 }
 await caso("copiar em /apoiar mostra 'Copiado ✓'", () => copiadoNaTela("/apoiar", "Copiar chave"));
-await caso("copiar em /sobre confirma", () =>
-  copiouEm("/sobre", () => nav.clicarTexto("Owdail - ID: 1033871650", 500)),
-);
+await caso("copiar em /sobre mostra 'Copiado ✓'", () => copiadoNaTela("/sobre", "Copiar"));
 await caso("copiar em /feedback mostra 'Copiado ✓'", () => copiadoNaTela("/feedback", "Copiar"));
 
 // ---------------- Resultado ----------------

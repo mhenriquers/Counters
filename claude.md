@@ -70,12 +70,12 @@ Todos os arquivos ficam na raiz, sem pasta `src/`. Cada tela é um arquivo `.js`
 | `MenuLateral.js` | Gaveta feita à mão (não usa o drawer do react-navigation). Props: `visivel`, `aoFechar`, `navigation`. Animada com `Animated` (desliza da esquerda, `useNativeDriver` fora da web), continua montada até terminar de fechar, e com o menu aberto o voltar do Android (`BackHandler`) fecha o menu. A gaveta tem `overflow: "hidden"` porque a imagem de fundo (`fundoMG.png`, 1167x2000) transbordava e cobria a sombra, impedindo de fechar ao tocar fora. |
 | `Doacoes.js` | Tela de apoio (URL `/apoiar`): chave Pix com `BotaoCopiar`. Primeira tela secundária no padrão novo (`CabecalhoTela`, `Cartao`, `Paragrafo`, `Rodape`): use-a como modelo para as outras. |
 | `Feedback.js` / `Sobre.js` | Links para GitHub e e-mail e um botão que copia um ID. As ações vêm de `contatos.js`. |
-| `contatos.js` | `EMAIL`, `GITHUB_USUARIO`, `ID_JOGO` e as ações `abrirGit`, `enviarEmail` (`mailto:`) e `copiarId` (provisória: sai quando as telas usarem o `BotaoCopiar`). |
+| `contatos.js` | `EMAIL`, `GITHUB_USUARIO`, `ID_JOGO` e as ações `abrirGit` e `enviarEmail` (`mailto:`). Só dados e ações: a parte visual é a `ListaContatos` de `ui.js`. |
 | `Configuracoes.js` | Tela estática e informativa (idioma, tema, política de privacidade). Ainda não tem configurações funcionais. |
 | `banco_herois.js` | **Fonte de todos os dados.** Exporta `HEROIS`. |
 | `LoadingScreen.js` | **Não está registrada no Stack** (código morto). |
 | `tema.js` | Tokens visuais: `cores`, `espaco`, `raio`, `fonte`. Toda cor, espaçamento ou tamanho de fonte novo deve vir daqui. |
-| `ui.js` | Componentes compartilhados: `Fundo` (substitui o `ImageBackground`), `TituloSecao` (faixa do site + capacete), `BarraStatus` (faixa preta atrás da hora), `CabecalhoTela` (já inclui a `BarraStatus`), `Cartao`, `Paragrafo` (justificado), `LinhaAcao`, `BotaoCopiar` (mostra "Copiado ✓", sem `Alert`) e `Rodape`. |
+| `ui.js` | Componentes compartilhados: `Fundo` (substitui o `ImageBackground`), `TituloSecao` (faixa do site + capacete), `BarraStatus` (faixa preta atrás da hora), `CabecalhoTela` (já inclui a `BarraStatus`), `Cartao`, `Paragrafo` (justificado e com recuo de primeira linha: não faça recuo com espaços), `LinhaAcao`, `BotaoCopiar` (mostra "Copiado ✓", sem `Alert`), `ListaContatos` (e-mail, GitHub e ID, igual em Sobre e Feedback) e `Rodape`. |
 | `scripts/` | `gerar-icones.mjs` e `otimizar-imagens.mjs` (usam `sharp`); `teste-web.mjs` (E2E) e `screenshots.mjs` (prints), que usam `cdp-util.mjs`: servidor estático de `dist/` + Chrome headless via DevTools Protocol, sem dependências. Chrome em `CHROME_PATH` ou no caminho padrão do Windows. |
 | `task.md` | Plano de trabalho em andamento (hoje: repaginada visual, na `main`). A seção "Estado atual" no topo diz o que foi feito e o próximo passo. |
 | `atualizar-sdk.md` | Anotações do dono do projeto sobre como atualizar o SDK. |
@@ -118,11 +118,10 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 ## Problemas conhecidos (verificados no código)
 
-- O `ImageBackground` (descontinuado) ainda é usado em 2 arquivos (só no fundo da tela): Sobre e Configuracoes. As outras telas já usam o `Fundo`. A troca está planejada no `task.md`.
-- No **Android**, copiar o ID no Sobre não mostra nenhum aviso: o `copiarId` de `contatos.js` só avisa no iOS e na web. Some quando as telas usarem o `BotaoCopiar` (o Pix já usa).
+- O `ImageBackground` (descontinuado) ainda é usado em 1 arquivo (só no fundo da tela): Configuracoes. As outras telas já usam o `Fundo`. A troca está planejada no `task.md`.
 - Erros de digitação: "Unico" e "Politica" (Configurações).
 - "Avalie-nos" em Configurações não faz nada (`TouchableOpacity` sem `onPress`).
-- Os textos das telas secundárias usam recuo feito com espaços (`{"        "}`).
+- A tela Configurações ainda usa recuo feito com espaços (`{"        "}`). As outras já usam o `Paragrafo`.
 - `LoadingScreen.js` usa a cor `'21FFB5'` sem `#`.
 - `assets/` tem vários arquivos de teste ou duplicados (`bgLayer - Copia.png`, `botaoVoltar (1).png`, `bg.layerTeste.png`, `gojo.jpg`).
 
