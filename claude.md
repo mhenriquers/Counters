@@ -118,9 +118,9 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 ## Problemas conhecidos (verificados no código)
 
-- O `ImageBackground` (descontinuado) ainda é usado em 3 arquivos: Sobre, Feedback, Configuracoes. Details, Home, Menu e Doacoes já usam o `Fundo`. A troca está planejada no `task.md`.
-- No **Android**, copiar o ID (Sobre e Feedback) não mostra nenhum aviso: o `copiarId` de `contatos.js` só avisa no iOS e na web. Some quando as telas usarem o `BotaoCopiar` (o Pix já usa).
-- Erros de digitação: "Unico" e "Politica" (Configurações), "se vc pediu" (Feedback).
+- O `ImageBackground` (descontinuado) ainda é usado em 2 arquivos (só no fundo da tela): Sobre e Configuracoes. As outras telas já usam o `Fundo`. A troca está planejada no `task.md`.
+- No **Android**, copiar o ID no Sobre não mostra nenhum aviso: o `copiarId` de `contatos.js` só avisa no iOS e na web. Some quando as telas usarem o `BotaoCopiar` (o Pix já usa).
+- Erros de digitação: "Unico" e "Politica" (Configurações).
 - "Avalie-nos" em Configurações não faz nada (`TouchableOpacity` sem `onPress`).
 - Os textos das telas secundárias usam recuo feito com espaços (`{"        "}`).
 - `LoadingScreen.js` usa a cor `'21FFB5'` sem `#`.

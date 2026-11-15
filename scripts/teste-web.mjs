@@ -132,19 +132,18 @@ async function copiouEm(rota, clicar) {
   await clicar();
   return dialogos.length > antes || (await nav.temTexto("Copiado"));
 }
-// /apoiar já usa o BotaoCopiar: tem que confirmar na tela, sem window.alert
-await caso("copiar em /apoiar mostra 'Copiado ✓'", async () => {
-  await nav.abrir(BASE + "/apoiar");
+// Telas que já usam o BotaoCopiar: tem que confirmar na tela, sem window.alert
+async function copiadoNaTela(rota, rotulo) {
+  await nav.abrir(BASE + rota);
   const antes = dialogos.length;
-  await nav.clicarTexto("Copiar chave", 500);
+  await nav.clicarTexto(rotulo, 500);
   return dialogos.length === antes && (await nav.temTexto("Copiado ✓"));
-});
+}
+await caso("copiar em /apoiar mostra 'Copiado ✓'", () => copiadoNaTela("/apoiar", "Copiar chave"));
 await caso("copiar em /sobre confirma", () =>
   copiouEm("/sobre", () => nav.clicarTexto("Owdail - ID: 1033871650", 500)),
 );
-await caso("copiar em /feedback confirma", () =>
-  copiouEm("/feedback", () => nav.clicarTexto("Owdail - ID: 1033871650", 500)),
-);
+await caso("copiar em /feedback mostra 'Copiado ✓'", () => copiadoNaTela("/feedback", "Copiar"));
 
 // ---------------- Resultado ----------------
 const unicos = [...new Set(avisos)];

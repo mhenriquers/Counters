@@ -2,10 +2,10 @@
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito:** Fases 0 a 8 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações). Último commit: `donations screen redesign`.
+- **Feito:** Fases 0 a 9 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home, menu lateral, `contatos.js`, Doações, Feedback). Último commit: `feedback screen redesign`.
 - **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **16 commits à frente** do GitHub (sem push).
-- **Aguardando:** o dono testar Doações redesenhada no celular (Fase 8): emblema encolhendo ao rolar, cabeçalho fora da barra de status, rolar até o fim, "Copiar chave" mostrando "Copiado ✓".
-- **Próximo passo:** Fase 9 (Feedback).
+- **Aguardando:** o dono testar no celular o Feedback (Fase 9) e a faixa preta em Sobre e Configurações. Doações (Fase 8) já foi aprovada.
+- **Próximo passo:** Fase 10 (Sobre). O cabeçalho dela (10.1) já foi trocado.
 - **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
@@ -277,19 +277,21 @@ Commit: `donations screen redesign`.
 
 ## Fase 9: Feedback
 
-- [ ] 9.1. `CabecalhoTela titulo="Feedback"` e `Fundo` (como na Fase 8).
-- [ ] 9.2. Remova o logo grande do topo (o cabeçalho já identifica a tela). Abra com `TituloSecao titulo="Sugestões ou erros?"` e `marginTop: espaco.lg`.
-- [ ] 9.3. O texto vira `<Cartao destaque="dourado"><Paragrafo ultimo>…</Paragrafo></Cartao>` (sem recuo).
-- [ ] 9.4. **Contatos** com `LinhaAcao`:
+- [x] 9.1. `CabecalhoTela titulo="Feedback"` e `Fundo` (como na Fase 8).
+- [x] 9.2. Remova o logo grande do topo (o cabeçalho já identifica a tela). Abra com `TituloSecao titulo="Sugestões ou erros?"` e `marginTop: espaco.lg`.
+- [x] 9.3. O texto vira `<Cartao destaque="dourado"><Paragrafo ultimo>…</Paragrafo></Cartao>` (sem recuo).
+- [x] 9.4. **Contatos** com `LinhaAcao`:
   - `gmail.png` com título `EMAIL` e subtítulo "Enviar e-mail", `aoTocar={enviarEmail}`;
   - `gitHub.png` com título `GITHUB_USUARIO` e subtítulo "Abrir GitHub", `aoTocar={abrirGit}`;
   - `imortal.png` com título "Owdail" e subtítulo `"ID: " + ID_JOGO`, e `direita={<BotaoCopiar texto={ID_JOGO} />}` (sem `aoTocar`).
-- [ ] 9.5. O aviso "Ao utilizar nossos canais…" vira `Rodape`.
-- [ ] 9.6. Seção "Retorno": `TituloSecao titulo="Retorno"` + `Cartao` + `Paragrafo ultimo`. Corrija "se vc pediu" para **"se você pediu"**.
-- [ ] 9.7. Remova os estilos e imports sem uso (inclusive os de `fontFamily` monospace).
-- [ ] 9.8. Atualize o teste de copiar em `/feedback` (clicar em "Copiar" e esperar "Copiado ✓").
+- [x] 9.5. O aviso "Ao utilizar nossos canais…" vira `Rodape`.
+- [x] 9.6. Seção "Retorno": `TituloSecao titulo="Retorno"` + `Cartao` + `Paragrafo ultimo`. Corrija "se vc pediu" para **"se você pediu"**.
+- [x] 9.7. Remova os estilos e imports sem uso (inclusive os de `fontFamily` monospace).
+- [x] 9.8. Atualize o teste de copiar em `/feedback` (clicar em "Copiar" e esperar "Copiado ✓").
 
 **✅ Verificar:** `npm run test:web` tudo `PASS`. No celular: e-mail abre o app de e-mail, GitHub abre o navegador, copiar mostra "Copiado ✓".
+
+> 📝 **Resultado da Fase 9:** além do plano, uma faixa `TituloSecao titulo="Contato"` antes dos 3 contatos (pra não ficarem soltos, como o dono pediu em Doações; o Sobre já ia ter essa seção). O `TituloSecao` ganhou a prop `style`. O teste de copiar em `/feedback` exige "Copiado ✓" e nenhum `window.alert`. **Antes desta fase**, a pedido do dono (faixa preta atrás da hora em todas as telas), Sobre e Configurações trocaram **só o cabeçalho** pelo `CabecalhoTela` (commit `83e1e05`). A margem do logo virou 6 para o conteúdo ficar no mesmo lugar no Sobre. Em Configurações, o conteúdo subiu ~48px (ali o cabeçalho antigo tinha um espaço a mais).
 
 Commit: `feedback screen redesign`.
 
@@ -297,7 +299,7 @@ Commit: `feedback screen redesign`.
 
 ## Fase 10: Sobre
 
-- [ ] 10.1. `CabecalhoTela titulo="Sobre"` e `Fundo`.
+- [x] 10.1. `CabecalhoTela titulo="Sobre"` e `Fundo`.
 - [ ] 10.2. Topo: `logo.png` (`width: "70%"`, altura 90, `resizeMode="contain"`, centralizado), com "Versão 1.0.0 — Build: Perfurador" logo abaixo (`fonte.legenda`, `cores.azulTexto`). Esse texto sai do fim da tela.
 - [ ] 10.3. Cada seção vira `TituloSecao` + `Cartao` + `Paragrafo`, com os textos atuais **sem recuo**:
   - "Early Game": 1 parágrafo;

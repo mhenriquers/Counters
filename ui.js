@@ -32,12 +32,12 @@ export function Fundo({ fonte: imagem, modo = "cover", style, children }) {
 // ---------------------------------------------------------------------------
 // TituloSecao: faixa azul do site (bg-Layer.png) + capacete + título.
 // ---------------------------------------------------------------------------
-export function TituloSecao({ titulo, subtitulo, cor = cores.azulTexto }) {
+export function TituloSecao({ titulo, subtitulo, cor = cores.azulTexto, style }) {
   return (
     <Fundo
       fonte={require("./assets/bg-Layer.png")}
       modo="stretch"
-      style={estilos.faixaSecao}
+      style={[estilos.faixaSecao, style]}
     >
       <Image
         source={require("./assets/hero.png")}
