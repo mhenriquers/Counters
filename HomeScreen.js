@@ -5,7 +5,6 @@ import {
   View,
   TextInput,
   FlatList,
-  ImageBackground,
   TouchableOpacity,
   Image,
   Keyboard,
@@ -18,26 +17,24 @@ import { LinearGradient } from "expo-linear-gradient";
 import { HEROIS } from "./banco_herois";
 import InstalarApp from "./InstalarApp";
 import MenuLateral from "./MenuLateral";
+import { cores, espaco, raio, fonte } from "./tema";
+import { Fundo } from "./ui";
 
 const chaveDoHeroi = (item) => item.id;
 
-// Logo do topo da grade (não muda, então é criado uma vez só)
-const cabecalhoGrade = (
-  <View>
-    <Image
-      source={require("./assets/logo.png")}
-      style={{
-        width: "80%",
-        height: 180,
-        marginTop: -40,
-        marginBottom: -10,
-        alignSelf: "center",
-      }}
-      resizeMode="contain"
-    />
-    <InstalarApp />
-  </View>
-);
+// Mostrado quando a busca não encontra nenhum herói. Fica fora da Home para
+// ser sempre a mesma referência (a FlatList não redesenha à toa).
+function ListaVazia() {
+  return <Text style={styles.listaVazia}>Nenhum herói encontrado</Text>;
+}
+
+// "128 heróis" ou "3 resultados para "ali""
+function textoContador(total, busca) {
+  if (busca) {
+    return `${total} ${total === 1 ? "resultado" : "resultados"} para "${busca}"`;
+  }
+  return `${total} ${total === 1 ? "herói" : "heróis"}`;
+}
 
 export default function HomeScreen({ navigation }) {
   //Constantes
@@ -72,6 +69,26 @@ export default function HomeScreen({ navigation }) {
       );
   }, [busca]);
   const [pesquisar, setPesquisar] = useState(false);
+
+  // Logo + botão de instalar + contador. Depende da busca, por isso o useMemo:
+  // só é recriado quando o total ou o texto buscado mudam (não ao abrir o menu).
+  const totalHerois = heroisFiltrados.length;
+  const cabecalhoGrade = useMemo(
+    () => (
+      <View>
+        <Image
+          source={require("./assets/logo.png")}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        <InstalarApp />
+        <Text style={styles.contador}>
+          {textoContador(totalHerois, busca.trim())}
+        </Text>
+      </View>
+    ),
+    [totalHerois, busca],
+  );
 
   // Funções da FlatList guardadas com useCallback: assim, abrir/fechar o menu
   // não faz a grade inteira ser redesenhada (as props da lista não mudam).
@@ -122,55 +139,59 @@ export default function HomeScreen({ navigation }) {
       <View style={{ flex: 1, backgroundColor: "#000" }}>
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
-            <ImageBackground
-              source={require("./assets/bgbg.png")}
+            <Fundo
+              fonte={require("./assets/bgbg.png")}
               style={styles.backgroundImage}
-              resizeMode="cover"
             >
-              {/* BOTÃO QUE ABRE O MENU */}
-
-              <ImageBackground
-                source={require("./assets/bg-header.png")}
-                style={styles.bgHeader}
+              {/* CABEÇALHO: menu | separador | busca + lupa */}
+              <Fundo
+                fonte={require("./assets/bg-header.png")}
+                style={styles.cabecalho}
               >
-                <View style={styles.headerSuperior}>
+                <TouchableOpacity
+                  onPress={() => setMenuAberto(true)}
+                  style={styles.botaoCabecalho}
+                  hitSlop={8}
+                >
+                  <Image source={require("./assets/opcoes.png")} />
+                </TouchableOpacity>
+                <Image
+                  source={require("./assets/separador.png")}
+                  style={styles.separador}
+                />
+
+                <View style={styles.areaPesquisa}>
+                  {pesquisar && (
+                    <View style={styles.campoBusca}>
+                      <TextInput
+                        ref={inputRef}
+                        autoFocus={true}
+                        style={styles.input}
+                        placeholder="Pesquisar herói..."
+                        placeholderTextColor={cores.textoFraco}
+                        value={busca}
+                        onChangeText={setBusca}
+                      />
+                      {busca.length > 0 && (
+                        <TouchableOpacity
+                          onPress={() => setBusca("")}
+                          hitSlop={8}
+                          style={styles.botaoLimpar}
+                        >
+                          <Text style={styles.textoLimpar}>✕</Text>
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  )}
                   <TouchableOpacity
-                    onPress={() => setMenuAberto(true)}
-                    style={styles.botaoOpcoes}
+                    onPress={alternarPesquisa}
+                    style={styles.botaoCabecalho}
                     hitSlop={8}
                   >
-                    <Image source={require("./assets/opcoes.png")} />
+                    <Image source={require("./assets/lupa.png")} />
                   </TouchableOpacity>
-                  <Image
-                    source={require("./assets/separador.png")}
-                    style={styles.separador}
-                  />
-
-                  {/* local de pesquisa */}
-
-                  <View resizeMode="contain" style={styles.areaPesquisa}>
-                    <View style={styles.inputContainer}>
-                      {pesquisar && (
-                        <TextInput
-                          ref={inputRef}
-                          autoFocus={true}
-                          style={styles.input}
-                          placeholder="Pesquisar herói..."
-                          placeholderTextColor="#ddd"
-                          value={busca}
-                          onChangeText={setBusca}
-                        />
-                      )}
-                      <TouchableOpacity onPress={alternarPesquisa}>
-                        <Image
-                          source={require("./assets/lupa.png")}
-                          style={styles.iconeLupa}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
                 </View>
-              </ImageBackground>
+              </Fundo>
 
               {/* Grade de herois */}
 
@@ -186,10 +207,11 @@ export default function HomeScreen({ navigation }) {
                 columnWrapperStyle={styles.linhaGrade}
                 contentContainerStyle={styles.conteudoGrade}
                 ListHeaderComponent={cabecalhoGrade}
+                ListEmptyComponent={ListaVazia}
                 renderItem={desenharHeroi}
               />
               <StatusBar style="light" />
-            </ImageBackground>
+            </Fundo>
           </SafeAreaView>
         </SafeAreaProvider>
 
@@ -230,11 +252,11 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
     margin: 2,
     borderWidth: 2,
-    borderColor: "hsl(191, 100%, 94%)", // Azul do desenho
+    borderColor: cores.azulBorda,
     borderRadius: 6,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 10,
+    elevation: 4,
     overflow: "hidden",
   },
 
@@ -269,35 +291,88 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  areaPesquisa: {
-    width: "100%",
-    width: 100,
-    height: 40,
-    flex: 1,
+  logo: {
+    width: "80%",
+    height: 180,
+    marginTop: -40,
+    marginBottom: -10,
+    alignSelf: "center",
   },
 
-  placeholder: {
-    paddingRight: 10,
-    marginRight: 20,
+  contador: {
+    color: cores.azulTexto,
+    fontSize: fonte.legenda,
+    textAlign: "center",
+    marginBottom: espaco.md,
+  },
+
+  listaVazia: {
+    color: cores.textoSuave,
+    fontSize: fonte.corpo,
+    textAlign: "center",
+    marginTop: espaco.xl,
+  },
+
+  // CABEÇALHO
+  cabecalho: {
+    width: "100%",
+    height: 56,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: espaco.md,
+    paddingHorizontal: espaco.sm,
+  },
+
+  // Área de toque mínima de 44x44 (os ícones são um pouco maiores e ficam no tamanho original)
+  botaoCabecalho: {
+    minWidth: 44,
+    minHeight: 44,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  separador: {
+    height: 40,
+  },
+
+  areaPesquisa: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: espaco.sm,
+  },
+
+  // Campo de busca em pílula
+  campoBusca: {
+    flex: 1,
+    height: 36,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: espaco.md,
+    borderRadius: raio.pilula,
+    borderWidth: 1,
+    borderColor: "rgba(155, 209, 253, 0.35)",
+    backgroundColor: "rgba(155, 209, 253, 0.1)",
   },
 
   input: {
     flex: 1,
-    color: "#FFFF",
+    height: "100%",
+    paddingVertical: 0, // o Android põe padding próprio e o texto sai da pílula
+    color: cores.texto,
+    fontSize: fonte.corpo,
+    // na web, tira o contorno azul do navegador (a pílula já mostra o campo)
+    ...Platform.select({ web: { outlineStyle: "none" }, default: {} }),
   },
 
-  inputContainer: {
-    flexDirection: "row",
-    width: "100%",
-    paddingLeft: 20,
-    paddingRight: 0,
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-end",
+  botaoLimpar: {
+    paddingLeft: espaco.sm,
   },
 
-  iconeLupa: {
-    right: 0,
+  textoLimpar: {
+    color: cores.textoSuave,
+    fontSize: fonte.corpo,
   },
 
   gradiente: {
@@ -319,26 +394,4 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
 
-  botaoOpcoes: {
-    width: 40,
-    height: 40,
-    justifyContent: "center",
-  },
-
-  headerSuperior: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: 20,
-    padding: 10,
-  },
-
-  bgHeader: {
-    width: "100%",
-    height: 60,
-  },
-
-  separador: {
-    height: 40,
-    marginLeft: 5,
-  },
 });

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Platform, TouchableOpacity, Text, StyleSheet } from "react-native";
+import { cores, espaco, raio } from "./tema";
 
 export default function InstalarApp() {
   const [evento, setEvento] = useState(null);
@@ -35,11 +36,11 @@ export default function InstalarApp() {
 const styles = StyleSheet.create({
   botao: {
     alignSelf: "center",
-    backgroundColor: "#ffd700",
+    backgroundColor: cores.douradoVivo,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderRadius: 20,
-    marginBottom: 10,
+    borderRadius: raio.pilula,
+    marginBottom: espaco.md,
   },
   texto: {
     color: "#000",
