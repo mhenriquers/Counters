@@ -22,7 +22,7 @@ import {
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { LinearGradient } from "expo-linear-gradient";
-import { HEROIS } from "./banco_herois";
+import { listarHerois } from "./herois";
 import InstalarApp from "./InstalarApp";
 import MenuLateral from "./MenuLateral";
 import { cores, espaco, raio, fonte } from "./tema";
@@ -63,23 +63,10 @@ export default function HomeScreen({ navigation }) {
   const heroisFiltrados = useMemo(() => {
     const textoBusca = busca.trim().toLocaleLowerCase("pt-BR");
 
-    return [...HEROIS]
-      .sort((a, b) => {
-        const comparacao = a.nome.localeCompare(b.nome, "pt-BR", {
-          sensitivity: "base",
-          numeric: true,
-        });
-
-        // Critério secundário para nomes iguais
-        if (comparacao === 0) {
-          return Number(a.id) - Number(b.id);
-        }
-
-        return comparacao;
-      })
-      .filter((heroi) =>
-        heroi.nome.toLocaleLowerCase("pt-BR").includes(textoBusca),
-      );
+    // A lista já vem em ordem alfabética; aqui só filtramos pela busca
+    return listarHerois().filter((heroi) =>
+      heroi.nome.toLocaleLowerCase("pt-BR").includes(textoBusca),
+    );
   }, [busca]);
 
   // Fecha a busca de vez: esconde o campo, fecha o teclado e limpa o texto

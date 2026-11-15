@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { HEROIS } from "./banco_herois";
+import { buscarHeroi, buscarHerois } from "./herois";
 import { cores, espaco, raio } from "./tema";
 import { Fundo, TituloSecao, BarraStatus } from "./ui";
 
-// Ícones das classes (as chaves são os nomes usados em `classe` no banco)
+// Ícones das classes (as chaves são os nomes usados nas classes do banco)
 const iconesClasses = {
   Assassino: require("./assets/assassino.png"),
   Mago: require("./assets/mago.png"),
@@ -23,11 +23,9 @@ const iconesClasses = {
   Atirador: require("./assets/atirador.png"),
 };
 
-const separarClasses = (classe) => classe.split("/");
-
 // Uma linha da lista: foto, nome, classes e seta
 function LinhaHeroi({ heroi, cor, aoTocar }) {
-  const classes = separarClasses(heroi.classe);
+  const { classes } = heroi;
 
   return (
     <TouchableOpacity
@@ -63,8 +61,7 @@ function LinhaHeroi({ heroi, cor, aoTocar }) {
 function DetailsScreen({ route, navigation }) {
   const insets = useSafeAreaInsets();
 
-  const id = String(route.params?.id ?? "");
-  const heroi = HEROIS.find((h) => h.id === id);
+  const heroi = buscarHeroi(route.params?.id);
 
   // URL com id inexistente (ex.: /heroi/999)
   if (!heroi) {
@@ -93,13 +90,9 @@ function DetailsScreen({ route, navigation }) {
     );
   }
 
-  // Converte a lista de ids em heróis, mantendo a ordem do banco
-  const buscarHerois = (ids) =>
-    (ids || []).map((x) => HEROIS.find((h) => h.id === x)).filter(Boolean);
-
   const forteContra = buscarHerois(heroi.counters);
   const fracoContra = buscarHerois(heroi.counteradoPor);
-  const classes = separarClasses(heroi.classe);
+  const { classes } = heroi;
 
   const abrirHeroi = (outro) => navigation.push("Details", { id: outro.id });
 
