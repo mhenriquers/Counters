@@ -1,7 +1,7 @@
 // Componentes visuais compartilhados entre as telas.
 // Seguem a identidade do site oficial do MLBB (ver tema.js e a tela Details).
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from "expo-clipboard";
 import { cores, espaco, raio, fonte } from "./tema";
@@ -166,10 +166,14 @@ export function Rodape({ style, children }) {
 }
 
 const estilos = StyleSheet.create({
-  imagemFundo: {
-    width: "100%",
-    height: "100%",
-  },
+  // Só na web: sem tamanho, o react-native-web desenha a imagem no tamanho
+  // original do arquivo. No celular NÃO pode: lá, o "100%" de um filho absoluto
+  // desconta o padding do pai, e a imagem termina antes da borda (sobrava uma
+  // faixa à direita do cabeçalho da Home). O absoluteFill já preenche tudo.
+  imagemFundo: Platform.select({
+    web: { width: "100%", height: "100%" },
+    default: {},
+  }),
 
   // TituloSecao (valores iguais aos que estavam no Details.js)
   faixaSecao: {

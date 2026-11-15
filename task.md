@@ -4,7 +4,7 @@
 
 - **Feito:** Fases 0 a 5 (ferramentas de teste, `tema.js`, `ui.js`, Details usando o tema, Home). Último commit da tela: `c65c7d6 home redesign`.
 - **Branch:** o trabalho está direto na `main` (a `rework` foi mergeada por fast-forward e não existe mais). A `main` está **11 commits à frente** do GitHub (sem push).
-- **Aguardando:** o dono testar no celular o Details (Fase 4) e a Home (Fase 5): busca, teclado, ✕ da busca, rolagem e o fundo do cabeçalho.
+- **Aguardando:** o dono testar de novo no celular a Home (o cabeçalho ia só até antes da borda direita, já corrigido) e o Details (Fase 4): busca, teclado, ✕ da busca, rolagem.
 - **Próximo passo:** Fase 6 (Menu lateral).
 - **Arquitetura:** a conversa sobre SOLID e pastas está resumida no `claude.md` (seção "Arquitetura"). Aplicar só **depois** desta repaginada.
 - **Jeito de trabalhar combinado com o dono:**
@@ -205,7 +205,7 @@ Commit: `details uses theme and shared components`.
 
 **✅ Verificar:** `npm run test:web` tudo `PASS`. Nos prints: cabeçalho alinhado, contador visível. Na web, buscar "zzz" mostra "Nenhum herói encontrado", e o ✕ limpa a busca. No celular: busca, teclado e rolagem funcionando.
 
-> 📝 **Resultado da Fase 5:** o contador trata o singular ("1 herói", "1 resultado"). O fundo do cabeçalho (`bg-header.png`) ficou em `cover`, como o `ImageBackground` fazia no celular. A lista vazia é o componente `ListaVazia`, fora da Home (referência estável para a `FlatList`). Na web, o campo de busca não mostra o contorno azul do navegador (`outlineStyle: "none"`). Os ícones ☰ e lupa ficam no tamanho original, dentro de uma área de toque mínima de 44x44.
+> 📝 **Resultado da Fase 5:** o **contador foi removido** a pedido do dono (ficou só o "Nenhum herói encontrado"). No celular, o fundo do cabeçalho terminava 16px antes da borda direita: era um bug do `Fundo` (o `width: "100%"` com o padding do pai), corrigido no `ui.js` (ver "Armadilhas" no `claude.md`). O fundo do cabeçalho (`bg-header.png`) ficou em `cover`, como o `ImageBackground` fazia no celular. A lista vazia é o componente `ListaVazia`, fora da Home (referência estável para a `FlatList`). Na web, o campo de busca não mostra o contorno azul do navegador (`outlineStyle: "none"`). Os ícones ☰ e lupa ficam no tamanho original, dentro de uma área de toque mínima de 44x44.
 
 Commit: `home redesign`.
 

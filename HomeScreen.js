@@ -28,12 +28,19 @@ function ListaVazia() {
   return <Text style={styles.listaVazia}>Nenhum herói encontrado</Text>;
 }
 
-// "128 heróis" ou "3 resultados para "ali""
-function textoContador(total, busca) {
-  if (busca) {
-    return `${total} ${total === 1 ? "resultado" : "resultados"} para "${busca}"`;
-  }
-  return `${total} ${total === 1 ? "herói" : "heróis"}`;
+// Logo + botão de instalar, no topo da grade. Também fica fora da Home
+// para ser sempre a mesma referência.
+function CabecalhoGrade() {
+  return (
+    <View>
+      <Image
+        source={require("./assets/logo.png")}
+        style={styles.logo}
+        resizeMode="contain"
+      />
+      <InstalarApp />
+    </View>
+  );
 }
 
 export default function HomeScreen({ navigation }) {
@@ -69,26 +76,6 @@ export default function HomeScreen({ navigation }) {
       );
   }, [busca]);
   const [pesquisar, setPesquisar] = useState(false);
-
-  // Logo + botão de instalar + contador. Depende da busca, por isso o useMemo:
-  // só é recriado quando o total ou o texto buscado mudam (não ao abrir o menu).
-  const totalHerois = heroisFiltrados.length;
-  const cabecalhoGrade = useMemo(
-    () => (
-      <View>
-        <Image
-          source={require("./assets/logo.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-        <InstalarApp />
-        <Text style={styles.contador}>
-          {textoContador(totalHerois, busca.trim())}
-        </Text>
-      </View>
-    ),
-    [totalHerois, busca],
-  );
 
   // Funções da FlatList guardadas com useCallback: assim, abrir/fechar o menu
   // não faz a grade inteira ser redesenhada (as props da lista não mudam).
@@ -206,7 +193,7 @@ export default function HomeScreen({ navigation }) {
                 keyboardShouldPersistTaps="handled"
                 columnWrapperStyle={styles.linhaGrade}
                 contentContainerStyle={styles.conteudoGrade}
-                ListHeaderComponent={cabecalhoGrade}
+                ListHeaderComponent={CabecalhoGrade}
                 ListEmptyComponent={ListaVazia}
                 renderItem={desenharHeroi}
               />
@@ -297,13 +284,6 @@ const styles = StyleSheet.create({
     marginTop: -40,
     marginBottom: -10,
     alignSelf: "center",
-  },
-
-  contador: {
-    color: cores.azulTexto,
-    fontSize: fonte.legenda,
-    textAlign: "center",
-    marginBottom: espaco.md,
   },
 
   listaVazia: {
