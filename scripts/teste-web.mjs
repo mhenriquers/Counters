@@ -11,6 +11,9 @@ if (!existsSync("dist/index.html")) {
   process.exit(1);
 }
 
+// Versão do app (o rodapé do menu e do Sobre mostram a do app.json)
+const VERSAO = JSON.parse(readFileSync("app.json", "utf8")).expo.version;
+
 // Dados do banco (sem executar o arquivo, que tem require de imagens)
 const banco = readFileSync("src/dados/banco_herois.js", "utf8");
 const nomes = {};
@@ -231,7 +234,7 @@ await caso("inglês: Home (busca e herói não encontrado)", async () => {
 await caso("inglês: menu lateral", async () => {
   await navIngles.abrir(BASE + "/", 4500);
   await navIngles.clicarSeletor('img[src*="opcoes"]', 600);
-  const textos = ["Become a supporter", "Settings", "Feedback", "About", "Version 1.0.0", "Data: official MLBB website"];
+  const textos = ["Become a supporter", "Settings", "Feedback", "About", `Version ${VERSAO}`, "Data: official MLBB website"];
   for (const texto of textos) if (!(await navIngles.temTexto(texto))) throw new Error("faltou: " + texto);
   await navIngles.clicarTexto("Settings");
   return (await navIngles.rota()) === "/configuracoes";
@@ -293,7 +296,7 @@ await caso("inglês: Feedback", () =>
 await caso("inglês: Sobre", () =>
   telaEmIngles(
     "/sobre",
-    ["About", "Early Game", "Thanks to my friends", "It all started", "Mythical Glory", "Contact", "Legal notice", "not affiliated with", "Version 1.0.0"],
+    ["About", "Early Game", "Thanks to my friends", "It all started", "Mythical Glory", "Contact", "Legal notice", "not affiliated with", `Version ${VERSAO}`],
     ["Aviso legal", "Tudo começou"],
   ),
 );
