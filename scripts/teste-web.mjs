@@ -154,6 +154,17 @@ await caso("fechar a busca pela lupa limpa o filtro", async () => {
   return filtrou && !(await buscaAberta()) && (await nav.temTexto("Akai"));
 });
 
+await caso("busca sem resultado mostra o capacete e 'Herói não encontrado'", async () => {
+  await nav.clicarSeletor('img[src*="lupa"]', 600);
+  await nav.enviar("Input.insertText", { text: "zzz" });
+  await espera(600);
+  const aviso = await nav.temTexto("Herói não encontrado");
+  const capacete = await nav.avaliar(`!!document.querySelector('img[src*="hero."]')`);
+  const semBotao = !(await nav.temTexto("Voltar para a lista"));
+  await nav.clicarSeletor('img[src*="lupa"]', 600); // fecha e limpa
+  return aviso && capacete && semBotao;
+});
+
 await caso("busca aberta: botão do menu só fecha a busca", async () => {
   await nav.clicarSeletor('img[src*="lupa"]', 600);
   const abriu = await buscaAberta();

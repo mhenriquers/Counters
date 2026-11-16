@@ -1,40 +1,40 @@
 import React from "react";
-import { Text, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { cores, espaco, raio } from "../tema";
-import { Fundo } from "./ui";
 
-// Tela de erro para um id que não existe (ex.: a URL /heroi/999).
-// Recebe só `aoVoltar`, não o `navigation` inteiro: quem decide para onde
-// voltar é quem usa o componente.
-export default function HeroiNaoEncontrado({ aoVoltar }) {
+// Aviso de "Herói não encontrado": capacete + título em negrito.
+// O texto e o botão são opcionais: só aparecem se forem passados.
+//   - Details (/heroi/999): com texto e botão de voltar
+//   - Home (busca sem resultado): só o capacete e o título
+// O fundo fica com quem usa o componente.
+export default function HeroiNaoEncontrado({ texto, aoVoltar, style }) {
   return (
-    <Fundo fonte={require("../../assets/bgDetails.png")} style={style.fundo}>
+    <View style={[estilos.container, style]}>
       <Image
         source={require("../../assets/hero.png")}
         resizeMode="contain"
-        style={style.icone}
+        style={estilos.icone}
       />
-      <Text style={style.titulo}>Herói não encontrado</Text>
-      <Text style={style.texto}>
-        Esse link não corresponde a nenhum herói do banco.
-      </Text>
-      <TouchableOpacity
-        onPress={aoVoltar}
-        style={style.botao}
-        activeOpacity={0.8}
-      >
-        <Text style={style.textoBotao}>Voltar para a lista</Text>
-      </TouchableOpacity>
-    </Fundo>
+      <Text style={estilos.titulo}>Herói não encontrado</Text>
+
+      {texto ? <Text style={estilos.texto}>{texto}</Text> : null}
+
+      {aoVoltar ? (
+        <TouchableOpacity
+          onPress={aoVoltar}
+          style={estilos.botao}
+          activeOpacity={0.8}
+        >
+          <Text style={estilos.textoBotao}>Voltar para a lista</Text>
+        </TouchableOpacity>
+      ) : null}
+    </View>
   );
 }
 
-const style = StyleSheet.create({
-  fundo: {
-    flex: 1,
-    backgroundColor: cores.fundo,
+const estilos = StyleSheet.create({
+  container: {
     alignItems: "center",
-    justifyContent: "center",
     paddingHorizontal: espaco.xl,
   },
 

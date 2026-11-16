@@ -23,7 +23,17 @@ function DetailsScreen({ route, navigation }) {
 
   // URL com id inexistente (ex.: /heroi/999)
   if (!heroi) {
-    return <HeroiNaoEncontrado aoVoltar={() => navigation.popTo("Home")} />;
+    return (
+      <Fundo
+        fonte={require("../../assets/bgDetails.png")}
+        style={[style.fundo, style.centralizado]}
+      >
+        <HeroiNaoEncontrado
+          texto="Esse link não corresponde a nenhum herói do banco."
+          aoVoltar={() => navigation.popTo("Home")}
+        />
+      </Fundo>
+    );
   }
 
   const forteContra = buscarHerois(heroi.counters);
@@ -138,6 +148,11 @@ const style = StyleSheet.create({
   fundo: {
     flex: 1,
     backgroundColor: cores.fundo,
+  },
+
+  // Herói não encontrado: aviso no meio da tela
+  centralizado: {
+    justifyContent: "center",
   },
 
   brilho: {

@@ -25,6 +25,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { listarHerois } from "../dados/herois";
 import InstalarApp from "../componentes/InstalarApp";
 import MenuLateral from "../componentes/MenuLateral";
+import HeroiNaoEncontrado from "../componentes/HeroiNaoEncontrado";
 import { cores, espaco, raio, fonte } from "../tema";
 import { Fundo } from "../componentes/ui";
 
@@ -33,7 +34,7 @@ const chaveDoHeroi = (item) => item.id;
 // Mostrado quando a busca não encontra nenhum herói. Fica fora da Home para
 // ser sempre a mesma referência (a FlatList não redesenha à toa).
 function ListaVazia() {
-  return <Text style={styles.listaVazia}>Nenhum herói encontrado</Text>;
+  return <HeroiNaoEncontrado style={styles.listaVazia} />;
 }
 
 // Logo + botão de instalar, no topo da grade. Também fica fora da Home
@@ -300,9 +301,6 @@ const styles = StyleSheet.create({
   },
 
   listaVazia: {
-    color: cores.textoSuave,
-    fontSize: fonte.corpo,
-    textAlign: "center",
     marginTop: espaco.xl,
   },
 
