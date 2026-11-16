@@ -1,54 +1,52 @@
-# Tarefa: fechar a repaginada e adicionar idiomas
+# Tarefas
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito:** a repaginada visual inteira (Fases 0 a 13). O resumo do que mudou está no `claude.md`. O 13.1 rendeu ajustes na busca da Home (commit `fix search behavior`).
-- **Branch:** o trabalho está direto na `main`.
-- **Decisões já tomadas:** cartões mais escuros aprovados; **manter** todas as imagens sem uso; a descrição da PWA (`public/manifest.json` e `public/index.html`) fica **só em português**, mesmo com o app traduzido.
-- **Arquitetura (feita):** veio **ANTES da fase de idiomas** (decisão do dono em 2026-11-15), na ordem do plano da seção "Arquitetura" do `claude.md`:
-  1. ✅ `herois.js` (commit `add heroes data layer`). `buscarHeroi(id)` devolve **`null`** quando não acha.
-  2. ✅ Quebrar o `Details.js` (commit `split details screen`): saíram `IconeClasse`, `LinhaHeroi` e `HeroiNaoEncontrado`. O dono decidiu **não** criar um `SecaoHerois` (as duas seções repetidas ficam como estão).
-  - O Claude escreve e explica, e cada explicação vai para o `explicaCode.md` (arquivo de estudo do dono).
-  3. ✅ Mover para `src/` (commit `move files to src`, só `git mv` e caminhos). Testado no celular.
-  4. ✅ Atualizar `claude.md` (Estrutura, Modelo de dados, Convenções e Arquitetura) e `task.md`.
-  - **Agora:** Fase 13 (idiomas) com o código pronto (13.1 a 13.7). Commits: `add language support`, `translate home`, `translate side menu`, `translate details` (com as classes, 13.5), `translate donations`, `translate shared components` (ui.js), `translate feedback`, `translate about`, `translate settings`, `translate email texts` (contatos.js recebe o `t` por parâmetro) e `update docs for languages`. **Aguardando:** o dono testar o app inteiro em inglês no celular e revisar as traduções (as da Home foram aprovadas). Decisões: opções de idioma sem recuo; o dono pediu para seguir até o fim sem parar entre telas.
+- **Feito** (o histórico está no git e no `claude.md`): repaginada visual, arquitetura (`herois.js`, Details em componentes, pastas em `src/`), idiomas pt/en no app inteiro e publicação da PWA na Vercel (https://counters-peach-one.vercel.app), testada num navegador real (links diretos, service worker e offline).
+- **Branch:** o trabalho está direto na `main`. Cada `git push` publica a PWA sozinho.
+- **Decisões já tomadas:**
+  - cartões mais escuros aprovados; **manter** todas as imagens sem uso;
+  - a descrição da PWA (`public/manifest.json` e `public/index.html`) fica **só em português**, mesmo com o app traduzido;
+  - opções de idioma nas Configurações **sem recuo**;
+  - **não** criar um `SecaoHerois` no Details;
+  - deploy na **Vercel** (o `netlify.toml` foi apagado pelo dono).
 - **Jeito de trabalhar combinado com o dono:**
-  - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
+  - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima (exceção: quando ele pedir para seguir até o fim);
   - deixar as perguntas para o **final** da resposta;
-  - ele está aprendendo: quando pedir para ensinar, explique o porquê e mostre os comandos, em vez de só fazer.
-- **Fora deste plano (o dono vai readicionar depois):** publicar o site no Netlify (a configuração já está no `netlify.toml`), testar a PWA instalada no celular e colocar o link do site no README.
+  - ele está aprendendo: quando pedir para ensinar, explique o porquê e mostre os comandos, em vez de só fazer. Explicações de arquitetura vão para o `explicaCode.md`.
+
+## Pendências do dono (precisam do celular ou da conta dele)
+
+- [ ] Testar o app inteiro em **inglês** no celular (`npx expo start -c`): trocar o idioma, fechar e abrir o app (a escolha continua) e passar por todas as telas nos dois idiomas.
+- [ ] Revisar as traduções em `src/idioma/textos.js` (as da Home e do menu já foram aprovadas).
+- [ ] Instalar a PWA no celular e abrir com o modo avião ligado (se ainda não fez).
+- [ ] Gerar um **APK novo** (`eas build -p android --profile preview`): entraram bibliotecas nativas (`async-storage`, `expo-localization`), e o APK do README (v1.0.0) ainda não tem os idiomas. Depois, atualizar o link do README.
+
+## Perguntas em aberto (decidir quando der)
+
+- **Pix em inglês:** o Pix só funciona no Brasil. Manter a tela de Doações igual em inglês, ou mostrar um aviso / outra forma de doação para quem é de fora?
+- **Versão em dois lugares:** o "1.0.0" está no `MenuLateral.js` (constante `VERSAO`) e no `Sobre.js`. Ler do `app.json` para mudar num lugar só?
+- **Erro de digitação no Sobre:** "como jogador sou um **otimo** programador" (sem acento). Corrigir para "ótimo"? (Pela regra 3, não foi mudado sem pedido.)
+
+## Depois: landing page (pedido do dono, adiado)
+
+Um site separado para "vender o peixe": explicar o que o app faz e convencer a usar, com botão para a PWA.
+
+Proposta já conversada:
+- HTML e CSS puros, numa página só (rápido, bom para o Google, fácil de editar);
+- mesma identidade visual do app (azul-marinho, dourado, logo, faixas com capacete, prints do `npm run shots`);
+- seções: topo com frase de impacto e botões "Abrir o app" / "Baixar APK", o problema, como funciona (3 passos), vantagens (133 heróis, offline, grátis, sem cadastro, pt/en), perguntas frequentes, chamada final e rodapé;
+- **obrigatório:** aviso no rodapé de que é projeto de fã, sem vínculo com a Moonton;
+- repositório separado (ex.: `c:\dev\counters-site`), com projeto próprio na Vercel.
+
+Perguntas para quando retomar: a pasta pode ser `c:\dev\counters-site`? Tem link fixo para o APK (o do GitHub Releases serve)? Só português ou pt/en? Já tem uma frase de impacto?
 
 ## Regras para executar
 
-1. Siga as fases **na ordem**. Dentro de cada fase, faça uma tarefa por vez.
-2. Cada fase termina com **✅ Verificar**. Se falhar, **não avance**: corrija primeiro.
-3. **Commit a cada arquivo ou tela finalizado**, com mensagem curta em inglês informal, como pede o `claude.md`. Se uma tarefa mexe em vários arquivos de uma vez (ex.: tela + teste), eles vão juntos no mesmo commit.
-4. **Não mude textos** (conteúdo das telas) além do que a tarefa manda.
-5. Sempre que mudar um texto que o teste procura, atualize `scripts/teste-web.mjs` **na mesma tarefa**.
-6. Teste sempre na web **e** no celular (Expo Go). Bugs de layout podem aparecer só no celular.
+1. **Commit a cada arquivo ou tela finalizado**, com mensagem curta em inglês informal, como pede o `claude.md`. Se uma tarefa mexe em vários arquivos de uma vez (ex.: tela + teste), eles vão juntos no mesmo commit.
+2. Antes de commitar: `npm run build:web && npm run test:web` (tudo `PASS`). Em mudança visual, compare os prints (`npm run shots` antes e depois).
+3. **Não mude textos** (conteúdo das telas) além do que a tarefa manda.
+4. Texto visível novo vai em `src/idioma/textos.js` (pt e en). Sempre que mudar um texto que o teste procura, atualize `scripts/teste-web.mjs` **na mesma tarefa**.
+5. Teste sempre na web **e** no celular (Expo Go). Bugs de layout podem aparecer só no celular.
 
-**Nota da repaginada que vale para frente:** a cor `#121212` da gaveta do menu ficou de propósito, porque o teste web acha a gaveta por ela. Se mudar a cor, mude o teste junto.
-
----
-
-## Fase 13: Idiomas (português e inglês)
-
-Pedido do dono: em Configurações → "Idioma", poder escolher **inglês**, e o app inteiro muda de idioma.
-
-**Decisões do dono (2026-11-15):**
-- **Lembrar a escolha:** sim. Instalar `@react-native-async-storage/async-storage` com `npx expo install` (funciona no Expo Go e, na web, usa o `localStorage`).
-- **Idioma inicial:** o do celular, com `expo-localization` (instalar com `npx expo install`). Celular em português abre em português. **Qualquer outro idioma abre em inglês.**
-- **Traduções:** o Claude escreve as versões em inglês e o dono revisa.
-
-**Plano:**
-- [x] 13.1. Instalar as duas bibliotecas (`npx expo install @react-native-async-storage/async-storage expo-localization`) e rodar `npx expo-doctor`.
-- [x] 13.2. Criar `src/idioma/textos.js` (os textos) e `src/idioma/idioma.js` (decisão do dono: pasta própria, ao lado do `tema.js`): textos `pt` e `en` por chave (ex.: `"menu.apoiar"`), um `IdiomaProvider` (Context) e um hook `useIdioma()` que devolve `{ idioma, mudarIdioma, t }`. O idioma inicial vem do que foi salvo, ou do celular (`pt*` → `pt`, o resto → `en`). Envolver o app com o `IdiomaProvider` no `App.js`.
-- [x] 13.3. Configurações: tocar em "Idioma" mostra **Português** e **English** (com ✓ no atual). A troca vale na hora e é salva.
-- [x] 13.4. Trocar os textos fixos por `t("...")`, **uma tela por commit**, parando para o dono testar: Home, menu lateral, Details, Doações, Feedback, Sobre, Configurações, e também `ui.js` (`ListaContatos`, `BotaoCopiar`: "Copiar"/"Copiado ✓").
-- [x] 13.5. Classes dos heróis traduzidas só na hora de mostrar, com os nomes oficiais do jogo: Assassin, Mage, Tank, Support, Fighter, Marksman. O `banco_herois.js` continua com as chaves em português (são as chaves de `iconesClasses`). Os nomes dos heróis não mudam.
-- [x] 13.6. Teste web: um caso que troca para inglês e confere textos de algumas telas. Os testes atuais procuram textos em português: garanta que eles rodem com o idioma em português (o Chrome headless pode vir em inglês e abrir o app em inglês, por causa do 14.2).
-- [x] 13.7. Atualizar o `claude.md`: `idioma.js` na Estrutura e, nas Convenções, "texto visível novo vai em `idioma.js` (pt e en), nunca direto na tela".
-
-**✅ Verificar:** `npm run test:web` tudo `PASS`. No celular: trocar o idioma, fechar e abrir o app (a escolha continua), e passar por todas as telas nos dois idiomas.
-
-Commits: um por tela, mais `add language support` (13.1 a 13.3).
+**Nota que vale para frente:** a cor `#121212` da gaveta do menu ficou de propósito, porque o teste web acha a gaveta por ela. Se mudar a cor, mude o teste junto.
