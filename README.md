@@ -27,6 +27,9 @@ Você pode testar a versão final do aplicativo diretamente no seu celular Andro
 
 - 📥 [Clique aqui para baixar o Counters v1.0.0](https://github.com/mhenriquers/Counters/releases/download/v1.0.0/Counters.apk)
 
+
+### Acessar via PWA
+[abrir pwa](https://counters-peach-one.vercel.app/)
 ### 📦 Como instalar no seu celular:
 
 1. Baixe o arquivo `.apk` usando o link acima direto no seu celular Android.
@@ -37,7 +40,7 @@ Você pode testar a versão final do aplicativo diretamente no seu celular Andro
 
 Requisitos:
 
-- Node.js: Versão 20 ou superior.
+- Node.js: versão 22.13 ou superior (exigência do Expo SDK 58).
 - Expo: Ambiente configurado.
 - Gerenciador de pacotes: NPM (padrão) ou Yarn.
 
