@@ -10,6 +10,8 @@ export const cores = {
   azulTexto: "#9bd1fd", // textos secundários
   dourado: "#D3AF37", // títulos e bordas das telas secundárias
   douradoVivo: "#ffd700", // itens do menu e botões de ação
+  douradoBorda: "rgba(211, 175, 55, 0.55)", // borda de um cartão aberto (ex.: seletor de idioma)
+  douradoFundo: "rgba(255, 215, 0, 0.08)", // fundo da opção escolhida
   texto: "#ffffff",
   textoSuave: "rgba(255, 255, 255, 0.75)",
   textoCorpo: "rgba(255, 255, 255, 0.9)", // parágrafos dentro de cartões

@@ -40,6 +40,12 @@ await nav.clicarSeletor('img[src*="opcoes"]', 800);
 writeFileSync(`${PASTA}/menu.png`, await nav.print());
 console.log(`${PASTA}/menu.png`);
 
+// Configurações com o seletor de idioma aberto
+await nav.abrir(BASE + "/configuracoes");
+await nav.clicarTexto("Idioma", 800);
+writeFileSync(`${PASTA}/configuracoes-idioma.png`, await nav.print());
+console.log(`${PASTA}/configuracoes-idioma.png`);
+
 nav.fechar();
 servidor.close();
 process.exit(0);

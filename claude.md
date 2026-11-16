@@ -45,7 +45,7 @@ node scripts/otimizar-imagens.mjs   # recomprime assets/ (sobrescreve; só grava
 npx expo-doctor                     # checa compatibilidade (deve passar em todas)
 npx expo install --check            # lista libs fora da versão esperada pelo SDK
 npm run test:web                    # teste E2E da web (rode antes npm run build:web)
-npm run shots                       # prints 384x832 de todas as telas em screenshots/
+npm run shots                       # prints 384x832 de todas as telas em screenshots/ (+ menu aberto e seletor de idioma aberto)
 ```
 
 Não há lint nem formatter. Os testes são só da versão web (`npm run test:web`, ver "Verificação e depuração"). As pastas `/android`, `/ios`, `dist/`, `screenshots/` e `screenshots-antes/` são geradas e ficam no `.gitignore`.
@@ -83,12 +83,13 @@ Cada tela ou componente é um arquivo `.js` com `StyleSheet.create` no final, co
 | `Details.js` | Recebe `{ id }` e usa `buscarHeroi`. Se não existir, mostra o `HeroiNaoEncontrado` (com texto e botão) sobre o fundo. Mostra foto, nome, classes (chips com `IconeClasse`) e duas seções com `TituloSecao`: "É forte contra" (`counters`, `cores.forte`) e "É fraco contra" (`counteradoPor`, `cores.fraco`), cada herói num `LinhaHeroi`. Tocar nele faz `navigation.push("Details", { id })`, empilhando telas. O ✕ usa `navigation.popTo("Home")`. A tela só compõe as peças. **É a referência visual do app.** |
 | `Doacoes.js` | Tela de apoio (URL `/apoiar`): chave Pix com `BotaoCopiar`. Primeira tela secundária no padrão novo (`CabecalhoTela`, `Cartao`, `Paragrafo`, `Rodape`): use-a como modelo para as outras. |
 | `Feedback.js` / `Sobre.js` | Links para GitHub e e-mail e um botão que copia um ID. As ações vêm de `contatos.js`. |
-| `Configuracoes.js` | Idioma (tocar abre Português/English logo abaixo, o atual em dourado com ✓; troca na hora e fica salvo), tema (só informativo) e textos de privacidade. |
+| `Configuracoes.js` | Idioma (`SeletorIdioma`; troca na hora e fica salvo), tema (só informativo) e textos de privacidade. |
 | **`src/componentes/`** | |
 | `ui.js` | Componentes compartilhados: `Fundo` (substitui o `ImageBackground`), `TituloSecao` (faixa do site + capacete), `BarraStatus` (faixa preta atrás da hora), `CabecalhoTela` (já inclui a `BarraStatus`), `Cartao`, `Paragrafo` (justificado e com recuo de primeira linha: não faça recuo com espaços), `LinhaAcao`, `BotaoCopiar` (mostra "Copiado ✓", sem `Alert`), `ListaContatos` (e-mail, GitHub e ID, igual em Sobre e Feedback) e `Rodape`. |
 | `IconeClasse.js` | `<IconeClasse classe tamanho style />`. Guarda o mapa classe → ícone (classe nova = chave nova). |
 | `LinhaHeroi.js` | Card de um herói numa lista: foto, nome, classes e seta. Props: `heroi`, `cor` (borda da esquerda), `aoTocar`. |
 | `HeroiNaoEncontrado.js` | Aviso "Herói não encontrado" (capacete + título em negrito). `texto` e `aoVoltar` (botão) são opcionais, e o fundo fica com quem usa. O Details usa com os dois (`/heroi/999`); a Home usa sem nenhum, como lista vazia da busca. |
+| `SeletorIdioma.js` | Sanfona do idioma (Configurações): um cartão com "Idioma" + idioma atual; tocar abre, deslizando, a lista dentro do cartão (sigla PT/EN, bolinha de seleção, o escolhido em dourado com faixa à esquerda). Escolher troca e fecha. Sem props (usa o `useIdioma`). Anima a altura com `Animated` no driver JS (altura não roda no nativo); a lista fica sempre montada, em `position: absolute`, para o `onLayout` medir a altura. |
 | `MenuLateral.js` | Gaveta feita à mão (não usa o drawer do react-navigation). Props: `visivel`, `aoFechar`, `navigation`. Animada com `Animated` (desliza da esquerda, `useNativeDriver` fora da web), continua montada até terminar de fechar, e com o menu aberto o voltar do Android (`BackHandler`) fecha o menu. A gaveta tem `overflow: "hidden"` porque a imagem de fundo (`fundoMG.png`, 1167x2000) transbordava e cobria a sombra, impedindo de fechar ao tocar fora. |
 | `InstalarApp.js` | Botão "Instalar app" (só web/Chrome): captura o `beforeinstallprompt`. Não aparece no iPhone nem com o app já instalado. |
 | `AvisoAtualizacao.js` | Só no Android. Ao abrir o app, usa o `buscarAtualizacao()` e, se houver versão nova, mostra um `Alert` nativo ("Agora não" / "Atualizar"). "Atualizar" abre o link do APK no navegador. Não desenha nada (`return null`) e fica no `App.js`, dentro do `IdiomaProvider`. |

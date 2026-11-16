@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { Text, StyleSheet, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { cores, espaco, fonte } from "../tema";
-import { useIdioma, IDIOMAS } from "../idioma/idioma";
+import { useIdioma } from "../idioma/idioma";
 import {
   Fundo,
   CabecalhoTela,
@@ -11,16 +10,11 @@ import {
   Paragrafo,
   LinhaAcao,
 } from "../componentes/ui";
+import SeletorIdioma from "../componentes/SeletorIdioma";
 
 export default function Configuracoes({ navigation }) {
   const insets = useSafeAreaInsets();
-  const { idioma, mudarIdioma, t } = useIdioma();
-  const [escolhendoIdioma, setEscolhendoIdioma] = useState(false);
-
-  const escolherIdioma = (codigo) => {
-    mudarIdioma(codigo);
-    setEscolhendoIdioma(false);
-  };
+  const { t } = useIdioma();
 
   return (
     <Fundo fonte={require("../../assets/bg-up-side.png")} style={styles.fundo}>
@@ -39,24 +33,8 @@ export default function Configuracoes({ navigation }) {
           style={styles.primeiraSecao}
         />
 
-        {/* Idioma: tocar abre a lista logo abaixo; o atual tem ✓ */}
-        <LinhaAcao
-          titulo={t("config.idioma")}
-          subtitulo={IDIOMAS[idioma]}
-          aoTocar={() => setEscolhendoIdioma(!escolhendoIdioma)}
-        />
-        {escolhendoIdioma &&
-          Object.entries(IDIOMAS).map(([codigo, nome]) => (
-            <LinhaAcao
-              key={codigo}
-              titulo={nome}
-              corTitulo={codigo === idioma ? cores.douradoVivo : cores.texto}
-              aoTocar={() => escolherIdioma(codigo)}
-              direita={
-                codigo === idioma ? <Text style={styles.marcado}>✓</Text> : false
-              }
-            />
-          ))}
+        {/* Idioma: sanfona que abre a lista dentro do próprio cartão */}
+        <SeletorIdioma />
 
         {/* Tema: só informativo (ainda não dá para mudar) */}
         <LinhaAcao
@@ -94,14 +72,6 @@ const styles = StyleSheet.create({
 
   primeiraSecao: {
     marginTop: espaco.lg,
-  },
-
-  // ✓ do idioma escolhido
-  marcado: {
-    color: cores.douradoVivo,
-    fontSize: fonte.cabecalho,
-    fontWeight: "700",
-    marginLeft: espaco.sm,
   },
 
   // Título acima de cada cartão de privacidade (alinhado com a borda do cartão)
