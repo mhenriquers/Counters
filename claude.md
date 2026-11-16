@@ -95,7 +95,7 @@ Cada tela ou componente é um arquivo `.js` com `StyleSheet.create` no final, co
 | **`src/dados/`** | |
 | `herois.js` | **Única porta de entrada para os heróis.** `buscarHeroi(id)` (devolve `null` se não existir), `buscarHerois(ids)` (ignora ids inexistentes) e `listarHerois()` (ordem alfabética pt-BR, lista congelada). Por dentro: um `Map` por id e o herói "preparado", com `classes: [...]` no lugar de `classe`. |
 | `banco_herois.js` | **Fonte de todos os dados.** Exporta `HEROIS`. Só o `herois.js` importa este arquivo. |
-| `atualizacao.js` | `buscarAtualizacao()`: consulta `api.github.com/repos/mhenriquers/Counters/releases/latest` e devolve `{ versao, link }` se a tag (ex.: `v1.1.0`) for maior que a `version` do `app.json`, ou `null` (inclusive sem internet). O link é o primeiro `.apk` anexado à release (ou a página dela). **Para publicar uma versão nova do APK:** subir a `version` no `app.json`, gerar o APK no EAS e criar a release no GitHub com a tag `v<versão>` e o `.apk` anexado. Sem subir a `version`, o aviso não aparece. |
+| `atualizacao.js` | `buscarAtualizacao()`: consulta `api.github.com/repos/mhenriquers/Counters/releases/latest` e devolve `{ versao, link }` se a tag (ex.: `v1.1.0`) for maior que a `version` do `app.json`, ou `null` (inclusive sem internet). O link é o primeiro `.apk` anexado à release (ou a página dela). Exporta também `VERSAO_ATUAL` (a `version` do `app.json`), que o rodapé do `MenuLateral` e do `Sobre` mostram. **Para publicar uma versão nova do APK:** subir a `version` no `app.json`, gerar o APK no EAS e criar a release no GitHub com a tag `v<versão>` e o `.apk` anexado. Sem subir a `version`, o aviso não aparece. |
 | `contatos.js` | `EMAIL`, `GITHUB_USUARIO`, `ID_JOGO` e as ações `abrirGit` e `enviarEmail` (`mailto:`). Só dados e ações: a parte visual é a `ListaContatos` de `ui.js`. |
 | **`src/idioma/`** | |
 | `textos.js` | **Todos os textos visíveis**, por chave `"tela.texto"`, com `pt` e `en` lado a lado. Parte variável com `{nome}`. As classes dos heróis são `classe.Assassino` etc. (a chave usa o nome do banco). Os nomes dos idiomas não ficam aqui (ver `IDIOMAS`). |
@@ -142,6 +142,7 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 - **`app.json`:** as chaves `newArchEnabled`, `android.edgeToEdgeEnabled` e `splash` (na raiz) foram removidas. A splash agora é configurada no plugin `expo-splash-screen` (em `plugins`, com `image`, `resizeMode`, `backgroundColor` e `imageWidth`).
 - **Edge-to-edge é obrigatório no Android:** o app desenha atrás da barra de status e da barra de navegação. Use `useSafeAreaInsets` / `SafeAreaView` em vez de margens fixas para o Android. **Decisão do dono:** nada da tela aparece atrás da hora e das notificações. Toda tela tem no topo uma faixa sólida `cores.barraStatus` (preta), como a Home: use a `BarraStatus` de `ui.js` (o `CabecalhoTela` já usa). Na web a faixa tem altura 0, então só dá para conferir no celular.
 - **Expo Go:** a splash do app não aparece no Expo Go (só no APK).
+- **Mudou o `app.json` (ex.: a `version`)? Limpe o cache do Metro.** O `npm run build:web` reaproveita o cache e o `dist/` sai com o `app.json` antigo (em 2026-11-15 a web continuou mostrando 1.0.0 depois de subir para 1.1.0). Use `npx expo export -p web --clear` antes do workbox, ou `npx expo start -c` no celular. A Vercel e o EAS compilam do zero, então lá não acontece.
 
 ## Problemas conhecidos (verificados no código)
 
@@ -181,11 +182,27 @@ O dono está aprendendo C# (POO, SOLID). A explicação passo a passo, com compa
 - O padrão é o do React: **composição de componentes** com dados descendo por props (fluxo unidirecional). Não é MVC nem MVVM.
 - Camadas, uma por pasta:
   ```
-  App.js (entrada + rotas, como um Program.cs)
+  App.js (entrada + rotas + providers, como um Program.cs)
     └▶ telas ──usam──▶ componentes ──usam──▶ tema
-         └──pedem dados──▶ dados/herois.js ──lê──▶ dados/banco_herois.js
+         │                 │
+         ├─────────────────┴──▶ idioma/ (useIdioma)      ──lê──▶ idioma/textos.js
+         └─────────────────┴──▶ dados/  (herois, contatos, atualizacao) ──▶ banco_herois.js
   ```
+- **Regra de dependência (as setas só descem):** `dados/` e `idioma/` nunca importam telas nem componentes; componentes nunca importam telas; uma tela não importa outra (navega pelo nome da rota). Verificado no código em 2026-11-15.
 - Feito em 3 commits: `add heroes data layer`, `split details screen`, `move files to src`.
+
+### Padrões usados (siga-os em código novo)
+
+| Padrão | Onde | Regra |
+|---|---|---|
+| **Composição** (`children` + props) | `ui.js` (`Fundo`, `Cartao`...), telas | Tela só compõe peças. Variação por prop (`destaque`, `cor`), nunca por cópia do componente. |
+| **Contexto + hook** (Provider) | `IdiomaProvider` / `useIdioma` | Único estado **global** do app é o idioma. O resto é `useState` local da tela (`menuAberto`, `busca`). Estado global novo: outro Provider no mesmo molde (`createContext` + Provider no `App.js` + hook que lança erro fora do Provider). Sem Redux/Zustand. |
+| **Repositório como módulo** | `herois.js` | As funções exportadas são o contrato. O preparo pesado (`Map`, ordenação) roda uma vez, quando o módulo carrega (como um `static` do C#). |
+| **Dados separados da apresentação** | `atualizacao.js` → `AvisoAtualizacao` | `dados/` devolve valores (`{ versao, link }` ou `null`) e quem desenha decide como mostrar. Exceção antiga: `enviarEmail` (`contatos.js`) chama `Alert` direto; não repita em código novo. |
+| **Componente sem visual** | `AvisoAtualizacao` (`return null`) | Para algo que roda ao abrir o app e precisa de hook (ex.: `t`). Fica no `App.js`, dentro do `IdiomaProvider`. |
+| **Guarda de plataforma dentro do componente** | `InstalarApp` (só web), `AvisoAtualizacao` (só Android) | O componente decide sozinho se aparece; quem usa não precisa de `if (Platform.OS...)`. |
+| **Tabela no lugar de `if/else`** | `icones` (`IconeClasse`), `IDIOMAS`, `textos`, `linking` | Caso novo = entrada nova no mapa. |
+| **Fonte única** | ver ao lado | Heróis: `banco_herois.js`. Textos: `textos.js`. Cores/espaços/fontes: `tema.js`. Versão do app: `version` do `app.json`, lida por `VERSAO_ATUAL` (`atualizacao.js`); nunca escreva a versão à mão numa tela. |
 
 ### POO e SOLID neste projeto
 
