@@ -22,7 +22,8 @@ Contexto do projeto para o Claude Code. Escrito em português, assim como o cód
 | `@react-navigation/native-stack` | ^7 (7.21.x) | |
 | `react-native-web` | ~0.21 | |
 | `react-native-screens` / `react-native-safe-area-context` | ~4.30 / ~5.11 | |
-| `expo-clipboard`, `expo-linear-gradient`, `expo-splash-screen`, `expo-status-bar`, `expo-asset` | ~58.0.x | |
+| `expo-clipboard`, `expo-linear-gradient`, `expo-splash-screen`, `expo-status-bar`, `expo-asset`, `expo-localization` | ~58.0.x | `expo-localization` dá o idioma do celular (tem plugin no `app.json`). |
+| `@react-native-async-storage/async-storage` | 2.2.0 | Guarda a escolha de idioma. Na web, usa o `localStorage` (chave `idioma`). |
 | devDependencies | `sharp`, `workbox-cli`, `serve` | Ferramentas de build. Não dependem do SDK. |
 
 - **Node:** 22.13+ ou 24.3+ (exigência do SDK 58). O Netlify usa `NODE_VERSION = "22"`.
@@ -66,6 +67,7 @@ src/
   telas/            uma tela por arquivo (tem rota no App.js)
   componentes/      tudo que desenha algo e não é tela
   dados/            dados e acesso a eles
+  idioma/           textos em pt e en + IdiomaProvider/useIdioma
   tema.js           tokens visuais
 scripts/            build, testes e prints
 ```
@@ -80,7 +82,7 @@ Cada tela ou componente é um arquivo `.js` com `StyleSheet.create` no final, co
 | `Details.js` | Recebe `{ id }` e usa `buscarHeroi`. Se não existir, mostra o `HeroiNaoEncontrado` (com texto e botão) sobre o fundo. Mostra foto, nome, classes (chips com `IconeClasse`) e duas seções com `TituloSecao`: "É forte contra" (`counters`, `cores.forte`) e "É fraco contra" (`counteradoPor`, `cores.fraco`), cada herói num `LinhaHeroi`. Tocar nele faz `navigation.push("Details", { id })`, empilhando telas. O ✕ usa `navigation.popTo("Home")`. A tela só compõe as peças. **É a referência visual do app.** |
 | `Doacoes.js` | Tela de apoio (URL `/apoiar`): chave Pix com `BotaoCopiar`. Primeira tela secundária no padrão novo (`CabecalhoTela`, `Cartao`, `Paragrafo`, `Rodape`): use-a como modelo para as outras. |
 | `Feedback.js` / `Sobre.js` | Links para GitHub e e-mail e um botão que copia um ID. As ações vêm de `contatos.js`. |
-| `Configuracoes.js` | Tela estática e informativa (idioma, tema, política de privacidade). Ainda não tem configurações funcionais. |
+| `Configuracoes.js` | Idioma (tocar abre Português/English logo abaixo, o atual em dourado com ✓; troca na hora e fica salvo), tema (só informativo) e textos de privacidade. |
 | **`src/componentes/`** | |
 | `ui.js` | Componentes compartilhados: `Fundo` (substitui o `ImageBackground`), `TituloSecao` (faixa do site + capacete), `BarraStatus` (faixa preta atrás da hora), `CabecalhoTela` (já inclui a `BarraStatus`), `Cartao`, `Paragrafo` (justificado e com recuo de primeira linha: não faça recuo com espaços), `LinhaAcao`, `BotaoCopiar` (mostra "Copiado ✓", sem `Alert`), `ListaContatos` (e-mail, GitHub e ID, igual em Sobre e Feedback) e `Rodape`. |
 | `IconeClasse.js` | `<IconeClasse classe tamanho style />`. Guarda o mapa classe → ícone (classe nova = chave nova). |
@@ -92,9 +94,12 @@ Cada tela ou componente é um arquivo `.js` com `StyleSheet.create` no final, co
 | `herois.js` | **Única porta de entrada para os heróis.** `buscarHeroi(id)` (devolve `null` se não existir), `buscarHerois(ids)` (ignora ids inexistentes) e `listarHerois()` (ordem alfabética pt-BR, lista congelada). Por dentro: um `Map` por id e o herói "preparado", com `classes: [...]` no lugar de `classe`. |
 | `banco_herois.js` | **Fonte de todos os dados.** Exporta `HEROIS`. Só o `herois.js` importa este arquivo. |
 | `contatos.js` | `EMAIL`, `GITHUB_USUARIO`, `ID_JOGO` e as ações `abrirGit` e `enviarEmail` (`mailto:`). Só dados e ações: a parte visual é a `ListaContatos` de `ui.js`. |
+| **`src/idioma/`** | |
+| `textos.js` | **Todos os textos visíveis**, por chave `"tela.texto"`, com `pt` e `en` lado a lado. Parte variável com `{nome}`. As classes dos heróis são `classe.Assassino` etc. (a chave usa o nome do banco). Os nomes dos idiomas não ficam aqui (ver `IDIOMAS`). |
+| `idioma.js` | `IdiomaProvider` (envolve o app no `App.js`), `useIdioma()` → `{ idioma, mudarIdioma, t }` e `IDIOMAS` (`{ pt: "Português", en: "English" }`). Idioma inicial: o salvo no `AsyncStorage`; se não houver, o do celular (`pt` → português, qualquer outro → inglês). Não desenha nada até ler o salvo (evita "piscar"). `t()` usa o `pt` se faltar o `en`, e mostra a chave + `console.warn` se a chave não existir. |
 | **outros** | |
 | `src/tema.js` | Tokens visuais: `cores`, `espaco`, `raio`, `fonte`. Toda cor, espaçamento ou tamanho de fonte novo deve vir daqui. |
-| `scripts/` | `gerar-icones.mjs` e `otimizar-imagens.mjs` (usam `sharp`); `teste-web.mjs` (E2E, lê `src/dados/banco_herois.js` como texto) e `screenshots.mjs` (prints), que usam `cdp-util.mjs`: servidor estático de `dist/` + Chrome headless via DevTools Protocol, sem dependências. Chrome em `CHROME_PATH` ou no caminho padrão do Windows. |
+| `scripts/` | `gerar-icones.mjs` e `otimizar-imagens.mjs` (usam `sharp`); `teste-web.mjs` (E2E, lê `src/dados/banco_herois.js` como texto) e `screenshots.mjs` (prints), que usam `cdp-util.mjs`: servidor estático de `dist/` + Chrome headless via DevTools Protocol, sem dependências. Chrome em `CHROME_PATH` ou no caminho padrão do Windows. O `abrirNavegador({ idioma })` fixa o `navigator.language` (padrão `pt-BR`, via `acceptLanguage`; o `setLocaleOverride` não muda o `navigator.language`). |
 | `task.md` | Plano de trabalho em andamento, na `main`. A seção "Estado atual" no topo diz o que foi feito e o próximo passo. |
 | `explicaCode.md` | Anotações de estudo do dono: a explicação de cada passo da arquitetura, com comparações com C#. Quando ele pedir para explicar uma mudança de arquitetura, acrescente uma seção aqui. |
 | `atualizar-sdk.md` | Anotações do dono do projeto sobre como atualizar o SDK. |
@@ -141,7 +146,7 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 
 ## Verificação e depuração
 
-- **Teste automático (web):** `npm run build:web && npm run test:web`. Cobre a navegação, o voltar, o ✕ do Details, os itens do menu, fechar o menu tocando fora, a busca (camada que bloqueia o toque, resultado abre direto, lupa limpa o filtro), `/heroi/999`, os botões de copiar e os erros no console. Sai com código 1 se algo falhar. Quando mudar um texto que o teste procura (ex.: um item do menu), atualize `scripts/teste-web.mjs` no mesmo commit.
+- **Teste automático (web):** `npm run build:web && npm run test:web`. Cobre a navegação, o voltar, o ✕ do Details, os itens do menu, fechar o menu tocando fora, a busca (camada que bloqueia o toque, resultado abre direto, lupa limpa o filtro), `/heroi/999`, os botões de copiar, o seletor de idioma (troca, fica salvo ao recarregar) e, num segundo Chrome com o "celular" em `en-US`, cada tela em inglês (função `telaEmIngles`) e o e-mail de contato. Os outros testes rodam em português (o `cdp-util` fixa `pt-BR`). Sai com código 1 se algo falhar. Quando mudar um texto que o teste procura (ex.: um item do menu), atualize `scripts/teste-web.mjs` no mesmo commit.
 - **Comparação visual:** `npm run shots` gera prints em `screenshots/`. Antes de mexer numa tela, copie a pasta para `screenshots-antes/` e compare depois.
 - **Na web, manual:** `npm run preview:web`. Teste o modo offline (F12 → Network → Offline).
 - **No celular:** sempre teste também no Expo Go. Há bugs que só aparecem no nativo (ex.: o `absoluteFillObject`).
@@ -153,6 +158,8 @@ Aprendidas na atualização do SDK 54 para o 58. Valem para qualquer código nov
 - Estilos inline via `StyleSheet.create`, num objeto chamado `style` ou `styles` (varia entre arquivos).
 - Ajustes por plataforma usam `Platform.OS === "ios" ? x : y`, ou `Platform.select({ ios, web, default })` quando a web precisa de um valor próprio.
 - **Visual (identidade do site oficial do MLBB):** fundo azul-marinho escuro (`#0d1424`), bordas azul-claras `hsl(191, 100%, 94%)`, textos secundários `#9bd1fd`, faixas de seção com `bg-Layer.png` + `hero.png`, dourado `#D3AF37` (bordas e títulos das telas secundárias) e `#ffd700` (menu, botões). Siga a tela `Details.js` como referência. Cores, espaços e fontes vêm de `tema.js`, e telas novas usam os componentes de `ui.js`.
+- **Texto visível novo vai em `src/idioma/textos.js` (pt e en), nunca direto na tela.** Na tela: `const { t } = useIdioma();` e `t("tela.texto")`. Ao traduzir uma tela, acrescente um caso em inglês no `teste-web.mjs` (com `telaEmIngles`).
+- **`useIdioma()` é um hook:** chame no topo do componente, antes de qualquer `return` antecipado (ex.: o `if (!heroi) return` do Details). Função que não é componente (ex.: `enviarEmail` em `contatos.js`) recebe o `t` como parâmetro.
 - Não use `fontFamily` customizada (nenhuma fonte é carregada, e a web cai em fonte serifada). Use só `fontWeight`.
 - **`FlatList`:** mantenha as props estáveis (`renderItem`, `keyExtractor`, handlers e estilos com `useCallback`, constantes ou `StyleSheet`). Funções inline fazem a grade inteira ser redesenhada a cada mudança de estado da tela (ex.: ao abrir o menu).
 - Assets são carregados com `require`, com caminho relativo ao arquivo: de `src/telas/` ou `src/componentes/` é `require("../../assets/...")`.

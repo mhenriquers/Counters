@@ -293,3 +293,63 @@ O `AsyncStorage` é um "guarda-volumes" chave → texto que sobrevive a fechar o
 O Chrome dos testes usa o idioma do Windows. Nesta máquina é `pt-BR`, mas em outra poderia ser inglês, e aí os testes (que procuram textos em português) falhariam sem motivo. Por isso o `cdp-util.mjs` agora fixa o idioma do navegador em `pt-BR`, e um teste abre um segundo Chrome em `en-US` para conferir que o app abre em inglês.
 
 Detalhe descoberto no caminho: o comando `Emulation.setLocaleOverride` do Chrome **não** muda o `navigator.language` (que é o que o `expo-localization` lê na web). O que funciona é o `acceptLanguage` do `Emulation.setUserAgentOverride`.
+
+---
+
+## Idiomas, parte 2: traduzir as telas
+
+### O padrão em cada tela
+
+```js
+import { useIdioma } from "../idioma/idioma";
+
+export default function Sobre({ navigation }) {
+  const { t } = useIdioma();              // 1. pede o t ao Context
+  ...
+  <TituloSecao titulo={t("sobre.lore")} /> // 2. troca o texto fixo pela chave
+```
+
+E o texto vai para o `textos.js`, com `pt` e `en` lado a lado. Cada componente pede o `t` **sozinho** (Home, `InstalarApp`, `LinhaHeroi`, `BotaoCopiar`...). Nenhum texto desce por props de pai para filho. Essa é a vantagem do Context.
+
+### Regra dos hooks: antes de qualquer `return`
+
+```js
+function DetailsScreen({ route, navigation }) {
+  const insets = useSafeAreaInsets();
+  const { t } = useIdioma();          // ← aqui, ANTES do return antecipado
+  const heroi = buscarHeroi(route.params?.id);
+  if (!heroi) return <HeroiNaoEncontrado ... />;
+```
+
+O React identifica cada hook pela **ordem** em que é chamado. Se um `return` antecipado pulasse o `useIdioma()` em um desenho e não no outro, a ordem mudaria e o React daria erro. Por isso hooks ficam sempre no topo, sem `if` em volta.
+
+### Quando não dá para usar o hook: passar o `t` como parâmetro
+
+O `contatos.js` não é um componente, então não pode chamar `useIdioma()`. Mas a `enviarEmail` precisa traduzir o corpo do e-mail. A solução:
+
+```js
+// contatos.js
+export const enviarEmail = async (t) => { ... t("email.corpo") ... };
+
+// ui.js (ListaContatos, que é componente e tem o t)
+aoTocar={() => enviarEmail(t)}
+```
+
+É **injeção de dependência por parâmetro**: a função não vai buscar o tradutor, ela o **recebe** de quem chama. Em C#, seria um método que recebe um `IStringLocalizer` como argumento. Bônus: a `enviarEmail` fica fácil de testar, porque basta passar um `t` de mentira.
+
+### Classes dos heróis: traduzir só na hora de mostrar
+
+O banco continua com `"Assassino"`, porque essa é a chave do mapa de ícones do `IconeClasse`. A tradução acontece só no texto da tela:
+
+```js
+<IconeClasse classe={classe} />           // usa "Assassino" (chave interna)
+<Text>{t(`classe.${classe}`)}</Text>      // mostra "Assassin" ou "Assassino"
+```
+
+Separar o **valor interno** (chave) do **texto mostrado** é uma regra geral: se a tradução mudar ("Fighter" → "Warrior"), nada no banco nem nos ícones quebra.
+
+### Como foi conferido
+
+- **Português não mudou:** prints de todas as telas comparados pixel a pixel, mais um script que pegou cada parágrafo da versão antiga de cada tela (`git show`) e conferiu que está igualzinho no `pt` do `textos.js`.
+- **Inglês aparece:** um segundo Chrome com o "celular" em `en-US` passa por todas as telas (`telaEmIngles`): confere os textos em inglês e que nenhum texto em português sobrou.
+- **E-mail:** o teste troca o `window.open` por um "espião" que só anota a URL, toca em "Send email" e confere que o `mailto:` sai com o texto em inglês.
