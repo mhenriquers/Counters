@@ -12,6 +12,7 @@ import {
   BotaoCopiar,
   Rodape,
 } from "../componentes/ui";
+import { useIdioma } from "../idioma/idioma";
 
 const CHAVE_PIX = "9bfe32d9-8633-41c0-835b-5287ecd44293";
 
@@ -21,6 +22,7 @@ const ROLAGEM_ENCOLHER = 180; // depois de rolar 180, ele fica no tamanho mínim
 
 export default function Doacoes({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { t } = useIdioma();
 
   // Posição da rolagem, ligada direto à animação do emblema
   const rolagem = useRef(new Animated.Value(0)).current;
@@ -53,7 +55,7 @@ export default function Doacoes({ navigation }) {
   return (
     <Fundo fonte={require("../../assets/bg-up-side.png")} style={styles.fundo}>
       <CabecalhoTela
-        titulo="Apoiar o projeto"
+        titulo={t("doacoes.titulo")}
         aoVoltar={() => navigation.goBack()}
       />
 
@@ -79,7 +81,7 @@ export default function Doacoes({ navigation }) {
               },
             ]}
           />
-          <Text style={styles.titulo}>Torne-se um Lendário Apoiador!</Text>
+          <Text style={styles.titulo}>{t("doacoes.chamada")}</Text>
           <LinearGradient
             colors={["transparent", cores.dourado, "transparent"]}
             start={{ x: 0, y: 0 }}
@@ -89,25 +91,17 @@ export default function Doacoes({ navigation }) {
         </View>
 
         {/* POR QUE APOIAR */}
-        <TituloSecao titulo="Por que apoiar" cor={cores.dourado} />
+        <TituloSecao titulo={t("doacoes.porque")} cor={cores.dourado} />
         <Cartao destaque="dourado">
-          <Paragrafo>
-            Olá! Eu sou o desenvolvedor por trás deste app. Faço tudo sozinho: do
-            código ao design. Manter um aplicativo funcionando consome tempo e
-            recursos, especialmente com os custos de hospedagem para manter os
-            dados e as imagens online. Cada centavo doado é reinvestido
-            diretamente aqui para cobrir esses servidores e trazer atualizações
-            constantes.
-          </Paragrafo>
+          <Paragrafo>{t("doacoes.texto1")}</Paragrafo>
           <Paragrafo ultimo>
-            Se este app já te ajudou a ganhar uma Ranked ou a entender melhor um
-            herói, considere apoiar o projeto com qualquer valor.{" "}
-            <Text style={styles.destaqueTexto}>Você já é o MVP dessa jornada!</Text>
+            {t("doacoes.texto2")}{" "}
+            <Text style={styles.destaqueTexto}>{t("doacoes.mvp")}</Text>
           </Paragrafo>
         </Cartao>
 
         {/* CHAVE PIX */}
-        <TituloSecao titulo="Chave Pix" />
+        <TituloSecao titulo={t("doacoes.chavePix")} />
         <Cartao>
           <View style={styles.campoChave}>
             <Text style={styles.chavePix} selectable>
@@ -116,16 +110,12 @@ export default function Doacoes({ navigation }) {
           </View>
           <BotaoCopiar
             texto={CHAVE_PIX}
-            rotulo="Copiar chave"
+            rotulo={t("doacoes.copiarChave")}
             style={styles.botaoCopiar}
           />
         </Cartao>
 
-        <Rodape>
-          As doações realizadas via Pix são voluntárias e destinadas
-          exclusivamente à manutenção e melhoria do projeto. Não armazenamos
-          quaisquer dados bancários dos doadores.
-        </Rodape>
+        <Rodape>{t("doacoes.aviso")}</Rodape>
       </Animated.ScrollView>
     </Fundo>
   );

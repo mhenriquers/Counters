@@ -260,6 +260,22 @@ await caso("inglês: /heroi/999", async () => {
   );
 });
 
+// Confere vários textos de uma tela em inglês e que nenhum texto em português sobrou
+async function telaEmIngles(rota, textos, semPortugues = []) {
+  await navIngles.abrir(BASE + rota);
+  for (const texto of textos) if (!(await navIngles.temTexto(texto))) throw new Error("faltou: " + texto);
+  for (const texto of semPortugues) if (await navIngles.temTexto(texto)) throw new Error("sobrou: " + texto);
+  return true;
+}
+
+await caso("inglês: Doações", () =>
+  telaEmIngles(
+    "/apoiar",
+    ["Support the project", "Become a Legendary Supporter!", "Why support", "MVP of this journey", "Pix key", "Copy key", "Pix donations are voluntary"],
+    ["Apoiar o projeto", "Chave Pix"],
+  ),
+);
+
 navIngles.fechar();
 
 // ---------------- Resultado ----------------
