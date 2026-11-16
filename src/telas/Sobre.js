@@ -11,6 +11,7 @@ import {
   Rodape,
 } from "../componentes/ui";
 import { useIdioma } from "../idioma/idioma";
+import { VERSAO_ATUAL } from "../dados/atualizacao";
 
 export default function Sobre({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -60,7 +61,7 @@ export default function Sobre({ navigation }) {
           <Paragrafo ultimo>{t("sobre.aviso2")}</Paragrafo>
         </Cartao>
 
-        <Rodape>{t("sobre.versao", { versao: "1.0.0" })}</Rodape>
+        <Rodape>{t("sobre.versao", { versao: VERSAO_ATUAL })}</Rodape>
       </ScrollView>
     </Fundo>
   );

@@ -15,9 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { cores, espaco } from "../tema";
 import { Fundo, LinhaAcao, Rodape } from "./ui";
 import { useIdioma } from "../idioma/idioma";
-
-// Versão mostrada no rodapé do menu
-const VERSAO = "1.0.0";
+import { VERSAO_ATUAL } from "../dados/atualizacao";
 
 // Duração das animações (ms)
 const TEMPO_ABRIR = 260;
@@ -150,7 +148,7 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
 
           {/* RODAPÉ: fica sempre embaixo */}
           <View style={{ paddingBottom: insets.bottom + espaco.lg }}>
-            <Rodape>{t("menu.versao", { versao: VERSAO })}</Rodape>
+            <Rodape>{t("menu.versao", { versao: VERSAO_ATUAL })}</Rodape>
             <Rodape style={style.rodapeSegundaLinha}>
               {t("menu.dados")}
             </Rodape>
