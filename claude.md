@@ -4,7 +4,7 @@ Contexto do projeto para o Claude Code. Escrito em português, assim como o cód
 
 ## Visão geral
 
-**Counters MLBB**: app que mostra, para cada herói do Mobile Legends: Bang Bang, contra quem ele é forte ("counters") e contra quem é fraco ("counteradoPor"). Distribuído como APK (Android) e como **PWA** (web instalável, hospedada no Netlify). Funciona 100% offline: não há backend, API nem persistência. Todos os dados ficam em um arquivo JS estático.
+**Counters MLBB**: app que mostra, para cada herói do Mobile Legends: Bang Bang, contra quem ele é forte ("counters") e contra quem é fraco ("counteradoPor"). Distribuído como APK (Android) e como **PWA** (web instalável, hospedada na Vercel: https://counters-peach-one.vercel.app). Funciona 100% offline: não há backend nem API, e a única coisa salva no aparelho é a escolha de idioma. Todos os dados ficam em um arquivo JS estático.
 
 - JavaScript puro (há um `tsconfig.json`, mas nenhum arquivo `.ts`/`.tsx`). New Architecture (obrigatória a partir do RN 0.82).
 - Navegação: React Navigation 7 (`native-stack`), com `linking` (cada tela tem uma URL na web).
@@ -26,7 +26,7 @@ Contexto do projeto para o Claude Code. Escrito em português, assim como o cód
 | `@react-native-async-storage/async-storage` | 2.2.0 | Guarda a escolha de idioma. Na web, usa o `localStorage` (chave `idioma`). |
 | devDependencies | `sharp`, `workbox-cli`, `serve` | Ferramentas de build. Não dependem do SDK. |
 
-- **Node:** 22.13+ ou 24.3+ (exigência do SDK 58). O Netlify usa `NODE_VERSION = "22"`.
+- **Node:** 22.13+ ou 24.3+ (exigência do SDK 58). Na Vercel, a versão do Node é escolhida nas configurações do projeto (Settings → General).
 - Para bibliotecas de React Native, instale **sempre** com `npx expo install <pacote>` (escolhe a versão compatível com o SDK), nunca com `npm install`.
 
 ## Comandos
@@ -55,7 +55,8 @@ Não há lint nem formatter. Os testes são só da versão web (`npm run test:we
 - `public/index.html` é o template da web (`"web.output": "single"` no `app.json`): metas da PWA, link para o manifest e registro do `/sw.js` (ignorado na porta 8081).
 - `public/manifest.json` + `public/icons/` (gerados pelo script). Tudo em `public/` é copiado para `dist/`.
 - `workbox-config.js` gera `dist/sw.js` com precache de todo o build e `navigateFallback` para `/index.html` (qualquer URL abre offline).
-- Deploy no **Netlify** via `netlify.toml`: roda `npm run build:web`, publica `dist/`, redireciona `/*` para `/index.html` e manda `Cache-Control: no-cache` no `sw.js`.
+- Deploy na **Vercel** via `vercel.json`: roda `npm run build:web`, publica `dist/`, manda qualquer URL para o `/index.html` (`rewrites`; arquivos que existem, como `sw.js` e imagens, continuam sendo servidos) e põe `Cache-Control: no-cache` no `sw.js`. O `"framework": null` impede a Vercel de usar o build padrão do Expo, que não roda o workbox (sem ele, o `sw.js` dá 404 e o app não funciona offline). Cada `git push` na `main` publica sozinho.
+- Num celular com a PWA instalada, a versão nova chega na **segunda** abertura (na primeira, o service worker baixa a atualização em segundo plano).
 - Na web, o app fica numa coluna de no máximo 480px com `overflow: "hidden"` (`App.js`), e `Alert.alert` não funciona: use `window.alert` quando `Platform.OS === "web"`.
 
 ## Estrutura
