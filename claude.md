@@ -4,7 +4,7 @@ Contexto do projeto para o Claude Code. Escrito em português, assim como o cód
 
 ## Visão geral
 
-**Counters MLBB**: app que mostra, para cada herói do Mobile Legends: Bang Bang, contra quem ele é forte ("counters") e contra quem é fraco ("counteradoPor"). Distribuído como APK (Android) e como **PWA** (web instalável, hospedada na Vercel: https://counters-peach-one.vercel.app). Funciona 100% offline: não há backend nem API, e a única coisa salva no aparelho é a escolha de idioma. Todos os dados ficam em um arquivo JS estático.
+**Counters MLBB**: app que mostra, para cada herói do Mobile Legends: Bang Bang, contra quem ele é forte ("counters") e contra quem é fraco ("counteradoPor"). Distribuído como APK (Android) e como **PWA** (web instalável, hospedada na Vercel: https://counters-peach-one.vercel.app). Funciona 100% offline: não há backend nem API, e a única coisa salva no aparelho é a escolha de idioma. Única consulta à internet: o APK confere no GitHub Releases, ao abrir, se há versão nova (ver `atualizacao.js`); sem internet, nada acontece. Todos os dados ficam em um arquivo JS estático.
 
 - JavaScript puro (há um `tsconfig.json`, mas nenhum arquivo `.ts`/`.tsx`). New Architecture (obrigatória a partir do RN 0.82).
 - Navegação: React Navigation 7 (`native-stack`), com `linking` (cada tela tem uma URL na web).
@@ -22,7 +22,7 @@ Contexto do projeto para o Claude Code. Escrito em português, assim como o cód
 | `@react-navigation/native-stack` | ^7 (7.21.x) | |
 | `react-native-web` | ~0.21 | |
 | `react-native-screens` / `react-native-safe-area-context` | ~4.30 / ~5.11 | |
-| `expo-clipboard`, `expo-linear-gradient`, `expo-splash-screen`, `expo-status-bar`, `expo-asset`, `expo-localization` | ~58.0.x | `expo-localization` dá o idioma do celular (tem plugin no `app.json`). |
+| `expo-clipboard`, `expo-linear-gradient`, `expo-splash-screen`, `expo-status-bar`, `expo-asset`, `expo-localization`, `expo-constants` | ~58.0.x | `expo-localization` dá o idioma do celular (tem plugin no `app.json`). `expo-constants` dá a versão do `app.json` (usada no aviso de atualização). |
 | `@react-native-async-storage/async-storage` | 2.2.0 | Guarda a escolha de idioma. Na web, usa o `localStorage` (chave `idioma`). |
 | devDependencies | `sharp`, `workbox-cli`, `serve` | Ferramentas de build. Não dependem do SDK. |
 
@@ -91,9 +91,11 @@ Cada tela ou componente é um arquivo `.js` com `StyleSheet.create` no final, co
 | `HeroiNaoEncontrado.js` | Aviso "Herói não encontrado" (capacete + título em negrito). `texto` e `aoVoltar` (botão) são opcionais, e o fundo fica com quem usa. O Details usa com os dois (`/heroi/999`); a Home usa sem nenhum, como lista vazia da busca. |
 | `MenuLateral.js` | Gaveta feita à mão (não usa o drawer do react-navigation). Props: `visivel`, `aoFechar`, `navigation`. Animada com `Animated` (desliza da esquerda, `useNativeDriver` fora da web), continua montada até terminar de fechar, e com o menu aberto o voltar do Android (`BackHandler`) fecha o menu. A gaveta tem `overflow: "hidden"` porque a imagem de fundo (`fundoMG.png`, 1167x2000) transbordava e cobria a sombra, impedindo de fechar ao tocar fora. |
 | `InstalarApp.js` | Botão "Instalar app" (só web/Chrome): captura o `beforeinstallprompt`. Não aparece no iPhone nem com o app já instalado. |
+| `AvisoAtualizacao.js` | Só no Android. Ao abrir o app, usa o `buscarAtualizacao()` e, se houver versão nova, mostra um `Alert` nativo ("Agora não" / "Atualizar"). "Atualizar" abre o link do APK no navegador. Não desenha nada (`return null`) e fica no `App.js`, dentro do `IdiomaProvider`. |
 | **`src/dados/`** | |
 | `herois.js` | **Única porta de entrada para os heróis.** `buscarHeroi(id)` (devolve `null` se não existir), `buscarHerois(ids)` (ignora ids inexistentes) e `listarHerois()` (ordem alfabética pt-BR, lista congelada). Por dentro: um `Map` por id e o herói "preparado", com `classes: [...]` no lugar de `classe`. |
 | `banco_herois.js` | **Fonte de todos os dados.** Exporta `HEROIS`. Só o `herois.js` importa este arquivo. |
+| `atualizacao.js` | `buscarAtualizacao()`: consulta `api.github.com/repos/mhenriquers/Counters/releases/latest` e devolve `{ versao, link }` se a tag (ex.: `v1.1.0`) for maior que a `version` do `app.json`, ou `null` (inclusive sem internet). O link é o primeiro `.apk` anexado à release (ou a página dela). **Para publicar uma versão nova do APK:** subir a `version` no `app.json`, gerar o APK no EAS e criar a release no GitHub com a tag `v<versão>` e o `.apk` anexado. Sem subir a `version`, o aviso não aparece. |
 | `contatos.js` | `EMAIL`, `GITHUB_USUARIO`, `ID_JOGO` e as ações `abrirGit` e `enviarEmail` (`mailto:`). Só dados e ações: a parte visual é a `ListaContatos` de `ui.js`. |
 | **`src/idioma/`** | |
 | `textos.js` | **Todos os textos visíveis**, por chave `"tela.texto"`, com `pt` e `en` lado a lado. Parte variável com `{nome}`. As classes dos heróis são `classe.Assassino` etc. (a chave usa o nome do banco). Os nomes dos idiomas não ficam aqui (ver `IDIOMAS`). |

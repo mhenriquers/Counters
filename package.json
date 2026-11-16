@@ -21,6 +21,7 @@
     "expo": "^58.0.5",
     "expo-asset": "~58.0.21",
     "expo-clipboard": "~58.0.4",
+    "expo-constants": "~58.0.16",
     "expo-linear-gradient": "~58.0.4",
     "expo-localization": "~58.0.5",
     "expo-splash-screen": "~58.0.14",

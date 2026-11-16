@@ -4,6 +4,7 @@ import React from "react";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { IdiomaProvider } from "./src/idioma/idioma";
+import AvisoAtualizacao from "./src/componentes/AvisoAtualizacao";
 
 // TELAS
 import DetailsScreen from "./src/telas/Details";
@@ -49,6 +50,8 @@ export default function App() {
           {/* Idioma disponível para todas as telas (dentro do fundo preto,
               para a tela continuar preta enquanto lê a escolha salva) */}
           <IdiomaProvider>
+            {/* Só no APK: avisa se há versão nova no GitHub */}
+            <AvisoAtualizacao />
             <NavigationContainer
               linking={linking}
               documentTitle={{ formatter: () => "Counters MLBB" }}

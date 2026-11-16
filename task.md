@@ -2,7 +2,7 @@
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito** (o histórico está no git e no `claude.md`): repaginada visual, arquitetura (`herois.js`, Details em componentes, pastas em `src/`), idiomas pt/en no app inteiro e publicação da PWA na Vercel (https://counters-peach-one.vercel.app), testada num navegador real (links diretos, service worker e offline).
+- **Feito** (o histórico está no git e no `claude.md`): repaginada visual, arquitetura (`herois.js`, Details em componentes, pastas em `src/`), idiomas pt/en no app inteiro e publicação da PWA na Vercel (https://counters-peach-one.vercel.app), testada num navegador real (links diretos, service worker e offline). Aviso de versão nova no APK (via GitHub Releases) feito, falta testar no celular (ver pendências).
 - **Branch:** o trabalho está direto na `main`. Cada `git push` publica a PWA sozinho.
 - **Decisões já tomadas:**
   - cartões mais escuros aprovados; **manter** todas as imagens sem uso;
@@ -21,6 +21,9 @@
 - [ ] Revisar as traduções em `src/idioma/textos.js` (as da Home e do menu já foram aprovadas).
 - [ ] Instalar a PWA no celular e abrir com o modo avião ligado (se ainda não fez).
 - [ ] Gerar um **APK novo** (`eas build -p android --profile preview`): entraram bibliotecas nativas (`async-storage`, `expo-localization`), e o APK do README (v1.0.0) ainda não tem os idiomas. Depois, atualizar o link do README.
+  - Antes do build, subir a `version` no `app.json` (ex.: `1.1.0`) e, depois, criar a release no GitHub com a tag `v1.1.0` e o `.apk` anexado. Esse APK já traz o **aviso de versão nova** (`AvisoAtualizacao.js`).
+  - O APK `v1.0.0` atual **não** tem o aviso: quem está nele precisa atualizar à mão uma vez. A partir do `1.1.0`, o aviso funciona.
+  - Testar o aviso: com o APK `1.1.0` instalado, criar uma release `v1.1.1` (pode ser rascunho publicado e apagado depois) e abrir o app. Tem que aparecer "Nova versão disponível"; "Atualizar" abre o download do APK.
 
 ## Perguntas em aberto (decidir quando der)
 

@@ -164,8 +164,8 @@ export const textos = {
   "config.privacidade": { pt: "Privacidade e uso", en: "Privacy and usage" },
   "config.politica": { pt: "Política de privacidade", en: "Privacy policy" },
   "config.politicaTexto": {
-    pt: "Este aplicativo não coleta informações de identificação pessoal dos usuários. Não solicitamos acesso a contatos, localização ou arquivos privados.",
-    en: "This app doesn't collect any personally identifiable information from users. We don't ask for access to contacts, location or private files.",
+    pt: "Este aplicativo não coleta informações de identificação pessoal dos usuários. Não solicitamos acesso a contatos, localização ou arquivos privados. Na versão para Android, o app consulta o GitHub ao abrir, só para saber se há uma versão nova.",
+    en: "This app doesn't collect any personally identifiable information from users. We don't ask for access to contacts, location or private files. On Android, the app checks GitHub when it opens, only to see if a new version is available.",
   },
   "config.imagens": {
     pt: "Uso de imagens e direitos autorais",
@@ -180,4 +180,13 @@ export const textos = {
     pt: "Ao acessar links de terceiros, você estará sujeito às políticas de privacidade dos respectivos serviços.",
     en: "When you open third-party links, you'll be subject to the privacy policies of those services.",
   },
+
+  // Aviso de versão nova (só no APK)
+  "atualizacao.titulo": { pt: "Nova versão disponível", en: "New version available" },
+  "atualizacao.texto": {
+    pt: "A versão {versao} do Counters já pode ser baixada.",
+    en: "Version {versao} of Counters is ready to download.",
+  },
+  "atualizacao.depois": { pt: "Agora não", en: "Not now" },
+  "atualizacao.atualizar": { pt: "Atualizar", en: "Update" },
 };
