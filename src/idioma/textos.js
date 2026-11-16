@@ -17,6 +17,14 @@ export const textos = {
   "naoEncontrado.titulo": { pt: "Herói não encontrado", en: "Hero not found" },
   "naoEncontrado.voltar": { pt: "Voltar para a lista", en: "Back to the list" },
 
+  // Menu lateral
+  "menu.apoiar": { pt: "Torne-se um apoiador", en: "Become a supporter" },
+  "menu.configuracoes": { pt: "Configurações", en: "Settings" },
+  "menu.feedback": { pt: "Feedback", en: "Feedback" },
+  "menu.sobre": { pt: "Sobre", en: "About" },
+  "menu.versao": { pt: "Versão {versao}", en: "Version {versao}" },
+  "menu.dados": { pt: "Dados: site oficial do MLBB", en: "Data: official MLBB website" },
+
   // Configurações
   "config.idioma": { pt: "Idioma", en: "Language" },
 };

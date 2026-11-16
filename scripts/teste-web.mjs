@@ -228,6 +228,15 @@ await caso("inglês: Home (busca e herói não encontrado)", async () => {
   return placeholder === "Search hero..." && (await navIngles.temTexto("Hero not found"));
 });
 
+await caso("inglês: menu lateral", async () => {
+  await navIngles.abrir(BASE + "/", 4500);
+  await navIngles.clicarSeletor('img[src*="opcoes"]', 600);
+  const textos = ["Become a supporter", "Settings", "Feedback", "About", "Version 1.0.0", "Data: official MLBB website"];
+  for (const texto of textos) if (!(await navIngles.temTexto(texto))) throw new Error("faltou: " + texto);
+  await navIngles.clicarTexto("Settings");
+  return (await navIngles.rota()) === "/configuracoes";
+});
+
 navIngles.fechar();
 
 // ---------------- Resultado ----------------

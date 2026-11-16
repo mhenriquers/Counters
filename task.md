@@ -11,7 +11,7 @@
   - O Claude escreve e explica, e cada explicação vai para o `explicaCode.md` (arquivo de estudo do dono).
   3. ✅ Mover para `src/` (commit `move files to src`, só `git mv` e caminhos). Testado no celular.
   4. ✅ Atualizar `claude.md` (Estrutura, Modelo de dados, Convenções e Arquitetura) e `task.md`.
-  - **Agora:** Fase 14. Feito 14.1 a 14.3 (commit `add language support`). 14.4 em andamento, uma tela por commit: ✅ Home (commit `translate home`, inclui `InstalarApp` e `HeroiNaoEncontrado`). Próximo: menu lateral. O dono aprovou as traduções da Home e quis manter as opções de idioma sem recuo.
+  - **Agora:** Fase 14. Feito 14.1 a 14.3 (commit `add language support`). 14.4 em andamento, uma tela por commit: ✅ Home (commit `translate home`, inclui `InstalarApp` e `HeroiNaoEncontrado`). ✅ menu lateral (commit `translate side menu`). Próximo: Details. O dono aprovou as traduções da Home e quis manter as opções de idioma sem recuo.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
   - deixar as perguntas para o **final** da resposta;
@@ -31,18 +31,7 @@
 
 ---
 
-## Fase 13: Finalizar
-
-- [x] 13.1. Teste completo no celular (Expo Go, `npx expo start -c`). Em todas as telas, confira:
-  - nada escondido atrás da barra de status ou da barra de navegação;
-  - todos os botões respondem;
-  - o gesto de voltar funciona;
-  - copiar funciona (Pix e ID);
-  - menu: abrir, fechar e navegar.
-
----
-
-## Fase 14: Idiomas (português e inglês)
+## Fase 13: Idiomas (português e inglês)
 
 Pedido do dono: em Configurações → "Idioma", poder escolher **inglês**, e o app inteiro muda de idioma.
 
@@ -52,14 +41,14 @@ Pedido do dono: em Configurações → "Idioma", poder escolher **inglês**, e o
 - **Traduções:** o Claude escreve as versões em inglês e o dono revisa.
 
 **Plano:**
-- [x] 14.1. Instalar as duas bibliotecas (`npx expo install @react-native-async-storage/async-storage expo-localization`) e rodar `npx expo-doctor`.
-- [x] 14.2. Criar `src/idioma/textos.js` (os textos) e `src/idioma/idioma.js` (decisão do dono: pasta própria, ao lado do `tema.js`): textos `pt` e `en` por chave (ex.: `"menu.apoiar"`), um `IdiomaProvider` (Context) e um hook `useIdioma()` que devolve `{ idioma, mudarIdioma, t }`. O idioma inicial vem do que foi salvo, ou do celular (`pt*` → `pt`, o resto → `en`). Envolver o app com o `IdiomaProvider` no `App.js`.
-- [x] 14.3. Configurações: tocar em "Idioma" mostra **Português** e **English** (com ✓ no atual). A troca vale na hora e é salva.
-- [ ] 14.4. Trocar os textos fixos por `t("...")`, **uma tela por commit**, parando para o dono testar: Home, menu lateral, Details, Doações, Feedback, Sobre, Configurações, e também `ui.js` (`ListaContatos`, `BotaoCopiar`: "Copiar"/"Copiado ✓").
-- [ ] 14.5. Classes dos heróis traduzidas só na hora de mostrar, com os nomes oficiais do jogo: Assassin, Mage, Tank, Support, Fighter, Marksman. O `banco_herois.js` continua com as chaves em português (são as chaves de `iconesClasses`). Os nomes dos heróis não mudam.
-- [ ] 14.6. Teste web: um caso que troca para inglês e confere textos de algumas telas. Os testes atuais procuram textos em português: garanta que eles rodem com o idioma em português (o Chrome headless pode vir em inglês e abrir o app em inglês, por causa do 14.2).
-- [ ] 14.7. Atualizar o `claude.md`: `idioma.js` na Estrutura e, nas Convenções, "texto visível novo vai em `idioma.js` (pt e en), nunca direto na tela".
+- [x] 13.1. Instalar as duas bibliotecas (`npx expo install @react-native-async-storage/async-storage expo-localization`) e rodar `npx expo-doctor`.
+- [x] 13.2. Criar `src/idioma/textos.js` (os textos) e `src/idioma/idioma.js` (decisão do dono: pasta própria, ao lado do `tema.js`): textos `pt` e `en` por chave (ex.: `"menu.apoiar"`), um `IdiomaProvider` (Context) e um hook `useIdioma()` que devolve `{ idioma, mudarIdioma, t }`. O idioma inicial vem do que foi salvo, ou do celular (`pt*` → `pt`, o resto → `en`). Envolver o app com o `IdiomaProvider` no `App.js`.
+- [x] 13.3. Configurações: tocar em "Idioma" mostra **Português** e **English** (com ✓ no atual). A troca vale na hora e é salva.
+- [ ] 13.4. Trocar os textos fixos por `t("...")`, **uma tela por commit**, parando para o dono testar: Home, menu lateral, Details, Doações, Feedback, Sobre, Configurações, e também `ui.js` (`ListaContatos`, `BotaoCopiar`: "Copiar"/"Copiado ✓").
+- [ ] 13.5. Classes dos heróis traduzidas só na hora de mostrar, com os nomes oficiais do jogo: Assassin, Mage, Tank, Support, Fighter, Marksman. O `banco_herois.js` continua com as chaves em português (são as chaves de `iconesClasses`). Os nomes dos heróis não mudam.
+- [ ] 13.6. Teste web: um caso que troca para inglês e confere textos de algumas telas. Os testes atuais procuram textos em português: garanta que eles rodem com o idioma em português (o Chrome headless pode vir em inglês e abrir o app em inglês, por causa do 14.2).
+- [ ] 13.7. Atualizar o `claude.md`: `idioma.js` na Estrutura e, nas Convenções, "texto visível novo vai em `idioma.js` (pt e en), nunca direto na tela".
 
 **✅ Verificar:** `npm run test:web` tudo `PASS`. No celular: trocar o idioma, fechar e abrir o app (a escolha continua), e passar por todas as telas nos dois idiomas.
 
-Commits: um por tela, mais `add language support` (14.1 a 14.3).
+Commits: um por tela, mais `add language support` (13.1 a 13.3).

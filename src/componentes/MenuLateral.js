@@ -14,6 +14,10 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { cores, espaco } from "../tema";
 import { Fundo, LinhaAcao, Rodape } from "./ui";
+import { useIdioma } from "../idioma/idioma";
+
+// Versão mostrada no rodapé do menu
+const VERSAO = "1.0.0";
 
 // Duração das animações (ms)
 const TEMPO_ABRIR = 260;
@@ -26,6 +30,7 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
   // A gaveta cobre a tela inteira (inclusive atrás das barras do Android),
   // então o topo e o rodapé usam as margens seguras.
   const insets = useSafeAreaInsets();
+  const { t } = useIdioma();
 
   // Na web o app fica numa coluna de no máximo 480px (ver App.js)
   const { width } = useWindowDimensions();
@@ -119,25 +124,25 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
           <View style={style.itens}>
             <LinhaAcao
               icone={require("../../assets/icon-doar.png")}
-              titulo="Torne-se um apoiador"
+              titulo={t("menu.apoiar")}
               corTitulo={cores.douradoVivo}
               aoTocar={() => irPara("Doacoes")}
             />
             <LinhaAcao
               icone={require("../../assets/icon-config.png")}
-              titulo="Configurações"
+              titulo={t("menu.configuracoes")}
               corTitulo={cores.douradoVivo}
               aoTocar={() => irPara("Configuracoes")}
             />
             <LinhaAcao
               icone={require("../../assets/icon-feedback.png")}
-              titulo="Feedback"
+              titulo={t("menu.feedback")}
               corTitulo={cores.douradoVivo}
               aoTocar={() => irPara("Feedback")}
             />
             <LinhaAcao
               icone={require("../../assets/icon-sobre.png")}
-              titulo="Sobre"
+              titulo={t("menu.sobre")}
               corTitulo={cores.douradoVivo}
               aoTocar={() => irPara("Sobre")}
             />
@@ -145,9 +150,9 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
 
           {/* RODAPÉ: fica sempre embaixo */}
           <View style={{ paddingBottom: insets.bottom + espaco.lg }}>
-            <Rodape>Versão 1.0.0</Rodape>
+            <Rodape>{t("menu.versao", { versao: VERSAO })}</Rodape>
             <Rodape style={style.rodapeSegundaLinha}>
-              Dados: site oficial do MLBB
+              {t("menu.dados")}
             </Rodape>
           </View>
         </Fundo>
