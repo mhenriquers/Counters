@@ -144,5 +144,28 @@ export const textos = {
   },
 
   // Configurações
+  "config.titulo": { pt: "Configurações", en: "Settings" },
+  "config.preferencias": { pt: "Preferências", en: "Preferences" },
   "config.idioma": { pt: "Idioma", en: "Language" },
+  "config.tema": { pt: "Tema", en: "Theme" },
+  "config.temaUnico": { pt: "Único", en: "Default" },
+  "config.privacidade": { pt: "Privacidade e uso", en: "Privacy and usage" },
+  "config.politica": { pt: "Política de privacidade", en: "Privacy policy" },
+  "config.politicaTexto": {
+    pt: "Este aplicativo não coleta informações de identificação pessoal dos usuários. Não solicitamos acesso a contatos, localização ou arquivos privados.",
+    en: "This app doesn't collect any personally identifiable information from users. We don't ask for access to contacts, location or private files.",
+  },
+  "config.imagens": {
+    pt: "Uso de imagens e direitos autorais",
+    en: "Use of images and copyright",
+  },
+  "config.imagensTexto": {
+    pt: "Todas as imagens de heróis e marcas registradas pertencem à Moonton Games. Este é um aplicativo desenvolvido por fã para a comunidade, sem fins lucrativos ou vínculo oficial. Este é apenas um guia informativo gratuito.",
+    en: "All hero images and trademarks belong to Moonton Games. This is a fan-made app for the community, non-profit and with no official affiliation. It's just a free informational guide.",
+  },
+  "config.links": { pt: "Links externos", en: "External links" },
+  "config.linksTexto": {
+    pt: "Ao acessar links de terceiros, você estará sujeito às políticas de privacidade dos respectivos serviços.",
+    en: "When you open third-party links, you'll be subject to the privacy policies of those services.",
+  },
 };

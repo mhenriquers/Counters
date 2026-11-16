@@ -298,6 +298,14 @@ await caso("inglês: Sobre", () =>
   ),
 );
 
+await caso("inglês: Configurações", () =>
+  telaEmIngles(
+    "/configuracoes",
+    ["Settings", "Preferences", "Language", "Theme", "Default", "Privacy and usage", "Privacy policy", "Use of images and copyright", "External links"],
+    ["Preferências", "Política de privacidade"],
+  ),
+);
+
 navIngles.fechar();
 
 // ---------------- Resultado ----------------
