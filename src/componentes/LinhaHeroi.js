@@ -2,10 +2,13 @@ import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import IconeClasse from "./IconeClasse";
 import { cores } from "../tema";
+import { useIdioma } from "../idioma/idioma";
 
 // Card de um herói numa lista: foto, nome, classes e seta.
 // `cor` pinta a borda da esquerda (ex.: cores.forte ou cores.fraco).
 export default function LinhaHeroi({ heroi, cor, aoTocar }) {
+  const { t } = useIdioma();
+
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -28,7 +31,7 @@ export default function LinhaHeroi({ heroi, cor, aoTocar }) {
             />
           ))}
           <Text style={style.textoClasses} numberOfLines={1}>
-            {heroi.classes.join(" · ")}
+            {heroi.classes.map((classe) => t(`classe.${classe}`)).join(" · ")}
           </Text>
         </View>
       </View>

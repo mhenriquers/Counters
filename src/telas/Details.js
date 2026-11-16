@@ -15,9 +15,11 @@ import { Fundo, TituloSecao, BarraStatus } from "../componentes/ui";
 import IconeClasse from "../componentes/IconeClasse";
 import LinhaHeroi from "../componentes/LinhaHeroi";
 import HeroiNaoEncontrado from "../componentes/HeroiNaoEncontrado";
+import { useIdioma } from "../idioma/idioma";
 
 function DetailsScreen({ route, navigation }) {
   const insets = useSafeAreaInsets();
+  const { t } = useIdioma();
 
   const heroi = buscarHeroi(route.params?.id);
 
@@ -29,7 +31,7 @@ function DetailsScreen({ route, navigation }) {
         style={[style.fundo, style.centralizado]}
       >
         <HeroiNaoEncontrado
-          texto="Esse link não corresponde a nenhum herói do banco."
+          texto={t("naoEncontrado.link")}
           aoVoltar={() => navigation.popTo("Home")}
         />
       </Fundo>
@@ -100,7 +102,7 @@ function DetailsScreen({ route, navigation }) {
             {heroi.classes.map((classe) => (
               <View key={classe} style={style.chipClasse}>
                 <IconeClasse classe={classe} tamanho={22} />
-                <Text style={style.textoChip}>{classe}</Text>
+                <Text style={style.textoChip}>{t(`classe.${classe}`)}</Text>
               </View>
             ))}
           </View>
@@ -108,8 +110,8 @@ function DetailsScreen({ route, navigation }) {
 
         {/* É FORTE CONTRA */}
         <TituloSecao
-          titulo="É forte contra"
-          subtitulo={`${heroi.nome} leva vantagem contra estes heróis`}
+          titulo={t("details.forte")}
+          subtitulo={t("details.forteSub", { nome: heroi.nome })}
           cor={cores.forte}
         />
         {forteContra.map((outro) => (
@@ -123,8 +125,8 @@ function DetailsScreen({ route, navigation }) {
 
         {/* É FRACO CONTRA */}
         <TituloSecao
-          titulo="É fraco contra"
-          subtitulo={`Estes heróis levam vantagem contra ${heroi.nome}`}
+          titulo={t("details.fraco")}
+          subtitulo={t("details.fracoSub", { nome: heroi.nome })}
           cor={cores.fraco}
         />
         {fracoContra.map((outro) => (
@@ -137,7 +139,7 @@ function DetailsScreen({ route, navigation }) {
         ))}
 
         <Text style={style.rodape}>
-          Pesquisa realizada no site oficial do MLBB
+          {t("details.fonte")}
         </Text>
       </ScrollView>
     </Fundo>

@@ -16,6 +16,35 @@ export const textos = {
   // Aviso de herói não encontrado (busca sem resultado e /heroi/999)
   "naoEncontrado.titulo": { pt: "Herói não encontrado", en: "Hero not found" },
   "naoEncontrado.voltar": { pt: "Voltar para a lista", en: "Back to the list" },
+  "naoEncontrado.link": {
+    pt: "Esse link não corresponde a nenhum herói do banco.",
+    en: "This link doesn't match any hero in the database.",
+  },
+
+  // Details
+  "details.forte": { pt: "É forte contra", en: "Strong against" },
+  "details.forteSub": {
+    pt: "{nome} leva vantagem contra estes heróis",
+    en: "{nome} has the advantage against these heroes",
+  },
+  "details.fraco": { pt: "É fraco contra", en: "Weak against" },
+  "details.fracoSub": {
+    pt: "Estes heróis levam vantagem contra {nome}",
+    en: "These heroes have the advantage against {nome}",
+  },
+  "details.fonte": {
+    pt: "Pesquisa realizada no site oficial do MLBB",
+    en: "Data collected from the official MLBB website",
+  },
+
+  // Classes dos heróis (nomes oficiais do jogo em inglês). A chave usa o nome
+  // em português, que é como o banco guarda: t(`classe.${classe}`)
+  "classe.Assassino": { pt: "Assassino", en: "Assassin" },
+  "classe.Mago": { pt: "Mago", en: "Mage" },
+  "classe.Tanque": { pt: "Tanque", en: "Tank" },
+  "classe.Suporte": { pt: "Suporte", en: "Support" },
+  "classe.Lutador": { pt: "Lutador", en: "Fighter" },
+  "classe.Atirador": { pt: "Atirador", en: "Marksman" },
 
   // Menu lateral
   "menu.apoiar": { pt: "Torne-se um apoiador", en: "Become a supporter" },

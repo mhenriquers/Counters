@@ -237,6 +237,29 @@ await caso("inglês: menu lateral", async () => {
   return (await navIngles.rota()) === "/configuracoes";
 });
 
+await caso("inglês: Details (seções, classes e rodapé)", async () => {
+  await navIngles.abrir(BASE + "/heroi/1"); // Aamon, Assassino
+  const textos = [
+    "Strong against",
+    "Aamon has the advantage against these heroes",
+    "Weak against",
+    "These heroes have the advantage against Aamon",
+    "Assassin",
+    "Data collected from the official MLBB website",
+  ];
+  for (const texto of textos) if (!(await navIngles.temTexto(texto))) throw new Error("faltou: " + texto);
+  return !(await navIngles.temTexto("Assassino"));
+});
+
+await caso("inglês: /heroi/999", async () => {
+  await navIngles.abrir(BASE + "/heroi/999");
+  return (
+    (await navIngles.temTexto("Hero not found")) &&
+    (await navIngles.temTexto("This link doesn't match any hero in the database.")) &&
+    (await navIngles.temTexto("Back to the list"))
+  );
+});
+
 navIngles.fechar();
 
 // ---------------- Resultado ----------------
