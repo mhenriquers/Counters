@@ -2,7 +2,7 @@
 
 ## 📍 Estado atual (atualize ao fim de cada sessão)
 
-- **Feito** (o histórico está no git e no `claude.md`): repaginada visual, arquitetura (`herois.js`, Details em componentes, pastas em `src/`), idiomas pt/en no app inteiro e publicação da PWA na Vercel (https://counters-peach-one.vercel.app), testada num navegador real (links diretos, service worker e offline). Aviso de versão nova no APK (via GitHub Releases) feito, falta testar no celular (ver pendências).
+- **Próximo passo:** publicar a release `v1.1.0` no GitHub com o APK novo, atualizar o link do README e testar o aviso de versão nova (ver pendências). O que já foi feito está no git e no `claude.md`.
 - **Branch:** o trabalho está direto na `main`. Cada `git push` publica a PWA sozinho.
 - **Decisões já tomadas:**
   - cartões mais escuros aprovados; **manter** todas as imagens sem uso;
@@ -20,15 +20,15 @@
 - [ ] Testar o app inteiro em **inglês** no celular (`npx expo start -c`): trocar o idioma, fechar e abrir o app (a escolha continua) e passar por todas as telas nos dois idiomas.
 - [ ] Revisar as traduções em `src/idioma/textos.js` (as da Home e do menu já foram aprovadas).
 - [ ] Instalar a PWA no celular e abrir com o modo avião ligado (se ainda não fez).
-- [ ] Gerar um **APK novo** (`eas build -p android --profile preview`): entraram bibliotecas nativas (`async-storage`, `expo-localization`), e o APK do README (v1.0.0) ainda não tem os idiomas. Depois, atualizar o link do README.
-  - Antes do build, subir a `version` no `app.json` (ex.: `1.1.0`) e, depois, criar a release no GitHub com a tag `v1.1.0` e o `.apk` anexado. Esse APK já traz o **aviso de versão nova** (`AvisoAtualizacao.js`).
-  - O APK `v1.0.0` atual **não** tem o aviso: quem está nele precisa atualizar à mão uma vez. A partir do `1.1.0`, o aviso funciona.
-  - Testar o aviso: com o APK `1.1.0` instalado, criar uma release `v1.1.1` (pode ser rascunho publicado e apagado depois) e abrir o app. Tem que aparecer "Nova versão disponível"; "Atualizar" abre o download do APK.
+- [ ] **Publicar o APK 1.1.0** (a `version` já é `1.1.0` e o APK já foi gerado no EAS; ele traz os idiomas e o aviso de versão nova):
+  - criar a release no GitHub com a tag `v1.1.0` e o `.apk` anexado (com o nome `Counters.apk`, como na `v1.0.0`);
+  - atualizar o link de download no README (hoje aponta para a `v1.0.0`);
+  - quem está no APK `v1.0.0` precisa atualizar à mão uma vez (ele não tem o aviso).
+- [ ] **Testar o aviso de versão nova:** com o APK `1.1.0` instalado, criar uma release `v1.1.1` de teste e abrir o app. Tem que aparecer "Nova versão disponível", e "Atualizar" abre o download do APK. Depois, apagar a release de teste.
 
 ## Perguntas em aberto (decidir quando der)
 
 - **Pix em inglês:** o Pix só funciona no Brasil. Manter a tela de Doações igual em inglês, ou mostrar um aviso / outra forma de doação para quem é de fora?
-- **Versão em dois lugares:** o "1.0.0" está no `MenuLateral.js` (constante `VERSAO`) e no `Sobre.js`. Ler do `app.json` para mudar num lugar só?
 - **Erro de digitação no Sobre:** "como jogador sou um **otimo** programador" (sem acento). Corrigir para "ótimo"? (Pela regra 3, não foi mudado sem pedido.)
 
 ## Depois: landing page (pedido do dono, adiado)
