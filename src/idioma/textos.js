@@ -80,6 +80,16 @@ export const textos = {
     en: "Pix donations are voluntary and go exclusively toward maintaining and improving the project. We don't store any banking data from donors.",
   },
 
+  // Componentes compartilhados (ui.js)
+  "ui.copiar": { pt: "Copiar", en: "Copy" },
+  "ui.copiado": { pt: "Copiado ✓", en: "Copied ✓" },
+  "contatos.email": { pt: "Enviar e-mail", en: "Send email" },
+  "contatos.github": { pt: "Abrir GitHub", en: "Open GitHub" },
+  "contatos.aviso": {
+    pt: "Ao utilizar nossos canais de contato, você concorda com nossos termos e política de privacidade.",
+    en: "By using our contact channels, you agree to our terms and privacy policy.",
+  },
+
   // Configurações
   "config.idioma": { pt: "Idioma", en: "Language" },
 };

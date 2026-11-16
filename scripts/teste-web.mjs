@@ -276,6 +276,12 @@ await caso("inglês: Doações", () =>
   ),
 );
 
+await caso("inglês: contatos e botão de copiar (ui.js)", async () => {
+  await telaEmIngles("/feedback", ["Send email", "Open GitHub", "Copy", "By using our contact channels"], ["Enviar e-mail"]);
+  await navIngles.clicarTexto("Copy", 500);
+  return navIngles.temTexto("Copied ✓");
+});
+
 navIngles.fechar();
 
 // ---------------- Resultado ----------------

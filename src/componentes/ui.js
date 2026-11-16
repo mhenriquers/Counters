@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from "expo-clipboard";
 import { cores, espaco, raio, fonte } from "../tema";
 import { EMAIL, GITHUB_USUARIO, ID_JOGO, abrirGit, enviarEmail } from "../dados/contatos";
+import { useIdioma } from "../idioma/idioma";
 
 // ---------------------------------------------------------------------------
 // Fundo: substitui o ImageBackground (descontinuado no React Native 0.88).
@@ -156,8 +157,10 @@ export function LinhaAcao({ icone, titulo, subtitulo, aoTocar, direita, corTitul
 // ---------------------------------------------------------------------------
 // BotaoCopiar: copia `texto` e mostra "Copiado ✓" por 2 segundos.
 // Funciona igual em Android, iOS e web (não usa Alert).
+// Sem `rotulo`, o botão diz "Copiar" (no idioma atual).
 // ---------------------------------------------------------------------------
-export function BotaoCopiar({ texto, rotulo = "Copiar", style }) {
+export function BotaoCopiar({ texto, rotulo, style }) {
+  const { t } = useIdioma();
   const [copiado, setCopiado] = useState(false);
   const timer = useRef(null);
 
@@ -172,7 +175,7 @@ export function BotaoCopiar({ texto, rotulo = "Copiar", style }) {
 
   return (
     <TouchableOpacity onPress={copiar} activeOpacity={0.8} style={[estilos.botaoCopiar, style]}>
-      <Text style={estilos.textoBotaoCopiar}>{copiado ? "Copiado ✓" : rotulo}</Text>
+      <Text style={estilos.textoBotaoCopiar}>{copiado ? t("ui.copiado") : (rotulo ?? t("ui.copiar"))}</Text>
     </TouchableOpacity>
   );
 }
@@ -182,18 +185,20 @@ export function BotaoCopiar({ texto, rotulo = "Copiar", style }) {
 // Igual em Sobre e Feedback. Os dados e as ações vêm de contatos.js.
 // ---------------------------------------------------------------------------
 export function ListaContatos() {
+  const { t } = useIdioma();
+
   return (
     <>
       <LinhaAcao
         icone={require("../../assets/gmail.png")}
         titulo={EMAIL}
-        subtitulo="Enviar e-mail"
+        subtitulo={t("contatos.email")}
         aoTocar={enviarEmail}
       />
       <LinhaAcao
         icone={require("../../assets/gitHub.png")}
         titulo={GITHUB_USUARIO}
-        subtitulo="Abrir GitHub"
+        subtitulo={t("contatos.github")}
         aoTocar={abrirGit}
       />
       <LinhaAcao
@@ -202,10 +207,7 @@ export function ListaContatos() {
         subtitulo={"ID: " + ID_JOGO}
         direita={<BotaoCopiar texto={ID_JOGO} />}
       />
-      <Rodape>
-        Ao utilizar nossos canais de contato, você concorda com nossos termos e
-        política de privacidade.
-      </Rodape>
+      <Rodape>{t("contatos.aviso")}</Rodape>
     </>
   );
 }
