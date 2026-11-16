@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Platform, TouchableOpacity, Text, StyleSheet } from "react-native";
 import { cores, espaco, raio } from "../tema";
+import { useIdioma } from "../idioma/idioma";
 
 export default function InstalarApp() {
   const [evento, setEvento] = useState(null);
+  const { t } = useIdioma();
 
   useEffect(() => {
     if (Platform.OS !== "web") return;
@@ -28,7 +30,7 @@ export default function InstalarApp() {
 
   return (
     <TouchableOpacity style={styles.botao} onPress={instalar}>
-      <Text style={styles.texto}>📲 Instalar app</Text>
+      <Text style={styles.texto}>📲 {t("home.instalar")}</Text>
     </TouchableOpacity>
   );
 }

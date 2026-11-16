@@ -9,6 +9,14 @@
 // sempre no próprio idioma (ver IDIOMAS em idioma.js).
 
 export const textos = {
+  // Home
+  "home.pesquisar": { pt: "Pesquisar herói...", en: "Search hero..." },
+  "home.instalar": { pt: "Instalar app", en: "Install app" },
+
+  // Aviso de herói não encontrado (busca sem resultado e /heroi/999)
+  "naoEncontrado.titulo": { pt: "Herói não encontrado", en: "Hero not found" },
+  "naoEncontrado.voltar": { pt: "Voltar para a lista", en: "Back to the list" },
+
   // Configurações
   "config.idioma": { pt: "Idioma", en: "Language" },
 };

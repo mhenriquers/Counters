@@ -211,13 +211,24 @@ await caso("voltar para Português (e continua ao recarregar)", async () => {
   return trocou && (await nav.temTexto("Idioma"));
 });
 
+// Um segundo Chrome com o "celular" em inglês: cada tela traduzida ganha um caso aqui
+const navIngles = await abrirNavegador({ porta: 9404, idioma: "en-US" });
+
 await caso("celular em inglês abre o app em inglês", async () => {
-  const navIngles = await abrirNavegador({ porta: 9404, idioma: "en-US" });
   await navIngles.abrir(BASE + "/configuracoes");
-  const ok = await navIngles.temTexto("Language");
-  navIngles.fechar();
-  return ok;
+  return navIngles.temTexto("Language");
 });
+
+await caso("inglês: Home (busca e herói não encontrado)", async () => {
+  await navIngles.abrir(BASE + "/", 4500);
+  await navIngles.clicarSeletor('img[src*="lupa"]', 600);
+  const placeholder = await navIngles.avaliar(`document.querySelector("input").placeholder`);
+  await navIngles.enviar("Input.insertText", { text: "zzz" });
+  await espera(600);
+  return placeholder === "Search hero..." && (await navIngles.temTexto("Hero not found"));
+});
+
+navIngles.fechar();
 
 // ---------------- Resultado ----------------
 const unicos = [...new Set(avisos)];

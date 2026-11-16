@@ -28,6 +28,7 @@ import MenuLateral from "../componentes/MenuLateral";
 import HeroiNaoEncontrado from "../componentes/HeroiNaoEncontrado";
 import { cores, espaco, raio, fonte } from "../tema";
 import { Fundo } from "../componentes/ui";
+import { useIdioma } from "../idioma/idioma";
 
 const chaveDoHeroi = (item) => item.id;
 
@@ -57,6 +58,7 @@ export default function HomeScreen({ navigation }) {
 
   // O estado do menu lateral fica aqui na própria Home
   const [menuAberto, setMenuAberto] = useState(false);
+  const { t } = useIdioma();
   const inputRef = useRef(null); // criando a referência
   const [pesquisar, setPesquisar] = useState(false);
   const [busca, setBusca] = useState("");
@@ -159,7 +161,7 @@ export default function HomeScreen({ navigation }) {
                         ref={inputRef}
                         autoFocus={true}
                         style={styles.input}
-                        placeholder="Pesquisar herói..."
+                        placeholder={t("home.pesquisar")}
                         placeholderTextColor={cores.textoFraco}
                         value={busca}
                         onChangeText={setBusca}

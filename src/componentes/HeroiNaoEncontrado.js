@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { cores, espaco, raio } from "../tema";
+import { useIdioma } from "../idioma/idioma";
 
 // Aviso de "Herói não encontrado": capacete + título em negrito.
 // O texto e o botão são opcionais: só aparecem se forem passados.
@@ -8,6 +9,8 @@ import { cores, espaco, raio } from "../tema";
 //   - Home (busca sem resultado): só o capacete e o título
 // O fundo fica com quem usa o componente.
 export default function HeroiNaoEncontrado({ texto, aoVoltar, style }) {
+  const { t } = useIdioma();
+
   return (
     <View style={[estilos.container, style]}>
       <Image
@@ -15,7 +18,7 @@ export default function HeroiNaoEncontrado({ texto, aoVoltar, style }) {
         resizeMode="contain"
         style={estilos.icone}
       />
-      <Text style={estilos.titulo}>Herói não encontrado</Text>
+      <Text style={estilos.titulo}>{t("naoEncontrado.titulo")}</Text>
 
       {texto ? <Text style={estilos.texto}>{texto}</Text> : null}
 
@@ -25,7 +28,9 @@ export default function HeroiNaoEncontrado({ texto, aoVoltar, style }) {
           style={estilos.botao}
           activeOpacity={0.8}
         >
-          <Text style={estilos.textoBotao}>Voltar para a lista</Text>
+          <Text style={estilos.textoBotao}>
+            {t("naoEncontrado.voltar")}
+          </Text>
         </TouchableOpacity>
       ) : null}
     </View>
