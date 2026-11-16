@@ -230,3 +230,66 @@ Errar um caminho não quebra em silêncio: o Metro (e o `expo export` da web) **
 - `npm run test:web`: tudo passou.
 - Prints comparados pixel a pixel: idênticos. Na primeira rodada, o print de um herói deu diferente, mas era só a foto que ainda estava carregando quando o print foi tirado. Na segunda, saiu idêntico. Lição: se a diferença é pequena e fica numa imagem, tire o print de novo antes de procurar um bug.
 - No celular: rodar `npx expo start -c`. O `-c` limpa o cache do Metro, que ainda lembra dos caminhos antigos.
+
+---
+
+## Idiomas, parte 1: `src/idioma/` (Context do React)
+
+### Onde fica e por quê
+
+```
+src/
+  idioma/
+    textos.js     ← só os textos: { "config.idioma": { pt: "Idioma", en: "Language" } }
+    idioma.js     ← IdiomaProvider, useIdioma(), salvar a escolha, detectar o idioma do celular
+  tema.js
+```
+
+- O idioma é "irmão" do `tema.js`: os dois são usados por todo mundo e nenhum é regra do jogo. O `tema.js` diz **como** o texto aparece, e o `idioma/` diz **o que** está escrito.
+- Não foi para `dados/` porque lá fica o domínio (heróis, contatos), e o `idioma.js` tem estado do React (Provider e hook).
+- São dois arquivos por causa do **S**: o `textos.js` cresce e muda a cada texto novo (e é onde se revisam as traduções, com `pt` e `en` lado a lado), enquanto o `idioma.js` fica pequeno e quase não muda. Em C#, é como separar o `.resx` da classe que escolhe a cultura.
+
+### O problema que o Context resolve
+
+O idioma precisa chegar em **todas** as telas e componentes. Sem Context, seria preciso passá-lo por props de pai para filho, tela por tela, inclusive por componentes que nem usam o idioma, só para repassar adiante (isso tem nome: *prop drilling*).
+
+O **Context** cria um "canal" que qualquer componente lá embaixo pode ler direto:
+
+```
+App.js
+└─ <IdiomaProvider>            ← guarda o idioma (useState) e oferece { idioma, mudarIdioma, t }
+   └─ NavigationContainer
+      └─ Configuracoes          ← const { t } = useIdioma();   (lê direto, sem props)
+      └─ Home → MenuLateral     ← const { t } = useIdioma();   (idem)
+```
+
+Comparando com C#: é parecido com registrar um serviço **singleton** na injeção de dependência (`services.AddSingleton<IIdiomaService>()`) e pedir ele onde precisar. A diferença: quando o idioma muda, o React **redesenha sozinho** todo componente que usa `useIdioma()`. No C# isso seria o `INotifyPropertyChanged` do WPF/MAUI.
+
+### As peças do `idioma.js`
+
+**`IdiomaProvider`:** um componente que guarda o idioma num `useState` e o entrega pelo `<IdiomaContext.Provider value={...}>`. Ele envolve o app inteiro no `App.js`.
+
+**`useIdioma()`:** um *hook* (função que começa com `use` e usa outros hooks). Ele só faz `useContext(IdiomaContext)`. Se alguém usar fora do Provider, recebe um erro claro em vez de um `null` misterioso.
+
+**O idioma inicial, em 2 etapas:**
+1. `useState(idiomaDoCelular)`: começa com o idioma do celular (`expo-localization`). `pt` → português, qualquer outro → inglês.
+2. `useEffect` ao abrir: lê a escolha salva no `AsyncStorage`. Se existir, ela vence.
+
+O `AsyncStorage` é um "guarda-volumes" chave → texto que sobrevive a fechar o app. No celular, é um arquivo do app; na web, é o `localStorage` do navegador. Ler é **assíncrono** (devolve uma Promise), por isso o `.then`.
+
+**`carregado`:** enquanto a escolha salva não foi lida, o Provider devolve `null` (não desenha nada). Sem isso, um celular em português com "English" salvo abriria em português e trocaria para inglês um instante depois (um "pisca"). A leitura leva poucos milissegundos, e o fundo preto do `App.js` fica visível nesse tempo.
+
+**`mudarIdioma(novo)`:** troca o estado (a tela muda na hora) e salva no `AsyncStorage` (para a próxima vez que o app abrir).
+
+**`t(chave, valores)`:** a função de tradução.
+- Procura a chave no `textos.js` e devolve o texto do idioma atual.
+- Se faltar o inglês, usa o português. Se faltar a chave, mostra a própria chave na tela e avisa no console (e o teste web falha com o aviso). Assim um esquecimento aparece em vez de sumir.
+- Texto com parte variável: `t("details.vantagem", { nome: "Aamon" })` troca `{nome}` por "Aamon".
+
+**`useCallback` e `useMemo`:** guardam a mesma função/objeto entre um desenho e outro, enquanto o idioma não muda. Sem isso, cada desenho do Provider criaria um objeto novo, e o React acharia que o valor do Context mudou, redesenhando o app inteiro à toa.
+
+### Os testes e o idioma do "celular"
+
+O Chrome dos testes usa o idioma do Windows. Nesta máquina é `pt-BR`, mas em outra poderia ser inglês, e aí os testes (que procuram textos em português) falhariam sem motivo. Por isso o `cdp-util.mjs` agora fixa o idioma do navegador em `pt-BR`, e um teste abre um segundo Chrome em `en-US` para conferir que o app abre em inglês.
+
+Detalhe descoberto no caminho: o comando `Emulation.setLocaleOverride` do Chrome **não** muda o `navigator.language` (que é o que o `expo-localization` lê na web). O que funciona é o `acceptLanguage` do `Emulation.setUserAgentOverride`.

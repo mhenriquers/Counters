@@ -55,7 +55,9 @@ const CHROME =
   process.env.CHROME_PATH || "C:/Program Files/Google/Chrome/Application/chrome.exe";
 
 // Abre o Chrome e devolve funções para controlar a página.
-export async function abrirNavegador({ porta = 9400, largura = 384, altura = 832 } = {}) {
+// `idioma` é o idioma do "celular" (navigator.language), que decide o idioma
+// inicial do app. Fixo em pt-BR para o resultado não depender da máquina.
+export async function abrirNavegador({ porta = 9400, largura = 384, altura = 832, idioma = "pt-BR" } = {}) {
   const perfil = mkdtempSync(path.join(tmpdir(), "counters-cdp-"));
   const chrome = spawn(CHROME, [
     "--headless=new",
@@ -106,6 +108,9 @@ export async function abrirNavegador({ porta = 9400, largura = 384, altura = 832
     deviceScaleFactor: 1,
     mobile: true,
   });
+  // Muda o navigator.language (o setLocaleOverride não muda, só o Intl)
+  const agente = await avaliar("navigator.userAgent");
+  await enviar("Emulation.setUserAgentOverride", { userAgent: agente, acceptLanguage: idioma });
   await enviar("Runtime.enable");
   await enviar("Log.enable");
   await enviar("Page.enable");

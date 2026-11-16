@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Text, StyleSheet, ScrollView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { cores, espaco, fonte } from "../tema";
+import { useIdioma, IDIOMAS } from "../idioma/idioma";
 import {
   Fundo,
   CabecalhoTela,
@@ -12,6 +14,13 @@ import {
 
 export default function Configuracoes({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { idioma, mudarIdioma, t } = useIdioma();
+  const [escolhendoIdioma, setEscolhendoIdioma] = useState(false);
+
+  const escolherIdioma = (codigo) => {
+    mudarIdioma(codigo);
+    setEscolhendoIdioma(false);
+  };
 
   return (
     <Fundo fonte={require("../../assets/bg-up-side.png")} style={styles.fundo}>
@@ -24,9 +33,29 @@ export default function Configuracoes({ navigation }) {
         contentContainerStyle={{ paddingBottom: insets.bottom + espaco.xl }}
         showsVerticalScrollIndicator={false}
       >
-        {/* PREFERÊNCIAS (informativas: ainda não dá para mudar) */}
+        {/* PREFERÊNCIAS */}
         <TituloSecao titulo="Preferências" style={styles.primeiraSecao} />
-        <LinhaAcao titulo="Idioma" subtitulo="Português" />
+
+        {/* Idioma: tocar abre a lista logo abaixo; o atual tem ✓ */}
+        <LinhaAcao
+          titulo={t("config.idioma")}
+          subtitulo={IDIOMAS[idioma]}
+          aoTocar={() => setEscolhendoIdioma(!escolhendoIdioma)}
+        />
+        {escolhendoIdioma &&
+          Object.entries(IDIOMAS).map(([codigo, nome]) => (
+            <LinhaAcao
+              key={codigo}
+              titulo={nome}
+              corTitulo={codigo === idioma ? cores.douradoVivo : cores.texto}
+              aoTocar={() => escolherIdioma(codigo)}
+              direita={
+                codigo === idioma ? <Text style={styles.marcado}>✓</Text> : false
+              }
+            />
+          ))}
+
+        {/* Tema: só informativo (ainda não dá para mudar) */}
         <LinhaAcao titulo="Tema" subtitulo="Único" />
 
         {/* PRIVACIDADE E USO */}
@@ -71,6 +100,14 @@ const styles = StyleSheet.create({
 
   primeiraSecao: {
     marginTop: espaco.lg,
+  },
+
+  // ✓ do idioma escolhido
+  marcado: {
+    color: cores.douradoVivo,
+    fontSize: fonte.cabecalho,
+    fontWeight: "700",
+    marginLeft: espaco.sm,
   },
 
   // Título acima de cada cartão de privacidade (alinhado com a borda do cartão)

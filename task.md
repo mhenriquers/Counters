@@ -11,7 +11,7 @@
   - O Claude escreve e explica, e cada explicação vai para o `explicaCode.md` (arquivo de estudo do dono).
   3. ✅ Mover para `src/` (commit `move files to src`, só `git mv` e caminhos). Testado no celular.
   4. ✅ Atualizar `claude.md` (Estrutura, Modelo de dados, Convenções e Arquitetura) e `task.md`.
-  - Depois disso, a Fase 14. O `idioma.js` já nasce em `src/` (pasta a decidir com o dono no 14.2).
+  - **Agora:** Fase 14. Feito 14.1 a 14.3 (commit `add language support`). Próximo: 14.4, uma tela por commit, começando pela Home.
 - **Jeito de trabalhar combinado com o dono:**
   - fazer **uma tela por vez**, commitar e **parar**, para ele testar no celular antes da próxima;
   - deixar as perguntas para o **final** da resposta;
@@ -52,9 +52,9 @@ Pedido do dono: em Configurações → "Idioma", poder escolher **inglês**, e o
 - **Traduções:** o Claude escreve as versões em inglês e o dono revisa.
 
 **Plano:**
-- [ ] 14.1. Instalar as duas bibliotecas (`npx expo install @react-native-async-storage/async-storage expo-localization`) e rodar `npx expo-doctor`.
-- [ ] 14.2. Criar `idioma.js`: textos `pt` e `en` por chave (ex.: `"menu.apoiar"`), um `IdiomaProvider` (Context) e um hook `useIdioma()` que devolve `{ idioma, mudarIdioma, t }`. O idioma inicial vem do que foi salvo, ou do celular (`pt*` → `pt`, o resto → `en`). Envolver o app com o `IdiomaProvider` no `App.js`.
-- [ ] 14.3. Configurações: tocar em "Idioma" mostra **Português** e **English** (com ✓ no atual). A troca vale na hora e é salva.
+- [x] 14.1. Instalar as duas bibliotecas (`npx expo install @react-native-async-storage/async-storage expo-localization`) e rodar `npx expo-doctor`.
+- [x] 14.2. Criar `src/idioma/textos.js` (os textos) e `src/idioma/idioma.js` (decisão do dono: pasta própria, ao lado do `tema.js`): textos `pt` e `en` por chave (ex.: `"menu.apoiar"`), um `IdiomaProvider` (Context) e um hook `useIdioma()` que devolve `{ idioma, mudarIdioma, t }`. O idioma inicial vem do que foi salvo, ou do celular (`pt*` → `pt`, o resto → `en`). Envolver o app com o `IdiomaProvider` no `App.js`.
+- [x] 14.3. Configurações: tocar em "Idioma" mostra **Português** e **English** (com ✓ no atual). A troca vale na hora e é salva.
 - [ ] 14.4. Trocar os textos fixos por `t("...")`, **uma tela por commit**, parando para o dono testar: Home, menu lateral, Details, Doações, Feedback, Sobre, Configurações, e também `ui.js` (`ListaContatos`, `BotaoCopiar`: "Copiar"/"Copiado ✓").
 - [ ] 14.5. Classes dos heróis traduzidas só na hora de mostrar, com os nomes oficiais do jogo: Assassin, Mage, Tank, Support, Fighter, Marksman. O `banco_herois.js` continua com as chaves em português (são as chaves de `iconesClasses`). Os nomes dos heróis não mudam.
 - [ ] 14.6. Teste web: um caso que troca para inglês e confere textos de algumas telas. Os testes atuais procuram textos em português: garanta que eles rodem com o idioma em português (o Chrome headless pode vir em inglês e abrir o app em inglês, por causa do 14.2).

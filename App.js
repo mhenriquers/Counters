@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { IdiomaProvider } from "./src/idioma/idioma";
 
 // TELAS
 import DetailsScreen from "./src/telas/Details";
@@ -45,19 +46,23 @@ export default function App() {
             overflow: "hidden",
           }}
         >
-          <NavigationContainer
-            linking={linking}
-            documentTitle={{ formatter: () => "Counters MLBB" }}
-          >
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="Home" component={HomeScreen} />
-              <Stack.Screen name="Details" component={DetailsScreen} />
-              <Stack.Screen name="Doacoes" component={Doacoes} />
-              <Stack.Screen name="Sobre" component={Sobre} />
-              <Stack.Screen name="Feedback" component={Feedback} />
-              <Stack.Screen name="Configuracoes" component={Configuracoes} />
-            </Stack.Navigator>
-          </NavigationContainer>
+          {/* Idioma disponível para todas as telas (dentro do fundo preto,
+              para a tela continuar preta enquanto lê a escolha salva) */}
+          <IdiomaProvider>
+            <NavigationContainer
+              linking={linking}
+              documentTitle={{ formatter: () => "Counters MLBB" }}
+            >
+              <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Home" component={HomeScreen} />
+                <Stack.Screen name="Details" component={DetailsScreen} />
+                <Stack.Screen name="Doacoes" component={Doacoes} />
+                <Stack.Screen name="Sobre" component={Sobre} />
+                <Stack.Screen name="Feedback" component={Feedback} />
+                <Stack.Screen name="Configuracoes" component={Configuracoes} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </IdiomaProvider>
         </View>
       </View>
     </SafeAreaProvider>

@@ -190,6 +190,35 @@ await caso("copiar em /apoiar mostra 'Copiado ✓'", () => copiadoNaTela("/apoia
 await caso("copiar em /sobre mostra 'Copiado ✓'", () => copiadoNaTela("/sobre", "Copiar"));
 await caso("copiar em /feedback mostra 'Copiado ✓'", () => copiadoNaTela("/feedback", "Copiar"));
 
+// ---------------- Idioma ----------------
+await caso("Configurações: escolher English troca o idioma", async () => {
+  await nav.abrir(BASE + "/configuracoes");
+  await nav.clicarTexto("Idioma", 500);
+  await nav.clicarTexto("English", 500);
+  return (await nav.temTexto("Language")) && !(await nav.temTexto("Idioma"));
+});
+
+await caso("a escolha continua depois de recarregar", async () => {
+  await nav.abrir(BASE + "/configuracoes");
+  return nav.temTexto("Language");
+});
+
+await caso("voltar para Português (e continua ao recarregar)", async () => {
+  await nav.clicarTexto("Language", 500);
+  await nav.clicarTexto("Português", 500);
+  const trocou = await nav.temTexto("Idioma");
+  await nav.abrir(BASE + "/configuracoes");
+  return trocou && (await nav.temTexto("Idioma"));
+});
+
+await caso("celular em inglês abre o app em inglês", async () => {
+  const navIngles = await abrirNavegador({ porta: 9404, idioma: "en-US" });
+  await navIngles.abrir(BASE + "/configuracoes");
+  const ok = await navIngles.temTexto("Language");
+  navIngles.fechar();
+  return ok;
+});
+
 // ---------------- Resultado ----------------
 const unicos = [...new Set(avisos)];
 console.log("\nErros/avisos no console:", unicos.length ? "\n  " + unicos.join("\n  ") : "nenhum");
