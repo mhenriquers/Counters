@@ -90,6 +90,20 @@ export const textos = {
     en: "By using our contact channels, you agree to our terms and privacy policy.",
   },
 
+  // Feedback
+  "feedback.titulo": { pt: "Feedback", en: "Feedback" },
+  "feedback.sugestoes": { pt: "Sugestões ou erros?", en: "Suggestions or bugs?" },
+  "feedback.texto": {
+    pt: "Este aplicativo foi desenvolvido para ser uma ferramenta útil no dia a dia das suas partidas. Se você encontrou algum erro, tem uma sugestão de melhoria ou sentiu falta de algum conteúdo, por favor, envie seu comentário. Feedbacks diretos de quem usa o app são a melhor forma de evoluir o projeto.",
+    en: "This app was built to be a useful tool in your everyday matches. If you found a bug, have a suggestion for improvement or missed some content, please send your comment. Direct feedback from the people who use the app is the best way to improve the project.",
+  },
+  "feedback.contato": { pt: "Contato", en: "Contact" },
+  "feedback.retorno": { pt: "Retorno", en: "Updates" },
+  "feedback.retornoTexto": {
+    pt: "Separei esse espaço para trazer quaisquer atualizações do App, se você pediu algo, lhe darei um retorno por aqui.",
+    en: "I set aside this space to share any updates about the app. If you asked for something, I'll get back to you here.",
+  },
+
   // Configurações
   "config.idioma": { pt: "Idioma", en: "Language" },
 };

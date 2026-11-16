@@ -9,41 +9,40 @@ import {
   Paragrafo,
   ListaContatos,
 } from "../componentes/ui";
+import { useIdioma } from "../idioma/idioma";
 
 export default function Feedback({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { t } = useIdioma();
 
   return (
     <Fundo fonte={require("../../assets/bg-up-side.png")} style={styles.fundo}>
-      <CabecalhoTela titulo="Feedback" aoVoltar={() => navigation.goBack()} />
+      <CabecalhoTela
+        titulo={t("feedback.titulo")}
+        aoVoltar={() => navigation.goBack()}
+      />
 
       <ScrollView
         contentContainerStyle={{ paddingBottom: insets.bottom + espaco.xl }}
         showsVerticalScrollIndicator={false}
       >
         {/* SUGESTÕES OU ERROS */}
-        <TituloSecao titulo="Sugestões ou erros?" style={styles.primeiraSecao} />
+        <TituloSecao
+          titulo={t("feedback.sugestoes")}
+          style={styles.primeiraSecao}
+        />
         <Cartao destaque="dourado">
-          <Paragrafo ultimo>
-            Este aplicativo foi desenvolvido para ser uma ferramenta útil no dia a
-            dia das suas partidas. Se você encontrou algum erro, tem uma sugestão
-            de melhoria ou sentiu falta de algum conteúdo, por favor, envie seu
-            comentário. Feedbacks diretos de quem usa o app são a melhor forma de
-            evoluir o projeto.
-          </Paragrafo>
+          <Paragrafo ultimo>{t("feedback.texto")}</Paragrafo>
         </Cartao>
 
         {/* CONTATO */}
-        <TituloSecao titulo="Contato" />
+        <TituloSecao titulo={t("feedback.contato")} />
         <ListaContatos />
 
         {/* RETORNO */}
-        <TituloSecao titulo="Retorno" />
+        <TituloSecao titulo={t("feedback.retorno")} />
         <Cartao>
-          <Paragrafo ultimo>
-            Separei esse espaço para trazer quaisquer atualizações do App, se você
-            pediu algo, lhe darei um retorno por aqui.
-          </Paragrafo>
+          <Paragrafo ultimo>{t("feedback.retornoTexto")}</Paragrafo>
         </Cartao>
       </ScrollView>
     </Fundo>

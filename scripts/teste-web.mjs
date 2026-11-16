@@ -282,6 +282,14 @@ await caso("inglês: contatos e botão de copiar (ui.js)", async () => {
   return navIngles.temTexto("Copied ✓");
 });
 
+await caso("inglês: Feedback", () =>
+  telaEmIngles(
+    "/feedback",
+    ["Suggestions or bugs?", "This app was built to be a useful tool", "Contact", "Updates", "I set aside this space"],
+    ["Sugestões ou erros?", "Contato", "Retorno"],
+  ),
+);
+
 navIngles.fechar();
 
 // ---------------- Resultado ----------------
