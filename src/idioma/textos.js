@@ -104,6 +104,45 @@ export const textos = {
     en: "I set aside this space to share any updates about the app. If you asked for something, I'll get back to you here.",
   },
 
+  // Sobre
+  "sobre.titulo": { pt: "Sobre", en: "About" },
+  "sobre.early": { pt: "Early Game", en: "Early Game" },
+  "sobre.earlyTexto": {
+    pt: "Agradeço aos meus amigos e parceiros de squad que testaram as primeiras versões deste app, aguentaram os bugs e me ajudaram a validar cada ideia implementada.",
+    en: "Thanks to my friends and squad mates who tested the first versions of this app, put up with the bugs and helped me validate every idea I implemented.",
+  },
+  "sobre.lore": { pt: "Lore", en: "Lore" },
+  "sobre.lore1": {
+    pt: "Tudo começou em uma noite de derrotas amargas no Land of Dawn. Entre sequências de derrotas inexplicáveis e a frustração de não saber como segurar um herói inimigo 'feedado', percebi que a força bruta não era o suficiente: era preciso inteligência.",
+    en: "It all started on a night of bitter defeats in the Land of Dawn. Between streaks of inexplicable losses and the frustration of not knowing how to hold off a 'fed' enemy hero, I realized that brute force wasn't enough: it took intelligence.",
+  },
+  "sobre.lore2": {
+    pt: "Como um desenvolvedor solo, decidi aceitar o desafio de construir meu próprio 'item' de batalha. Foram muitas noites codificando sozinho, enfrentei obstáculos técnicos complexos e falhas críticas de sistema que exigiram profundas revisões de código e persistência, refinando dados para que esse item finalmente ficasse pronto.",
+    en: "As a solo developer, I decided to take on the challenge of building my own battle 'item'. It took many nights of coding alone. I faced complex technical obstacles and critical system failures that demanded deep code reviews and persistence, refining data until this item was finally ready.",
+  },
+  "sobre.lore3": {
+    pt: "Este aplicativo não é apenas um banco de dados; ele é a união de mecânicas essenciais e vivência de jogo e a prova de que, com a estratégia certa, qualquer herói pode ser derrotado. Eu criei esta ferramenta para que você, assim como eu, tenha em mãos um recurso prático para subir de nível e dominar as partidas.",
+    en: "This app isn't just a database; it's the union of essential mechanics and game experience, and proof that, with the right strategy, any hero can be defeated. I created this tool so that you, like me, have a practical resource at hand to level up and dominate your matches.",
+  },
+  "sobre.lore4": {
+    pt: "Continuo no Glória Mítico e estou sempre pronto para fechar o squad. Pode passar raiva comigo nas TF's, porque como jogador sou um otimo programador. Nos vemos em Land of Dawn!",
+    en: "I'm still in Mythical Glory and always ready to fill the squad. Feel free to rage with me in the team fights, because as a player I'm a great programmer. See you in the Land of Dawn!",
+  },
+  "sobre.contato": { pt: "Contato", en: "Contact" },
+  "sobre.aviso": { pt: "Aviso legal", en: "Legal notice" },
+  "sobre.aviso1": {
+    pt: "Este aplicativo é um projeto independente desenvolvido por fã e para fãs de Mobile Legends: Bang Bang. Todo o conteúdo, incluindo nomes de heróis, imagens, ícones e marcas registradas, são de propriedade exclusiva da Moonton Games.",
+    en: "This app is an independent project made by a fan, for fans of Mobile Legends: Bang Bang. All content, including hero names, images, icons and trademarks, is the exclusive property of Moonton Games.",
+  },
+  "sobre.aviso2": {
+    pt: "As informações aqui contidas servem apenas para propósitos educacionais e informativos de auxílio ao jogador. Este app não é afiliado, endossado ou patrocinado pela Moonton de nenhuma forma.",
+    en: "The information here is for educational and informational purposes only, to help players. This app is not affiliated with, endorsed by or sponsored by Moonton in any way.",
+  },
+  "sobre.versao": {
+    pt: "Versão {versao} — Build: Perfurador",
+    en: "Version {versao} — Build: Perfurador",
+  },
+
   // Configurações
   "config.idioma": { pt: "Idioma", en: "Language" },
 };

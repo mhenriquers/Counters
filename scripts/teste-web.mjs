@@ -290,6 +290,14 @@ await caso("inglês: Feedback", () =>
   ),
 );
 
+await caso("inglês: Sobre", () =>
+  telaEmIngles(
+    "/sobre",
+    ["About", "Early Game", "Thanks to my friends", "It all started", "Mythical Glory", "Contact", "Legal notice", "not affiliated with", "Version 1.0.0"],
+    ["Aviso legal", "Tudo começou"],
+  ),
+);
+
 navIngles.fechar();
 
 // ---------------- Resultado ----------------

@@ -10,13 +10,18 @@ import {
   ListaContatos,
   Rodape,
 } from "../componentes/ui";
+import { useIdioma } from "../idioma/idioma";
 
 export default function Sobre({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { t } = useIdioma();
 
   return (
     <Fundo fonte={require("../../assets/bg-up-side.png")} style={styles.fundo}>
-      <CabecalhoTela titulo="Sobre" aoVoltar={() => navigation.goBack()} />
+      <CabecalhoTela
+        titulo={t("sobre.titulo")}
+        aoVoltar={() => navigation.goBack()}
+      />
 
       <ScrollView
         contentContainerStyle={{ paddingBottom: insets.bottom + espaco.xl }}
@@ -30,66 +35,32 @@ export default function Sobre({ navigation }) {
         />
 
         {/* EARLY GAME */}
-        <TituloSecao titulo="Early Game" />
+        <TituloSecao titulo={t("sobre.early")} />
         <Cartao destaque="dourado">
-          <Paragrafo ultimo>
-            Agradeço aos meus amigos e parceiros de squad que testaram as
-            primeiras versões deste app, aguentaram os bugs e me ajudaram a
-            validar cada ideia implementada.
-          </Paragrafo>
+          <Paragrafo ultimo>{t("sobre.earlyTexto")}</Paragrafo>
         </Cartao>
 
         {/* LORE */}
-        <TituloSecao titulo="Lore" />
+        <TituloSecao titulo={t("sobre.lore")} />
         <Cartao destaque="dourado">
-          <Paragrafo>
-            Tudo começou em uma noite de derrotas amargas no Land of Dawn. Entre
-            sequências de derrotas inexplicáveis e a frustração de não saber como
-            segurar um herói inimigo 'feedado', percebi que a força bruta não era
-            o suficiente: era preciso inteligência.
-          </Paragrafo>
-          <Paragrafo>
-            Como um desenvolvedor solo, decidi aceitar o desafio de construir meu
-            próprio 'item' de batalha. Foram muitas noites codificando sozinho,
-            enfrentei obstáculos técnicos complexos e falhas críticas de sistema
-            que exigiram profundas revisões de código e persistência, refinando
-            dados para que esse item finalmente ficasse pronto.
-          </Paragrafo>
-          <Paragrafo>
-            Este aplicativo não é apenas um banco de dados; ele é a união de
-            mecânicas essenciais e vivência de jogo e a prova de que, com a
-            estratégia certa, qualquer herói pode ser derrotado. Eu criei esta
-            ferramenta para que você, assim como eu, tenha em mãos um recurso
-            prático para subir de nível e dominar as partidas.
-          </Paragrafo>
-          <Paragrafo ultimo>
-            Continuo no Glória Mítico e estou sempre pronto para fechar o squad.
-            Pode passar raiva comigo nas TF's, porque como jogador sou um otimo
-            programador. Nos vemos em Land of Dawn!
-          </Paragrafo>
+          <Paragrafo>{t("sobre.lore1")}</Paragrafo>
+          <Paragrafo>{t("sobre.lore2")}</Paragrafo>
+          <Paragrafo>{t("sobre.lore3")}</Paragrafo>
+          <Paragrafo ultimo>{t("sobre.lore4")}</Paragrafo>
         </Cartao>
 
         {/* CONTATO */}
-        <TituloSecao titulo="Contato" />
+        <TituloSecao titulo={t("sobre.contato")} />
         <ListaContatos />
 
         {/* AVISO LEGAL */}
-        <TituloSecao titulo="Aviso legal" />
+        <TituloSecao titulo={t("sobre.aviso")} />
         <Cartao>
-          <Paragrafo>
-            Este aplicativo é um projeto independente desenvolvido por fã e para
-            fãs de Mobile Legends: Bang Bang. Todo o conteúdo, incluindo nomes de
-            heróis, imagens, ícones e marcas registradas, são de propriedade
-            exclusiva da Moonton Games.
-          </Paragrafo>
-          <Paragrafo ultimo>
-            As informações aqui contidas servem apenas para propósitos
-            educacionais e informativos de auxílio ao jogador. Este app não é
-            afiliado, endossado ou patrocinado pela Moonton de nenhuma forma.
-          </Paragrafo>
+          <Paragrafo>{t("sobre.aviso1")}</Paragrafo>
+          <Paragrafo ultimo>{t("sobre.aviso2")}</Paragrafo>
         </Cartao>
 
-        <Rodape>Versão 1.0.0 — Build: Perfurador</Rodape>
+        <Rodape>{t("sobre.versao", { versao: "1.0.0" })}</Rodape>
       </ScrollView>
     </Fundo>
   );
