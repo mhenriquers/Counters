@@ -4,7 +4,7 @@
 
 - **Feito:** a repaginada visual inteira (Fases 0 a 13). O resumo do que mudou está no `claude.md`. O 13.1 rendeu ajustes na busca da Home (commit `fix search behavior`).
 - **Branch:** o trabalho está direto na `main`.
-- **Decisões já tomadas:** cartões mais escuros aprovados; **manter** todas as imagens sem uso.
+- **Decisões já tomadas:** cartões mais escuros aprovados; **manter** todas as imagens sem uso; a descrição da PWA (`public/manifest.json` e `public/index.html`) fica **só em português**, mesmo com o app traduzido.
 - **Arquitetura (feita):** veio **ANTES da fase de idiomas** (decisão do dono em 2026-11-15), na ordem do plano da seção "Arquitetura" do `claude.md`:
   1. ✅ `herois.js` (commit `add heroes data layer`). `buscarHeroi(id)` devolve **`null`** quando não acha.
   2. ✅ Quebrar o `Details.js` (commit `split details screen`): saíram `IconeClasse`, `LinhaHeroi` e `HeroiNaoEncontrado`. O dono decidiu **não** criar um `SecaoHerois` (as duas seções repetidas ficam como estão).
