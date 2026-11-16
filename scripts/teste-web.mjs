@@ -306,6 +306,15 @@ await caso("inglês: Configurações", () =>
   ),
 );
 
+await caso("inglês: e-mail de contato com o texto em inglês", async () => {
+  await navIngles.abrir(BASE + "/feedback");
+  // troca o window.open por um "espião" que só guarda a URL (não abre nada)
+  await navIngles.avaliar(`window.__urls = []; window.open = (url) => { window.__urls.push(url); return null; }`);
+  await navIngles.clicarTexto("Send email", 800);
+  const url = decodeURIComponent((await navIngles.avaliar("window.__urls[0]")) || "");
+  return url.startsWith("mailto:") && url.includes("Hi! I'd like to suggest...");
+});
+
 navIngles.fechar();
 
 // ---------------- Resultado ----------------

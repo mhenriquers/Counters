@@ -143,6 +143,18 @@ export const textos = {
     en: "Version {versao} — Build: Perfurador",
   },
 
+  // E-mail de contato (contatos.js)
+  "email.assunto": { pt: "Feedback - App Counters", en: "Feedback - App Counters" },
+  "email.corpo": { pt: "Olá! Gostaria de sugerir...", en: "Hi! I'd like to suggest..." },
+  "email.semAppTitulo": {
+    pt: "App de E-mail não encontrado",
+    en: "Email app not found",
+  },
+  "email.semAppTexto": {
+    pt: "Para enviar um e-mail, configure o aplicativo 'Mail' padrão do seu iPhone ou copie o endereço: {email}",
+    en: "To send an email, set up your iPhone's default 'Mail' app or copy the address: {email}",
+  },
+
   // Configurações
   "config.titulo": { pt: "Configurações", en: "Settings" },
   "config.preferencias": { pt: "Preferências", en: "Preferences" },

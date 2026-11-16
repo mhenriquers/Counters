@@ -11,9 +11,11 @@ export const abrirGit = () => {
   Linking.openURL(`https://github.com/${GITHUB_USUARIO}`);
 };
 
-export const enviarEmail = async () => {
-  const assunto = encodeURIComponent("Feedback - App Counters");
-  const corpo = encodeURIComponent("Olá! Gostaria de sugerir...");
+// Recebe o `t` (tradução) de quem chama: este arquivo não é um componente,
+// então não pode usar o useIdioma() (hooks só funcionam dentro de componentes).
+export const enviarEmail = async (t) => {
+  const assunto = encodeURIComponent(t("email.assunto"));
+  const corpo = encodeURIComponent(t("email.corpo"));
 
   const url = `mailto:${EMAIL}?subject=${assunto}&body=${corpo}`;
   const supported = await Linking.canOpenURL(url);
@@ -22,8 +24,8 @@ export const enviarEmail = async () => {
     await Linking.openURL(url);
   } else {
     Alert.alert(
-      "App de E-mail não encontrado",
-      `Para enviar um e-mail, configure o aplicativo 'Mail' padrão do seu iPhone ou copie o endereço: ${EMAIL}`,
+      t("email.semAppTitulo"),
+      t("email.semAppTexto", { email: EMAIL }),
       [{ text: "OK" }],
     );
   }

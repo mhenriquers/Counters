@@ -193,7 +193,7 @@ export function ListaContatos() {
         icone={require("../../assets/gmail.png")}
         titulo={EMAIL}
         subtitulo={t("contatos.email")}
-        aoTocar={enviarEmail}
+        aoTocar={() => enviarEmail(t)}
       />
       <LinhaAcao
         icone={require("../../assets/gitHub.png")}
