@@ -22,7 +22,6 @@
       "package": "app.counters.mlbb"
     },
     "web": {
-      "favicon": "./assets/favicon.png",
       "output": "single"
     },
     "plugins": [

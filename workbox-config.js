@@ -9,6 +9,8 @@ module.exports = {
   maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
   // qualquer URL (ex.: /heroi/12) abre o app, mesmo offline
   navigateFallback: "/index.html",
+  // o ?v= do ícone da aba (index.html) não impede de achar o arquivo offline
+  ignoreURLParametersMatching: [/^utm_/, /^fbclid$/, /^v$/],
   // versão nova entra sozinha na próxima abertura do app
   clientsClaim: true,
   skipWaiting: true,
