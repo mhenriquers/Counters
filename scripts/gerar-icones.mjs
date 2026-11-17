@@ -15,6 +15,10 @@ await sharp(base).resize(192, 192).png().toFile(`${DESTINO}/icon-192.png`);
 await sharp(base).resize(512, 512).png().toFile(`${DESTINO}/icon-512.png`);
 await sharp(base).resize(180, 180).png().toFile(`${DESTINO}/apple-touch-icon.png`);
 
+// ícone da aba do navegador: o Expo transforma o app.json "web.favicon"
+// em /favicon.ico, e o navegador prefere esse ao /icons/icon-192.png
+await sharp(base).resize(48, 48).png().toFile("assets/favicon.png");
+
 // "maskable": o Android recorta em círculo, então o desenho (grupo "desenho"
 // do SVG) encolhe para 82%, centralizado, e o fundo continua ocupando tudo
 const MARCADOR = '<g id="desenho">';
