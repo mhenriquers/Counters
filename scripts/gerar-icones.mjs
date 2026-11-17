@@ -1,26 +1,30 @@
-// Gera os ícones da PWA a partir do ícone do app
+// Gera os ícones da PWA (e o da aba do navegador) a partir do SVG do ícone.
+// O ícone do APK continua sendo o assets/counters.png (app.json).
 import sharp from "sharp";
-import { mkdir } from "node:fs/promises";
+import { mkdir, readFile } from "node:fs/promises";
 
-const ORIGEM = "assets/counters.png"; // 1024x1024
+const ORIGEM = "assets/icone-pwa.svg"; // quadro de 1024x1024
 const DESTINO = "public/icons";
 
 await mkdir(DESTINO, { recursive: true });
 
-await sharp(ORIGEM).resize(192, 192).png().toFile(`${DESTINO}/icon-192.png`);
-await sharp(ORIGEM).resize(512, 512).png().toFile(`${DESTINO}/icon-512.png`);
+const svg = await readFile(ORIGEM, "utf8");
+const base = await sharp(Buffer.from(svg)).png().toBuffer(); // 1024x1024
 
-await sharp(ORIGEM)
-  .resize(180, 180)
-  .flatten({ background: "#000000" })
-  .png()
-  .toFile(`${DESTINO}/apple-touch-icon.png`);
+await sharp(base).resize(192, 192).png().toFile(`${DESTINO}/icon-192.png`);
+await sharp(base).resize(512, 512).png().toFile(`${DESTINO}/icon-512.png`);
+await sharp(base).resize(180, 180).png().toFile(`${DESTINO}/apple-touch-icon.png`);
 
-// "maskable": logo menor com borda preta, para o Android recortar em círculo
-await sharp(ORIGEM)
-  .resize(410, 410)
-  .extend({ top: 51, bottom: 51, left: 51, right: 51, background: "#000000" })
-  .flatten({ background: "#000000" })
+// "maskable": o Android recorta em círculo, então o desenho (grupo "desenho"
+// do SVG) encolhe para 82%, centralizado, e o fundo continua ocupando tudo
+const MARCADOR = '<g id="desenho">';
+if (!svg.includes(MARCADOR)) throw new Error(`${ORIGEM} precisa ter ${MARCADOR}`);
+const svgMaskable = svg.replace(
+  MARCADOR,
+  '<g id="desenho" transform="translate(92 92) scale(0.82)">'
+);
+await sharp(Buffer.from(svgMaskable))
+  .resize(512, 512)
   .png()
   .toFile(`${DESTINO}/maskable-512.png`);
 

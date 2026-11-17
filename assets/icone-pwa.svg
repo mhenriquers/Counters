@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="45%" r="70%">
+      <stop offset="0" stop-color="#1c2f52"/><stop offset="1" stop-color="#0d1424"/>
+    </radialGradient>
+    <linearGradient id="laranja" gradientUnits="userSpaceOnUse" x1="250" y1="200" x2="800" y2="830">
+      <stop offset="0" stop-color="#ffd23a"/><stop offset="0.55" stop-color="#ffa514"/><stop offset="1" stop-color="#ff7417"/>
+    </linearGradient>
+    <filter id="brilho" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="26"/></filter>
+    <filter id="aspero" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="1" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <g id="desenho">
+  <g transform="translate(6 0)">
+    <path d="M 802 214 L 732 452 Q 690 423 650 383 A 135 135 0 0 0 555 344 H 512 A 158 158 0 0 0 354 502 V 522 A 158 158 0 0 0 512 680 H 555 A 135 135 0 0 0 650 641 Q 690 601 732 572 L 802 810 L 720 781 A 220 220 0 0 1 592 822 H 512 A 300 300 0 0 1 212 522 V 502 A 300 300 0 0 1 512 202 H 592 A 220 220 0 0 1 720 243 Z" fill="url(#laranja)" filter="url(#aspero)"/>
+    
+  <ellipse cx="522" cy="512" rx="85" ry="140" fill="#3aa0ff" opacity="0.7" filter="url(#brilho)"/>
+  <path d="M 522 372 L 522 495 L 448 495 Z" fill="#8fe4ff"/>
+  <path d="M 522 372 L 596 495 L 522 495 Z" fill="#2a86ea"/>
+  <path d="M 448 495 L 522 495 L 522 655 Z" fill="#1b4fae"/>
+  <path d="M 522 495 L 596 495 L 522 655 Z" fill="#86a6d6"/>
+  <path d="M 508 408 L 492 470" stroke="#ffffff" stroke-width="7" stroke-linecap="round" opacity="0.8"/>
+  </g>
+  </g>
+</svg>
