@@ -353,3 +353,41 @@ Separar o **valor interno** (chave) do **texto mostrado** é uma regra geral: se
 - **Português não mudou:** prints de todas as telas comparados pixel a pixel, mais um script que pegou cada parágrafo da versão antiga de cada tela (`git show`) e conferiu que está igualzinho no `pt` do `textos.js`.
 - **Inglês aparece:** um segundo Chrome com o "celular" em `en-US` passa por todas as telas (`telaEmIngles`): confere os textos em inglês e que nenhum texto em português sobrou.
 - **E-mail:** o teste troca o `window.open` por um "espião" que só anota a URL, toca em "Send email" e confere que o `mailto:` sai com o texto em inglês.
+
+## Resumo: POO, SOLID e os padrões do projeto
+
+Esta parte ficava no `CLAUDE.md`. Saiu de lá porque é material de estudo: as regras que valem para o código continuam lá, na seção "Arquitetura". A arquitetura foi aplicada em 3 commits: `add heroes data layer`, `split details screen` e `move files to src`.
+
+### O desenho das camadas
+
+```
+App.js (entrada + rotas + providers, como um Program.cs)
+  └▶ telas ──usam──▶ componentes ──usam──▶ tema
+       ├─────────────────┴──▶ idioma/ (useIdioma) ──lê──▶ idioma/textos.js
+       └─────────────────┴──▶ dados/  (herois, contatos, atualizacao) ──▶ banco_herois.js
+```
+
+O padrão é o do React: **composição de componentes**, com os dados descendo por props (fluxo unidirecional). Não é MVC nem MVVM.
+
+### Padrões usados
+
+| Padrão | Onde | Ideia |
+|---|---|---|
+| **Composição** (`children` + props) | `ui.js` (`Fundo`, `Cartao`...), telas | A tela só monta peças. Uma variação vira prop (`destaque`, `cor`), não uma cópia do componente. |
+| **Contexto + hook** (Provider) | `IdiomaProvider` / `useIdioma` | O único estado global é o idioma. O resto é `useState` local da tela. |
+| **Repositório como módulo** | `herois.js` | As funções exportadas são o contrato. O preparo pesado (`Map`, ordenação) roda uma vez, quando o módulo carrega, como um `static` do C#. |
+| **Dados separados da apresentação** | `atualizacao.js` → `AvisoAtualizacao` | `dados/` devolve valores e quem desenha decide como mostrar. |
+| **Componente sem visual** | `AvisoAtualizacao` (`return null`) | Roda ao abrir o app e pode usar hooks (ex.: `t`). |
+| **Guarda de plataforma dentro do componente** | `InstalarApp`, `AvisoAtualizacao` | O componente decide sozinho se aparece. |
+| **Tabela no lugar de `if/else`** | `icones`, `IDIOMAS`, `textos`, `linking` | Caso novo = entrada nova no mapa. |
+| **Fonte única** | `banco_herois.js`, `textos.js`, `tema.js`, `app.json` | Cada informação mora num lugar só. |
+
+### POO e SOLID neste projeto
+
+- **POO:** não há classes nem herança, e isso não faz falta. As ideias continuam aqui: encapsulamento (só o que tem `export` sai do módulo, e o `useState` é privado), composição em vez de herança (`children`) e polimorfismo por props (`<Cartao destaque="dourado">`, `<LinhaHeroi cor={cores.forte}>`).
+- **S (responsabilidade única):** o mais útil. Exemplos: `ui.js`, `contatos.js` (tirou a duplicação entre Sobre e Feedback) e o Details quebrado em `IconeClasse`, `LinhaHeroi` e `HeroiNaoEncontrado`.
+- **O (aberto/fechado):** o mapa `icones` do `IconeClasse` (classe nova = chave nova, sem `if/else`). Componentes se estendem por props e `children`.
+- **L (Liskov):** quase não se aplica, porque fala de herança. Versão solta: componentes com o mesmo contrato de props são intercambiáveis (o `Fundo` no lugar do `ImageBackground`).
+- **I (segregação de interface):** "não exija props que não usa". Exemplo: o `HeroiNaoEncontrado` recebe só `aoVoltar`. Pendente: o `MenuLateral` ainda recebe o `navigation` inteiro, mas talvez só precise de um `irPara(tela)`.
+- **D (inversão de dependência):** o `herois.js` é o equivalente ao `IHeroiRepository` do C#. Em JS não há `interface`: as **funções exportadas por um módulo são o contrato**. Não precisa de injeção de dependência.
+- **Alerta:** não exagerar. Repository/Service/UseCase num app offline seria cerimônia sem ganho. S + D resolvem 90%.
