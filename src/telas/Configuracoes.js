@@ -4,6 +4,7 @@ import { cores, espaco, fonte } from "../tema";
 import { useIdioma } from "../idioma/idioma";
 import {
   Fundo,
+  Coluna,
   CabecalhoTela,
   TituloSecao,
   Cartao,
@@ -27,38 +28,40 @@ export default function Configuracoes({ navigation }) {
         contentContainerStyle={{ paddingBottom: insets.bottom + espaco.xl }}
         showsVerticalScrollIndicator={false}
       >
-        {/* PREFERÊNCIAS */}
-        <TituloSecao
-          titulo={t("config.preferencias")}
-          style={styles.primeiraSecao}
-        />
+        <Coluna>
+          {/* PREFERÊNCIAS */}
+          <TituloSecao
+            titulo={t("config.preferencias")}
+            style={styles.primeiraSecao}
+          />
 
-        {/* Idioma: sanfona que abre a lista dentro do próprio cartão */}
-        <SeletorIdioma />
+          {/* Idioma: sanfona que abre a lista dentro do próprio cartão */}
+          <SeletorIdioma />
 
-        {/* Tema: só informativo (ainda não dá para mudar) */}
-        <LinhaAcao
-          titulo={t("config.tema")}
-          subtitulo={t("config.temaUnico")}
-        />
+          {/* Tema: só informativo (ainda não dá para mudar) */}
+          <LinhaAcao
+            titulo={t("config.tema")}
+            subtitulo={t("config.temaUnico")}
+          />
 
-        {/* PRIVACIDADE E USO */}
-        <TituloSecao titulo={t("config.privacidade")} />
-        {/* Um cartão para cada assunto, com o título fora do cartão */}
-        <Text style={styles.subtitulo}>{t("config.politica")}</Text>
-        <Cartao>
-          <Paragrafo ultimo>{t("config.politicaTexto")}</Paragrafo>
-        </Cartao>
+          {/* PRIVACIDADE E USO */}
+          <TituloSecao titulo={t("config.privacidade")} />
+          {/* Um cartão para cada assunto, com o título fora do cartão */}
+          <Text style={styles.subtitulo}>{t("config.politica")}</Text>
+          <Cartao>
+            <Paragrafo ultimo>{t("config.politicaTexto")}</Paragrafo>
+          </Cartao>
 
-        <Text style={styles.subtitulo}>{t("config.imagens")}</Text>
-        <Cartao>
-          <Paragrafo ultimo>{t("config.imagensTexto")}</Paragrafo>
-        </Cartao>
+          <Text style={styles.subtitulo}>{t("config.imagens")}</Text>
+          <Cartao>
+            <Paragrafo ultimo>{t("config.imagensTexto")}</Paragrafo>
+          </Cartao>
 
-        <Text style={styles.subtitulo}>{t("config.links")}</Text>
-        <Cartao>
-          <Paragrafo ultimo>{t("config.linksTexto")}</Paragrafo>
-        </Cartao>
+          <Text style={styles.subtitulo}>{t("config.links")}</Text>
+          <Cartao>
+            <Paragrafo ultimo>{t("config.linksTexto")}</Paragrafo>
+          </Cartao>
+        </Coluna>
       </ScrollView>
     </Fundo>
   );

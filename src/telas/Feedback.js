@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { cores, espaco } from "../tema";
 import {
   Fundo,
+  Coluna,
   CabecalhoTela,
   TituloSecao,
   Cartao,
@@ -26,24 +27,26 @@ export default function Feedback({ navigation }) {
         contentContainerStyle={{ paddingBottom: insets.bottom + espaco.xl }}
         showsVerticalScrollIndicator={false}
       >
-        {/* SUGESTÕES OU ERROS */}
-        <TituloSecao
-          titulo={t("feedback.sugestoes")}
-          style={styles.primeiraSecao}
-        />
-        <Cartao destaque="dourado">
-          <Paragrafo ultimo>{t("feedback.texto")}</Paragrafo>
-        </Cartao>
+        <Coluna>
+          {/* SUGESTÕES OU ERROS */}
+          <TituloSecao
+            titulo={t("feedback.sugestoes")}
+            style={styles.primeiraSecao}
+          />
+          <Cartao destaque="dourado">
+            <Paragrafo ultimo>{t("feedback.texto")}</Paragrafo>
+          </Cartao>
 
-        {/* CONTATO */}
-        <TituloSecao titulo={t("feedback.contato")} />
-        <ListaContatos />
+          {/* CONTATO */}
+          <TituloSecao titulo={t("feedback.contato")} />
+          <ListaContatos />
 
-        {/* RETORNO */}
-        <TituloSecao titulo={t("feedback.retorno")} />
-        <Cartao>
-          <Paragrafo ultimo>{t("feedback.retornoTexto")}</Paragrafo>
-        </Cartao>
+          {/* RETORNO */}
+          <TituloSecao titulo={t("feedback.retorno")} />
+          <Cartao>
+            <Paragrafo ultimo>{t("feedback.retornoTexto")}</Paragrafo>
+          </Cartao>
+        </Coluna>
       </ScrollView>
     </Fundo>
   );

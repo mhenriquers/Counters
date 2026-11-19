@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { cores, espaco } from "../tema";
 import {
   Fundo,
+  Coluna,
   CabecalhoTela,
   TituloSecao,
   Cartao,
@@ -28,40 +29,42 @@ export default function Sobre({ navigation }) {
         contentContainerStyle={{ paddingBottom: insets.bottom + espaco.xl }}
         showsVerticalScrollIndicator={false}
       >
-        {/* TOPO: logo */}
-        <Image
-          source={require("../../assets/logo.png")}
-          resizeMode="contain"
-          style={styles.logo}
-        />
+        <Coluna>
+          {/* TOPO: logo */}
+          <Image
+            source={require("../../assets/logo.png")}
+            resizeMode="contain"
+            style={styles.logo}
+          />
 
-        {/* EARLY GAME */}
-        <TituloSecao titulo={t("sobre.early")} />
-        <Cartao destaque="dourado">
-          <Paragrafo ultimo>{t("sobre.earlyTexto")}</Paragrafo>
-        </Cartao>
+          {/* EARLY GAME */}
+          <TituloSecao titulo={t("sobre.early")} />
+          <Cartao destaque="dourado">
+            <Paragrafo ultimo>{t("sobre.earlyTexto")}</Paragrafo>
+          </Cartao>
 
-        {/* LORE */}
-        <TituloSecao titulo={t("sobre.lore")} />
-        <Cartao destaque="dourado">
-          <Paragrafo>{t("sobre.lore1")}</Paragrafo>
-          <Paragrafo>{t("sobre.lore2")}</Paragrafo>
-          <Paragrafo>{t("sobre.lore3")}</Paragrafo>
-          <Paragrafo ultimo>{t("sobre.lore4")}</Paragrafo>
-        </Cartao>
+          {/* LORE */}
+          <TituloSecao titulo={t("sobre.lore")} />
+          <Cartao destaque="dourado">
+            <Paragrafo>{t("sobre.lore1")}</Paragrafo>
+            <Paragrafo>{t("sobre.lore2")}</Paragrafo>
+            <Paragrafo>{t("sobre.lore3")}</Paragrafo>
+            <Paragrafo ultimo>{t("sobre.lore4")}</Paragrafo>
+          </Cartao>
 
-        {/* CONTATO */}
-        <TituloSecao titulo={t("sobre.contato")} />
-        <ListaContatos />
+          {/* CONTATO */}
+          <TituloSecao titulo={t("sobre.contato")} />
+          <ListaContatos />
 
-        {/* AVISO LEGAL */}
-        <TituloSecao titulo={t("sobre.aviso")} />
-        <Cartao>
-          <Paragrafo>{t("sobre.aviso1")}</Paragrafo>
-          <Paragrafo ultimo>{t("sobre.aviso2")}</Paragrafo>
-        </Cartao>
+          {/* AVISO LEGAL */}
+          <TituloSecao titulo={t("sobre.aviso")} />
+          <Cartao>
+            <Paragrafo>{t("sobre.aviso1")}</Paragrafo>
+            <Paragrafo ultimo>{t("sobre.aviso2")}</Paragrafo>
+          </Cartao>
 
-        <Rodape>{t("sobre.versao", { versao: VERSAO_ATUAL })}</Rodape>
+          <Rodape>{t("sobre.versao", { versao: VERSAO_ATUAL })}</Rodape>
+        </Coluna>
       </ScrollView>
     </Fundo>
   );

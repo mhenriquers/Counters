@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { cores, espaco, raio, fonte } from "../tema";
 import {
   Fundo,
+  Coluna,
   CabecalhoTela,
   TituloSecao,
   Cartao,
@@ -65,57 +66,59 @@ export default function Doacoes({ navigation }) {
         contentContainerStyle={{ paddingBottom: insets.bottom + espaco.xl }}
         showsVerticalScrollIndicator={false}
       >
-        {/* DESTAQUE: emblema + título (como o bloco do herói no Details) */}
-        <View style={styles.destaque}>
-          <Animated.Image
-            source={require("../../assets/imortal.png")}
-            resizeMode="contain"
-            style={[
-              styles.emblema,
-              {
-                opacity: opacidadeEmblema,
-                transform: [
-                  { translateY: descidaEmblema },
-                  { scale: escalaEmblema },
-                ],
-              },
-            ]}
-          />
-          <Text style={styles.titulo}>{t("doacoes.chamada")}</Text>
-          <LinearGradient
-            colors={["transparent", cores.dourado, "transparent"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.divisor}
-          />
-        </View>
-
-        {/* POR QUE APOIAR */}
-        <TituloSecao titulo={t("doacoes.porque")} cor={cores.dourado} />
-        <Cartao destaque="dourado">
-          <Paragrafo>{t("doacoes.texto1")}</Paragrafo>
-          <Paragrafo ultimo>
-            {t("doacoes.texto2")}{" "}
-            <Text style={styles.destaqueTexto}>{t("doacoes.mvp")}</Text>
-          </Paragrafo>
-        </Cartao>
-
-        {/* CHAVE PIX */}
-        <TituloSecao titulo={t("doacoes.chavePix")} />
-        <Cartao>
-          <View style={styles.campoChave}>
-            <Text style={styles.chavePix} selectable>
-              {CHAVE_PIX}
-            </Text>
+        <Coluna>
+          {/* DESTAQUE: emblema + título (como o bloco do herói no Details) */}
+          <View style={styles.destaque}>
+            <Animated.Image
+              source={require("../../assets/imortal.png")}
+              resizeMode="contain"
+              style={[
+                styles.emblema,
+                {
+                  opacity: opacidadeEmblema,
+                  transform: [
+                    { translateY: descidaEmblema },
+                    { scale: escalaEmblema },
+                  ],
+                },
+              ]}
+            />
+            <Text style={styles.titulo}>{t("doacoes.chamada")}</Text>
+            <LinearGradient
+              colors={["transparent", cores.dourado, "transparent"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.divisor}
+            />
           </View>
-          <BotaoCopiar
-            texto={CHAVE_PIX}
-            rotulo={t("doacoes.copiarChave")}
-            style={styles.botaoCopiar}
-          />
-        </Cartao>
 
-        <Rodape>{t("doacoes.aviso")}</Rodape>
+          {/* POR QUE APOIAR */}
+          <TituloSecao titulo={t("doacoes.porque")} cor={cores.dourado} />
+          <Cartao destaque="dourado">
+            <Paragrafo>{t("doacoes.texto1")}</Paragrafo>
+            <Paragrafo ultimo>
+              {t("doacoes.texto2")}{" "}
+              <Text style={styles.destaqueTexto}>{t("doacoes.mvp")}</Text>
+            </Paragrafo>
+          </Cartao>
+
+          {/* CHAVE PIX */}
+          <TituloSecao titulo={t("doacoes.chavePix")} />
+          <Cartao>
+            <View style={styles.campoChave}>
+              <Text style={styles.chavePix} selectable>
+                {CHAVE_PIX}
+              </Text>
+            </View>
+            <BotaoCopiar
+              texto={CHAVE_PIX}
+              rotulo={t("doacoes.copiarChave")}
+              style={styles.botaoCopiar}
+            />
+          </Cartao>
+
+          <Rodape>{t("doacoes.aviso")}</Rodape>
+        </Coluna>
       </Animated.ScrollView>
     </Fundo>
   );
