@@ -10,8 +10,9 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { buscarHeroi, buscarHerois } from "../dados/herois";
-import { cores } from "../tema";
-import { Fundo, TituloSecao, BarraStatus } from "../componentes/ui";
+import { cores, tela } from "../tema";
+import { Fundo, Coluna, TituloSecao, BarraStatus } from "../componentes/ui";
+import { useTamanhoTela } from "../responsivo";
 import IconeClasse from "../componentes/IconeClasse";
 import LinhaHeroi from "../componentes/LinhaHeroi";
 import HeroiNaoEncontrado from "../componentes/HeroiNaoEncontrado";
@@ -20,6 +21,9 @@ import { useIdioma } from "../idioma/idioma";
 function DetailsScreen({ route, navigation }) {
   const insets = useSafeAreaInsets();
   const { t } = useIdioma();
+  // Do tablet para cima, as seções forte/fraco ficam lado a lado
+  const { celular } = useTamanhoTela();
+  const ladoALado = !celular;
 
   const heroi = buscarHeroi(route.params?.id);
 
@@ -55,7 +59,10 @@ function DetailsScreen({ route, navigation }) {
       <BarraStatus />
 
       {/* Botões de voltar e fechar */}
-      <View style={[style.cabecalho, { paddingTop: 6 }]}>
+      <Coluna
+        largura={tela.larguraDetalhes}
+        style={[style.cabecalho, { paddingTop: 6 }]}
+      >
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           style={style.botaoCabecalho}
@@ -77,70 +84,79 @@ function DetailsScreen({ route, navigation }) {
             style={style.iconeFechar}
           />
         </TouchableOpacity>
-      </View>
+      </Coluna>
 
       <ScrollView
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* HERÓI PRINCIPAL */}
-        <View style={style.blocoHeroi}>
-          <View style={style.molduraFoto}>
-            <Image source={heroi.foto} style={style.fotoHeroi} />
+        <Coluna largura={tela.larguraDetalhes}>
+          {/* HERÓI PRINCIPAL */}
+          <View style={style.blocoHeroi}>
+            <View style={style.molduraFoto}>
+              <Image source={heroi.foto} style={style.fotoHeroi} />
+            </View>
+
+            <Text style={style.nomeHeroi}>{heroi.nome}</Text>
+
+            <LinearGradient
+              colors={["transparent", cores.azulTexto, "transparent"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={style.divisor}
+            />
+
+            <View style={style.chipsClasse}>
+              {heroi.classes.map((classe) => (
+                <View key={classe} style={style.chipClasse}>
+                  <IconeClasse classe={classe} tamanho={22} />
+                  <Text style={style.textoChip}>{t(`classe.${classe}`)}</Text>
+                </View>
+              ))}
+            </View>
           </View>
 
-          <Text style={style.nomeHeroi}>{heroi.nome}</Text>
+          {/* No celular, uma seção embaixo da outra; do tablet para cima, lado a lado */}
+          <View style={ladoALado && style.secoesLadoALado}>
+            <View style={ladoALado && style.secao}>
+              {/* É FORTE CONTRA */}
+              <TituloSecao
+                titulo={t("details.forte")}
+                subtitulo={t("details.forteSub", { nome: heroi.nome })}
+                cor={cores.forte}
+              />
+              {forteContra.map((outro) => (
+                <LinhaHeroi
+                  key={outro.id}
+                  heroi={outro}
+                  cor={cores.forte}
+                  aoTocar={() => abrirHeroi(outro)}
+                />
+              ))}
+            </View>
 
-          <LinearGradient
-            colors={["transparent", cores.azulTexto, "transparent"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={style.divisor}
-          />
-
-          <View style={style.chipsClasse}>
-            {heroi.classes.map((classe) => (
-              <View key={classe} style={style.chipClasse}>
-                <IconeClasse classe={classe} tamanho={22} />
-                <Text style={style.textoChip}>{t(`classe.${classe}`)}</Text>
-              </View>
-            ))}
+            <View style={ladoALado && style.secao}>
+              {/* É FRACO CONTRA */}
+              <TituloSecao
+                titulo={t("details.fraco")}
+                subtitulo={t("details.fracoSub", { nome: heroi.nome })}
+                cor={cores.fraco}
+              />
+              {fracoContra.map((outro) => (
+                <LinhaHeroi
+                  key={outro.id}
+                  heroi={outro}
+                  cor={cores.fraco}
+                  aoTocar={() => abrirHeroi(outro)}
+                />
+              ))}
+            </View>
           </View>
-        </View>
 
-        {/* É FORTE CONTRA */}
-        <TituloSecao
-          titulo={t("details.forte")}
-          subtitulo={t("details.forteSub", { nome: heroi.nome })}
-          cor={cores.forte}
-        />
-        {forteContra.map((outro) => (
-          <LinhaHeroi
-            key={outro.id}
-            heroi={outro}
-            cor={cores.forte}
-            aoTocar={() => abrirHeroi(outro)}
-          />
-        ))}
-
-        {/* É FRACO CONTRA */}
-        <TituloSecao
-          titulo={t("details.fraco")}
-          subtitulo={t("details.fracoSub", { nome: heroi.nome })}
-          cor={cores.fraco}
-        />
-        {fracoContra.map((outro) => (
-          <LinhaHeroi
-            key={outro.id}
-            heroi={outro}
-            cor={cores.fraco}
-            aoTocar={() => abrirHeroi(outro)}
-          />
-        ))}
-
-        <Text style={style.rodape}>
-          {t("details.fonte")}
-        </Text>
+          <Text style={style.rodape}>
+            {t("details.fonte")}
+          </Text>
+        </Coluna>
       </ScrollView>
     </Fundo>
   );
@@ -254,6 +270,15 @@ const style = StyleSheet.create({
     color: cores.azulBorda,
     fontSize: 13,
     fontWeight: "600",
+  },
+
+  // Tablet e computador: as duas seções em colunas de mesma largura
+  secoesLadoALado: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+  secao: {
+    flex: 1,
   },
 
   rodape: {
