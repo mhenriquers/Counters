@@ -1,6 +1,8 @@
-// Tira prints da versão web (pasta dist/) em tamanho de celular (384x832).
+// Tira prints da versão web (pasta dist/) em 3 tamanhos:
+// celular (384x832, em screenshots/), tablet (820x1180, em screenshots/tablet/)
+// e computador (1440x900, em screenshots/computador/).
 // Rode antes: npm run build:web
-// Uso: npm run shots  (salva em screenshots/)
+// Uso: npm run shots
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { servidorEstatico, abrirNavegador } from "./cdp-util.mjs";
 
@@ -24,28 +26,38 @@ const TELAS = [
   ["configuracoes", "/configuracoes"],
 ];
 
-mkdirSync(PASTA, { recursive: true });
-const servidor = await servidorEstatico("dist", PORTA);
-const nav = await abrirNavegador({ porta: 9402 });
+const TAMANHOS = [
+  { pasta: PASTA, largura: 384, altura: 832, celular: true },
+  { pasta: `${PASTA}/tablet`, largura: 820, altura: 1180, celular: true },
+  { pasta: `${PASTA}/computador`, largura: 1440, altura: 900, celular: false },
+];
 
-for (const [nome, rota] of TELAS) {
-  await nav.abrir(BASE + rota);
-  writeFileSync(`${PASTA}/${nome}.png`, await nav.print());
-  console.log(`${PASTA}/${nome}.png`);
+const servidor = await servidorEstatico("dist", PORTA);
+
+for (const [i, { pasta, largura, altura, celular }] of TAMANHOS.entries()) {
+  mkdirSync(pasta, { recursive: true });
+  const nav = await abrirNavegador({ porta: 9402 + i * 10, largura, altura, celular });
+
+  for (const [nome, rota] of TELAS) {
+    await nav.abrir(BASE + rota);
+    writeFileSync(`${pasta}/${nome}.png`, await nav.print());
+    console.log(`${pasta}/${nome}.png`);
+  }
+
+  // Home com o menu aberto
+  await nav.abrir(BASE + "/");
+  await nav.clicarSeletor('img[src*="opcoes"]', 800);
+  writeFileSync(`${pasta}/menu.png`, await nav.print());
+  console.log(`${pasta}/menu.png`);
+
+  // Configurações com o seletor de idioma aberto
+  await nav.abrir(BASE + "/configuracoes");
+  await nav.clicarTexto("Idioma", 800);
+  writeFileSync(`${pasta}/configuracoes-idioma.png`, await nav.print());
+  console.log(`${pasta}/configuracoes-idioma.png`);
+
+  nav.fechar();
 }
 
-// Home com o menu aberto
-await nav.abrir(BASE + "/");
-await nav.clicarSeletor('img[src*="opcoes"]', 800);
-writeFileSync(`${PASTA}/menu.png`, await nav.print());
-console.log(`${PASTA}/menu.png`);
-
-// Configurações com o seletor de idioma aberto
-await nav.abrir(BASE + "/configuracoes");
-await nav.clicarTexto("Idioma", 800);
-writeFileSync(`${PASTA}/configuracoes-idioma.png`, await nav.print());
-console.log(`${PASTA}/configuracoes-idioma.png`);
-
-nav.fechar();
 servidor.close();
 process.exit(0);

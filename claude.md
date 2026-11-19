@@ -20,7 +20,7 @@ npm run web             # dev server web (localhost:8081, service worker desliga
 npm run build:web       # expo export -p web + workbox (gera dist/ com sw.js)
 npm run preview:web     # serve dist/ em localhost:3000 (testar PWA/offline)
 npm run test:web        # teste E2E da web (rode antes npm run build:web)
-npm run shots           # prints 384x832 de todas as telas em screenshots/
+npm run shots           # prints de todas as telas: celular 384x832 (screenshots/), tablet/ e computador/
 eas build -p android --profile preview      # gera o APK
 eas build -p android --profile production   # autoIncrement de versão
 node scripts/gerar-icones.mjs       # regera public/icons/ (PWA) a partir de assets/icone-pwa.svg
@@ -37,7 +37,7 @@ Não há lint nem formatter. `/android`, `/ios`, `dist/`, `screenshots/` e `scre
 - `workbox-config.js` gera `dist/sw.js`: precache de todo o build e `navigateFallback` para `/index.html` (qualquer URL abre offline).
 - Vercel (`vercel.json`): roda `build:web`, publica `dist/`, `rewrites` para `/index.html` e `no-cache` no `sw.js`. O `"framework": null` é obrigatório: o build padrão do Expo não roda o workbox (sem `sw.js`, sem offline). Cada `git push` na `main` publica.
 - A PWA instalada recebe a versão nova na **segunda** abertura.
-- Na web, o app é uma coluna de até 480px (`App.js`), e `Alert.alert` não funciona: use `window.alert` quando `Platform.OS === "web"`.
+- Na web, `Alert.alert` não funciona: use `window.alert` quando `Platform.OS === "web"`.
 
 ## Estrutura
 
@@ -49,7 +49,8 @@ src/
   componentes/      tudo que desenha algo e não é tela
   dados/            dados e acesso a eles
   idioma/           textos em pt e en + IdiomaProvider/useIdioma
-  tema.js           tokens visuais: cores, espaco, raio, fonte
+  tema.js           tokens visuais: cores, espaco, raio, fonte, tela (larguras do layout)
+  responsivo.js     useTamanhoTela() → { largura, altura, tipo, celular }
 scripts/            build, testes e prints
 ```
 
@@ -99,6 +100,7 @@ Valem para qualquer código novo. Várias só aparecem no celular.
 
 - **Teste automático:** `npm run build:web && npm run test:web` (E2E da web: navegação, menu, busca, `/heroi/999`, copiar, idioma e, num Chrome em `en-US`, cada tela em inglês com `telaEmIngles`). Sai com código 1 se algo falhar. Mudou um texto que o teste procura? Atualize `scripts/teste-web.mjs` no mesmo commit.
 - `teste-web.mjs` e `screenshots.mjs` usam o `cdp-util.mjs` (servidor de `dist/` + Chrome headless via DevTools Protocol; Chrome em `CHROME_PATH` ou no caminho padrão do Windows). O `abrirNavegador({ idioma })` fixa o `navigator.language` (padrão `pt-BR`) via `acceptLanguage`: o `setLocaleOverride` não muda o `navigator.language`.
+- **Layout responsivo:** o app ocupa a tela inteira em celular, tablet e computador. `useTamanhoTela()` (`src/responsivo.js`) dá o `tipo` (`"celular"` < 600px ≤ `"tablet"` < 1024px ≤ `"computador"`; limites em `tela` no `tema.js`). O fundo vai de ponta a ponta e o conteúdo fica na `Coluna` do `ui.js` (largura máxima centralizada; o `CabecalhoTela` já alinha a seta com ela). Home: 3 colunas no celular, quantas couberem no resto (`FlatList` com `key={colunas}`). Details: forte/fraco lado a lado do tablet para cima. **No celular o visual não muda.** Tela nova: envolva o conteúdo do `ScrollView` na `Coluna`.
 - **Comparação visual:** antes de mexer numa tela, copie `screenshots/` para `screenshots-antes/`; depois rode `npm run shots` e compare.
 - **Web manual:** `npm run preview:web`. Teste o offline (F12 → Network → Offline).
 - **Celular:** sempre teste também no Expo Go. O `console.log` aparece no terminal do `npx expo start`; para um elemento que "não aparece", logue o `onLayout` (`e.nativeEvent.layout`). Remova os logs antes do commit.
