@@ -26,11 +26,19 @@ import { listarHerois } from "../dados/herois";
 import InstalarApp from "../componentes/InstalarApp";
 import MenuLateral from "../componentes/MenuLateral";
 import HeroiNaoEncontrado from "../componentes/HeroiNaoEncontrado";
-import { cores, espaco, raio, fonte } from "../tema";
+import { cores, espaco, raio, fonte, tela } from "../tema";
+import { useTamanhoTela } from "../responsivo";
 import { Fundo } from "../componentes/ui";
 import { useIdioma } from "../idioma/idioma";
 
 const chaveDoHeroi = (item) => item.id;
+
+// Lado do quadro de cada herói, por tipo de tela. No celular são sempre
+// 3 colunas; no tablet e no computador, cabem quantas colunas der.
+const LADO_QUADRO = { celular: 115, tablet: 130, computador: 140 };
+// Espaço que cada quadro ocupa além do lado: margem (2 + 2) + gap da linha (1)
+const SOBRA_QUADRO = 5;
+const PADDING_GRADE = 10; // igual ao paddingHorizontal de conteudoGrade
 
 // Mostrado quando a busca não encontra nenhum herói. Fica fora da Home para
 // ser sempre a mesma referência (a FlatList não redesenha à toa).
@@ -62,6 +70,26 @@ export default function HomeScreen({ navigation }) {
   const inputRef = useRef(null); // criando a referência
   const [pesquisar, setPesquisar] = useState(false);
   const [busca, setBusca] = useState("");
+
+  // Grade responsiva: tamanho dos quadros e número de colunas pela largura
+  const { largura, tipo, celular } = useTamanhoTela();
+  const lado = LADO_QUADRO[tipo];
+  const larguraUtil = Math.min(largura, tela.larguraGrade) - PADDING_GRADE * 2;
+  const colunas = celular
+    ? 3
+    : Math.max(3, Math.floor(larguraUtil / (lado + SOBRA_QUADRO)));
+
+  // Estilos que dependem do tamanho, guardados com useMemo: só mudam quando
+  // o tipo de tela muda (assim a grade não é redesenhada à toa)
+  const tamanhos = useMemo(
+    () => ({
+      quadro: { width: lado, height: lado },
+      // a foto é 3px maior que o quadro (como no celular: 118 x 115)
+      foto: { width: lado + 3, height: lado + 3 },
+      nome: celular ? null : styles.nomeHeroiGrande,
+    }),
+    [lado, celular],
+  );
 
   const heroisFiltrados = useMemo(() => {
     const textoBusca = busca.trim().toLocaleLowerCase("pt-BR");
@@ -102,7 +130,7 @@ export default function HomeScreen({ navigation }) {
   const desenharHeroi = useCallback(
     ({ item }) => (
       <TouchableOpacity
-        style={styles.quadrado}
+        style={[styles.quadrado, tamanhos.quadro]}
         onPress={() => {
           setBusca("");
           setPesquisar(false);
@@ -110,17 +138,19 @@ export default function HomeScreen({ navigation }) {
         }}
       >
         <View>
-          <Image source={item.foto} style={styles.fotoHeroi} />
+          <Image source={item.foto} style={[styles.fotoHeroi, tamanhos.foto]} />
           <LinearGradient
             colors={["transparent", "rgba(0, 0, 0, 0.94)"]}
             style={styles.gradiente}
           >
-            <Text style={styles.nomeHeroi}>{item.nome}</Text>
+            <Text style={[styles.nomeHeroi, tamanhos.nome]}>
+              {item.nome}
+            </Text>
           </LinearGradient>
         </View>
       </TouchableOpacity>
     ),
-    [navigation],
+    [navigation, tamanhos],
   );
 
   const fecharMenu = useCallback(() => setMenuAberto(false), []);
@@ -190,10 +220,14 @@ export default function HomeScreen({ navigation }) {
               {/* Grade de herois */}
 
               <View style={styles.areaGrade}>
+                {/* key: a FlatList não aceita mudar numColumns depois de
+                    desenhada; com a key, ela é recriada ao mudar de colunas
+                    (ex.: ao girar o tablet ou redimensionar a janela) */}
                 <FlatList
+                  key={colunas}
                   data={heroisFiltrados}
                   keyExtractor={chaveDoHeroi}
-                  numColumns={3}
+                  numColumns={colunas}
                   keyboardDismissMode="on-drag"
                   keyboardShouldPersistTaps="handled"
                   columnWrapperStyle={styles.linhaGrade}
@@ -249,9 +283,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.4)",
   },
 
+  // width/height vêm de tamanhos.quadro (dependem do tipo de tela)
   quadrado: {
-    width: 115,
-    height: 115,
     backgroundColor: "rgba(0,0,0,0.5)",
     margin: 2,
     borderWidth: 2,
@@ -263,9 +296,8 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
 
+  // width/height vêm de tamanhos.foto (dependem do tipo de tela)
   fotoHeroi: {
-    width: 118,
-    height: 118,
     borderRadius: 5,
   },
 
@@ -286,6 +318,11 @@ const styles = StyleSheet.create({
     right: 0,
   },
 
+  // Tablet e computador: quadros maiores, nome um pouco maior
+  nomeHeroiGrande: {
+    fontSize: 13,
+  },
+
   titulo: {
     fontSize: 24,
     fontWeight: "bold",
@@ -296,6 +333,7 @@ const styles = StyleSheet.create({
 
   logo: {
     width: "80%",
+    maxWidth: 560, // no computador, 80% da tela seria largo demais
     height: 180,
     marginTop: -40,
     marginBottom: -10,
@@ -339,6 +377,7 @@ const styles = StyleSheet.create({
   // Campo de busca em pílula
   campoBusca: {
     flex: 1,
+    maxWidth: 420, // no computador, a pílula não atravessa a tela toda
     height: 36,
     flexDirection: "row",
     alignItems: "center",
@@ -387,8 +426,12 @@ const styles = StyleSheet.create({
     gap: 1,
   },
 
+  // No computador, a grade fica no meio com largura máxima (tela.larguraGrade)
   conteudoGrade: {
-    paddingHorizontal: 10,
+    width: "100%",
+    maxWidth: tela.larguraGrade,
+    alignSelf: "center",
+    paddingHorizontal: PADDING_GRADE,
     paddingVertical: 20,
   },
 
