@@ -33,3 +33,14 @@ export const fonte = {
   legenda: 12, // textos secundários
   rodape: 11,
 };
+
+// Layout responsivo: a partir de que largura a tela conta como tablet ou
+// computador, e a largura máxima do conteúdo em cada tipo de tela
+// (no computador o conteúdo fica no meio, e o fundo ocupa a tela inteira).
+export const tela = {
+  tablet: 600, // de 600 a 1023: tablet (ou janela média no computador)
+  computador: 1024, // 1024 ou mais: computador
+  larguraTexto: 720, // telas secundárias (Sobre, Apoiar...): linhas de texto legíveis
+  larguraDetalhes: 1040, // Details com as duas seções lado a lado
+  larguraGrade: 1280, // grade de heróis da Home
+};

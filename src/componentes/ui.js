@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Clipboard from "expo-clipboard";
-import { cores, espaco, raio, fonte } from "../tema";
+import { cores, espaco, raio, fonte, tela } from "../tema";
 import { EMAIL, GITHUB_USUARIO, ID_JOGO, abrirGit, enviarEmail } from "../dados/contatos";
 import { useIdioma } from "../idioma/idioma";
 
@@ -29,6 +29,15 @@ export function Fundo({ fonte: imagem, modo = "cover", style, children }) {
       {children}
     </View>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Coluna: centraliza o conteúdo com uma largura máxima (padrão: a das telas
+// de texto). No celular não muda nada (a tela é mais estreita que o máximo);
+// no tablet e no computador, evita linhas de texto enormes de ponta a ponta.
+// ---------------------------------------------------------------------------
+export function Coluna({ largura = tela.larguraTexto, style, children }) {
+  return <View style={[estilos.coluna, { maxWidth: largura }, style]}>{children}</View>;
 }
 
 // ---------------------------------------------------------------------------
@@ -76,17 +85,21 @@ export function CabecalhoTela({ titulo, aoVoltar }) {
   return (
     <View>
       <BarraStatus />
+      {/* A imagem ocupa a largura toda; a seta e o título ficam alinhados
+          com a Coluna do conteúdo (no computador, não vão para o canto) */}
       <Fundo fonte={require("../../assets/header.png")} style={estilos.cabecalho}>
-        <TouchableOpacity onPress={aoVoltar} style={estilos.botaoVoltar} hitSlop={8}>
-          <Image
-            source={require("../../assets/seta-branca.png")}
-            resizeMode="contain"
-            style={estilos.iconeVoltar}
-          />
-        </TouchableOpacity>
-        <Text style={estilos.tituloCabecalho} numberOfLines={1}>
-          {titulo}
-        </Text>
+        <Coluna style={estilos.linhaCabecalho}>
+          <TouchableOpacity onPress={aoVoltar} style={estilos.botaoVoltar} hitSlop={8}>
+            <Image
+              source={require("../../assets/seta-branca.png")}
+              resizeMode="contain"
+              style={estilos.iconeVoltar}
+            />
+          </TouchableOpacity>
+          <Text style={estilos.tituloCabecalho} numberOfLines={1}>
+            {titulo}
+          </Text>
+        </Coluna>
       </Fundo>
     </View>
   );
@@ -226,6 +239,12 @@ const estilos = StyleSheet.create({
     height: "100%",
   },
 
+  // Coluna (o maxWidth vem da prop `largura`)
+  coluna: {
+    width: "100%",
+    alignSelf: "center",
+  },
+
   // TituloSecao (valores iguais aos que estavam no Details.js)
   faixaSecao: {
     flexDirection: "row",
@@ -258,11 +277,14 @@ const estilos = StyleSheet.create({
   // CabecalhoTela
   cabecalho: {
     height: 56,
-    flexDirection: "row",
-    alignItems: "center",
     paddingHorizontal: espaco.sm,
     borderBottomWidth: 1,
     borderBottomColor: cores.bordaCartao,
+  },
+  linhaCabecalho: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
   },
   botaoVoltar: {
     width: 44,

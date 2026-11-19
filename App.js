@@ -37,16 +37,9 @@ export default function App() {
     <SafeAreaProvider>
       {/* Fundo preto ocupando a tela toda */}
       <View style={{ flex: 1, backgroundColor: "#000" }}>
-        {/* No computador, o app fica numa coluna de no máximo 480px centralizada */}
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            maxWidth: 480,
-            alignSelf: "center",
-            overflow: "hidden",
-          }}
-        >
+        {/* O app ocupa a tela inteira. Cada tela se ajusta à largura
+            (celular, tablet ou computador) com o useTamanhoTela e a Coluna. */}
+        <View style={{ flex: 1, overflow: "hidden" }}>
           {/* Idioma disponível para todas as telas (dentro do fundo preto,
               para a tela continuar preta enquanto lê a escolha salva) */}
           <IdiomaProvider>

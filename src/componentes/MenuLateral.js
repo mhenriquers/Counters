@@ -21,6 +21,8 @@ import { VERSAO_ATUAL } from "../dados/atualizacao";
 const TEMPO_ABRIR = 260;
 const TEMPO_FECHAR = 200;
 
+const LARGURA_MAXIMA_GAVETA = 360;
+
 // Espaço do topo que não é do logo: padding (16 + 8) + gap (8) + botão ✕ (44)
 const SOBRA_TOPO = espaco.lg + espaco.sm + espaco.sm + 44;
 
@@ -30,9 +32,10 @@ export default function MenuLateral({ visivel, aoFechar, navigation }) {
   const insets = useSafeAreaInsets();
   const { t } = useIdioma();
 
-  // Na web o app fica numa coluna de no máximo 480px (ver App.js)
+  // 75% da tela no celular; no tablet e no computador, no máximo 360px
+  // (a gaveta não precisa ser maior que isso para os 4 itens)
   const { width } = useWindowDimensions();
-  const larguraGaveta = Math.min(width, 480) * 0.75;
+  const larguraGaveta = Math.min(width * 0.75, LARGURA_MAXIMA_GAVETA);
 
   // 0 = fechado, 1 = aberto. Uma única animação controla gaveta e sombra.
   const progresso = useRef(new Animated.Value(0)).current;
